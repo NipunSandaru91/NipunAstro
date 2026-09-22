@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createCalculation } from "@/app/calculations/actions";
 
 type Calculation = {
   id: string;
@@ -17,7 +18,12 @@ type Calculation = {
   node_method: string | null;
 };
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error: queryError } = await searchParams;
   const supabase = await createClient();
 
   const { data: claimsData } = await supabase.auth.getClaims();
@@ -63,6 +69,49 @@ export default async function Home() {
             </form>
           </div>
         </header>
+
+        {queryError ? (
+          <section className="mt-8 rounded-2xl border border-[#5a3434] bg-[#211416] p-6">
+            <p className="eyebrow">Input status</p>
+            <p className="mt-2 text-sm leading-7 text-[#d8aaaa]">
+              {decodeURIComponent(queryError)}
+            </p>
+          </section>
+        ) : null}
+
+        <section className="panel mt-8 rounded-2xl p-7 sm:p-9">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="eyebrow">Calculation Workspace</p>
+              <h2 className="serif mt-2 text-3xl text-[#eee9de]">
+                Create a natal calculation
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--muted)]">
+                The demo uses the canonical Colombo fixture by default. Inputs
+                are passed to the authenticated calculation pipeline.
+              </p>
+            </div>
+            <span className="text-xs text-[#676d76]">Vedic · Lahiri · Whole Sign</span>
+          </div>
+
+          <form action={createCalculation} className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Field label="Birth date" name="birth_date" type="date" defaultValue="1991-04-06" />
+            <Field label="Birth time" name="birth_time" type="time" defaultValue="14:12" />
+            <Field label="Timezone" name="timezone" defaultValue="Asia/Colombo" />
+            <Field label="Place" name="place_name" defaultValue="Colombo" />
+            <Field label="Country" name="country" defaultValue="Sri Lanka" />
+            <Field label="Latitude" name="latitude" defaultValue="6.927079" />
+            <Field label="Longitude" name="longitude" defaultValue="79.861244" />
+            <div className="flex items-end">
+              <button
+                type="submit"
+                className="w-full rounded-lg border border-[#8f7740] bg-[#19160f] px-4 py-3 text-xs uppercase tracking-[0.12em] text-[#e4d19b] transition hover:bg-[#242015]"
+              >
+                Calculate chart
+              </button>
+            </div>
+          </form>
+        </section>
 
         {error ? (
           <section className="mt-8 rounded-2xl border border-[#5a3434] bg-[#211416] p-6">
@@ -190,6 +239,34 @@ export default async function Home() {
         </section>
       </div>
     </main>
+  );
+}
+
+function Field({
+  label,
+  name,
+  type = "text",
+  defaultValue,
+}: {
+  label: string;
+  name: string;
+  type?: string;
+  defaultValue?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
+        {label}
+      </span>
+      <input
+        required
+        name={name}
+        type={type}
+        defaultValue={defaultValue}
+        step={type === "number" ? "any" : undefined}
+        className="w-full rounded-lg border border-[#343a43] bg-[#0d1014] px-3 py-3 text-sm text-[#d4cfc4] outline-none transition focus:border-[#8f7740]"
+      />
+    </label>
   );
 }
 
