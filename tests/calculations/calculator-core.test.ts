@@ -60,6 +60,9 @@ Deno.test("handles asc2 singular trigonometric branches", () => {
   const negativeNinety = asc2(270, 0, 0, 1);
   if (!Number.isFinite(negativeNinety)) throw new Error("Expected finite negative ninety result");
 
+  const negativeTiny = asc2(180, 0, 0, 1);
+  if (!Number.isFinite(negativeTiny)) throw new Error("Expected finite negative tiny result");
+
   const zeroDenominator = asc2(90, 90, 1, 0);
   if (!Number.isFinite(zeroDenominator)) throw new Error("Expected finite zero-denominator result");
 });
