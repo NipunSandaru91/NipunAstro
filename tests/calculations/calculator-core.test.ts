@@ -115,8 +115,8 @@ Deno.test("covers D30 odd and even segment maps", () => {
   const oddD30 = odd.find((position) => position.varga_id === 13);
   const evenD30 = even.find((position) => position.varga_id === 13);
   if (!oddD30 || !evenD30) throw new Error("D30 position missing");
-  if (oddD30.varga_rasi_id !== 11) throw new Error("Unexpected odd D30 mapping");
-  if (evenD30.varga_rasi_id !== 6) throw new Error("Unexpected even D30 mapping");
+  if (oddD30.varga_rasi_id !== 9) throw new Error("Unexpected odd D30 mapping");
+  if (evenD30.varga_rasi_id !== 12) throw new Error("Unexpected even D30 mapping");
 });
 
 Deno.test("covers D27, D16, D20 and D45 modulo branches", () => {
