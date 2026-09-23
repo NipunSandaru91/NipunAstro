@@ -59,25 +59,42 @@ export async function createCalculation(formData: FormData) {
     redirect("/login?error=session_expired");
   }
 
-  const { error: engineError } = await supabase.functions.invoke(
-    "jyotisha-calculator",
-    {
-      body: {
-        mode: "natal",
-        calculation_id: calculationId,
-      },
+  const functionUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL +
+    "/functions/v1/jyotisha-calculator";
+  const functionKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  let engineError: string | null = null;
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST",
       headers: {
+        "Content-Type": "application/json",
+        apikey: functionKey ?? "",
         Authorization: "Bearer " + session.access_token,
       },
-    },
-  );
+      body: JSON.stringify({
+        mode: "natal",
+        calculation_id: calculationId,
+      }),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const detail = await response.text();
+      engineError = detail || `ENGINE_HTTP_${response.status}`;
+    }
+  } catch (error) {
+    engineError = error instanceof Error ? error.message : String(error);
+  }
 
   if (engineError) {
     redirect(
       "/calculations/" +
         calculationId +
         "?error=" +
-        encodeURIComponent(engineError.message),
+        encodeURIComponent(engineError),
     );
   }
 
