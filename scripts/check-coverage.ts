@@ -14,7 +14,7 @@ if (!output.success) {
   Deno.exit(1);
 }
 
-const measurements = [...stdout.matchAll(/cover .*? (\d+(?:\.\d+)?)%/g)].map(
+const cleanOutput = stdout.replace(/\\x1B\\[[0-?]*[ -\\/]*[@-~]/g, "");\nconst measurements = [...cleanOutput.matchAll(/cover .*? (\\d+(?:\\.\\d+)?)%/g)].map(
   (match) => Number(match[1]),
 );
 
