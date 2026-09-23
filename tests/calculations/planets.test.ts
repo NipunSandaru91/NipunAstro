@@ -18,6 +18,14 @@ Deno.test("maps Rahu and Ketu as opposite nodes with opposite speed", () => {
   if (ketu.latitude !== -2 || ketu.longitudeSpeed !== 0.05 || ketu.retrograde) throw new Error("Ketu transformation mismatch");
 });
 
+Deno.test("covers default speed and missing node latitude branches", () => {
+  const graha = mapGraha("SURYA", 1, { longitude: 12 });
+  if (graha.retrograde) throw new Error("Default speed should not be retrograde");
+  const [rahu, ketu] = mapNodes({ longitude: 10 });
+  if (rahu.graha_id !== 8 || ketu.graha_id !== 9) throw new Error("Node ids mismatch");
+  if (ketu.latitude !== undefined || ketu.longitudeSpeed !== 0 || ketu.retrograde) throw new Error("Missing latitude/speed mapping mismatch");
+});
+
 Deno.test("rejects invalid graha longitude", () => {
   try { mapGraha("SURYA", 1, { longitude: Number.NaN }); throw new Error("Expected rejection"); }
   catch (e) { if (!(e instanceof Error) || !e.message.includes("missing longitude")) throw e; }
