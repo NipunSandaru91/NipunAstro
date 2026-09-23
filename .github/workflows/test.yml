@@ -18,10 +18,5 @@ jobs:
           deno-version: v2.x
 
       - name: Run tests with coverage
-        run: deno test --allow-env --coverage=coverage tests
+        run: deno test --clean --allow-env --coverage=coverage --coverage-threshold=100 tests
 
-      - name: Diagnose branch coverage
-        run: deno coverage --lcov --output=/tmp/coverage.lcov coverage && grep -E '^(SF:|BRDA:|BRF:|BRH:)' /tmp/coverage.lcov
-
-      - name: Enforce 100% line coverage
-        run: deno run --allow-read --allow-run scripts/check-coverage.ts coverage
