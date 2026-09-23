@@ -2,6 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import {
+  parseCoordinate,
+  validateCalculationInput,
+} from "@/lib/calculations/validation";
 
 export async function createCalculation(formData: FormData) {
   const supabase = await createClient();
@@ -14,15 +18,18 @@ export async function createCalculation(formData: FormData) {
   const placeName = String(formData.get("place_name") ?? "").trim();
   const country = String(formData.get("country") ?? "").trim();
 
-  if (!birthDate || !birthTime || !timezone || !latitude || !longitude) {
-    redirect("/?error=missing_birth_data");
-  }
+  const lat = parseCoordinate(latitude);
+  const lon = parseCoordinate(longitude);
+  const validation = validateCalculationInput({
+    birthDate,
+    birthTime,
+    timezone,
+    latitude: lat,
+    longitude: lon,
+  });
 
-  const lat = Number(latitude);
-  const lon = Number(longitude);
-
-  if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
-    redirect("/?error=invalid_coordinates");
+  if (!validation.ok) {
+    redirect("/?error=" + validation.error);
   }
 
   const { data: calculationId, error: createError } =
