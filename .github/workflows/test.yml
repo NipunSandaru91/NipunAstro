@@ -1,0 +1,22 @@
+name: Test and Coverage
+
+on:
+  push:
+    branches: [main, "refactor/**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Run tests with coverage
+        run: deno test --clean --allow-env --coverage=coverage --coverage-threshold=100 tests
+
