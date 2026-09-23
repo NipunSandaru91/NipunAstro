@@ -20,5 +20,8 @@ jobs:
       - name: Run tests with coverage
         run: deno test --allow-env --coverage=coverage tests
 
+      - name: Diagnose branch coverage
+        run: deno coverage --lcov coverage | awk '/SF:.*(math|vargas)\\.ts/,/end_of_record/'
+
       - name: Enforce 100% line coverage
         run: deno run --allow-read --allow-run scripts/check-coverage.ts coverage
