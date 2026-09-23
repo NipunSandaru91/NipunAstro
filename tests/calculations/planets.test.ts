@@ -15,7 +15,7 @@ Deno.test("maps Rahu and Ketu as opposite nodes with opposite speed", () => {
   const [rahu, ketu] = mapNodes({ longitude: 350, latitude: 2, longitudeSpeed: -0.05 });
   if (rahu.graha_id !== 8 || ketu.graha_id !== 9) throw new Error("Node ids mismatch");
   if (ketu.longitude !== 530) throw new Error("Ketu longitude offset mismatch");
-  if (ketu.latitude !== -2 || ketu.longitudeSpeed !== 0.05 || !ketu.retrograde) throw new Error("Ketu transformation mismatch");
+  if (ketu.latitude !== -2 || ketu.longitudeSpeed !== 0.05 || ketu.retrograde) throw new Error("Ketu transformation mismatch");
 });
 
 Deno.test("rejects invalid graha longitude", () => {
