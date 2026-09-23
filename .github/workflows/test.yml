@@ -21,7 +21,7 @@ jobs:
         run: deno test --allow-env --coverage=coverage tests
 
       - name: Diagnose branch coverage
-        run: deno coverage --lcov coverage | awk '/SF:.*(math|vargas)\\.ts/,/end_of_record/'
+        run: deno coverage --lcov --output=/tmp/coverage.lcov coverage && grep -E '^(SF:|BRDA:|BRF:|BRH:)' /tmp/coverage.lcov
 
       - name: Enforce 100% line coverage
         run: deno run --allow-read --allow-run scripts/check-coverage.ts coverage
