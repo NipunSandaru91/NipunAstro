@@ -54,6 +54,12 @@ Deno.test("handles asc2 singular trigonometric branches", () => {
   const zeroSine = asc2(0, 10, 0, 1);
   if (!Number.isFinite(zeroSine)) throw new Error("Expected finite zero-sine result");
 
+  const positiveNinety = asc2(90, 0, 0, 1);
+  if (!Number.isFinite(positiveNinety)) throw new Error("Expected finite positive ninety result");
+
+  const negativeNinety = asc2(270, 0, 0, 1);
+  if (!Number.isFinite(negativeNinety)) throw new Error("Expected finite negative ninety result");
+
   const zeroDenominator = asc2(90, 90, 1, 0);
   if (!Number.isFinite(zeroDenominator)) throw new Error("Expected finite zero-denominator result");
 });
