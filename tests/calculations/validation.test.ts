@@ -76,9 +76,4 @@ Deno.test("parses a numeric coordinate from FormData", () => {
   }
 });
 
-Deno.test("parses empty FormData values as NaN", () => {
-  const form = new FormData();
-  if (!Number.isNaN(parseCoordinate(form.get("missing")))) {
-    throw new Error("Expected NaN for missing coordinate");
-  }
-});
+Deno.test("parses an absent coordinate as zero, matching Number conversion semantics", () => {\n  const form = new FormData();\n  if (parseCoordinate(form.get("missing")) !== 0) {\n    throw new Error("Expected zero for missing coordinate");\n  }\n});\n
