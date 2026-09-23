@@ -40,6 +40,41 @@ const GOLDEN = {
     RAHU: 270.3452264390,
     KETU: 90.3452264390,
   },
+  retrograde: {
+    SURYA: false,
+    CHANDRA: false,
+    MANGALA: false,
+    BUDHA: true,
+    SHUKRA: false,
+    GURU: false,
+    SHANI: false,
+    RAHU: true,
+    KETU: false,
+  },
+  nakshatra: {
+    LAGNA: 8,
+    SURYA: 26,
+    CHANDRA: 18,
+    MANGALA: 5,
+    BUDHA: 0,
+    SHUKRA: 2,
+    GURU: 7,
+    SHANI: 21,
+    RAHU: 20,
+    KETU: 6,
+  },
+  pada: {
+    LAGNA: 2,
+    SURYA: 2,
+    CHANDRA: 4,
+    MANGALA: 1,
+    BUDHA: 2,
+    SHUKRA: 1,
+    GURU: 2,
+    SHANI: 1,
+    RAHU: 2,
+    KETU: 4,
+  },
 } as const;
 
 function assertClose(actual: number, expected: number, tolerance = 1e-6) {
@@ -58,11 +93,19 @@ function julianDayUtc(
   minute: number,
 ) {
   const d = new Date(Date.UTC(year, month - 1, day, hour, minute));
-  const h =
+  return (
     d.getUTCHours() +
     d.getUTCMinutes() / 60 +
-    d.getUTCSeconds() / 3600;
-  return h;
+    d.getUTCSeconds() / 3600
+  );
+}
+
+function nakshatraIndex(longitude: number) {
+  return Math.floor(norm(longitude) / (360 / 27));
+}
+
+function pada(longitude: number) {
+  return Math.floor((norm(longitude) % (360 / 27)) / (360 / 108)) + 1;
 }
 
 Deno.test("Golden Chart: Lahiri sidereal D1 regression", async () => {
@@ -102,9 +145,19 @@ Deno.test("Golden Chart: Lahiri sidereal D1 regression", async () => {
 
   assertClose(asc, GOLDEN.lagna);
 
-  const flags = SE.MOSEPH | SE.SIDEREAL | SE.SPEED;
+  if (rasi(asc).number !== 4) {
+    throw new Error("Golden Chart: Lagna must be Cancer");
+  }
+  if (nakshatraIndex(asc) !== GOLDEN.nakshatra.LAGNA) {
+    throw new Error("Golden Chart: Lagna Nakshatra mismatch");
+  }
+  if (pada(asc) !== GOLDEN.pada.LAGNA) {
+    throw new Error("Golden Chart: Lagna Pada mismatch");
+  }
 
+  const flags = SE.MOSEPH | SE.SIDEREAL | SE.SPEED;
   const calculated: Record<string, number> = {};
+  const retrograde: Record<string, boolean> = {};
 
   for (const [code, body] of NATAL_BODIES) {
     const result: any = se.swe_calc_ut(jd, body, flags);
@@ -112,12 +165,18 @@ Deno.test("Golden Chart: Lahiri sidereal D1 regression", async () => {
     const longitude = Number.isFinite(result?.longitude)
       ? result.longitude
       : values?.[0];
+    const speed = Number.isFinite(result?.longitudeSpeed)
+      ? result.longitudeSpeed
+      : Number.isFinite(result?.longitude_speed)
+      ? result.longitude_speed
+      : values?.[3];
 
-    if (!Number.isFinite(longitude)) {
-      throw new Error(`Golden Chart: ${code} longitude missing`);
+    if (!Number.isFinite(longitude) || !Number.isFinite(speed)) {
+      throw new Error(`Golden Chart: ${code} result incomplete`);
     }
 
     calculated[code] = norm(longitude);
+    retrograde[code] = speed < 0;
   }
 
   const node: any = se.swe_calc_ut(jd, SE.MEAN_NODE, flags);
@@ -125,20 +184,31 @@ Deno.test("Golden Chart: Lahiri sidereal D1 regression", async () => {
   const rahu = norm(
     Number.isFinite(node?.longitude) ? node.longitude : nodeValues?.[0],
   );
+  const rahuSpeed = Number.isFinite(node?.longitudeSpeed)
+    ? node.longitudeSpeed
+    : Number.isFinite(node?.longitude_speed)
+    ? node.longitude_speed
+    : nodeValues?.[3];
 
-  if (!Number.isFinite(rahu)) {
-    throw new Error("Golden Chart: Rahu longitude missing");
+  if (!Number.isFinite(rahu) || !Number.isFinite(rahuSpeed)) {
+    throw new Error("Golden Chart: Rahu result incomplete");
   }
 
   calculated.RAHU = rahu;
   calculated.KETU = norm(rahu + 180);
+  retrograde.RAHU = rahuSpeed < 0;
+  retrograde.KETU = rahuSpeed > 0;
 
   for (const [code, expected] of Object.entries(GOLDEN.grahas)) {
     assertClose(calculated[code], expected);
   }
 
-  if (rasi(asc).number !== 4) {
-    throw new Error("Golden Chart: Lagna must be Cancer");
+  for (const [code, expected] of Object.entries(GOLDEN.retrograde)) {
+    if (retrograde[code] !== expected) {
+      throw new Error(
+        `Golden Chart: ${code} retrograde expected ${expected}, got ${retrograde[code]}`,
+      );
+    }
   }
 
   const expectedRasis = {
@@ -157,6 +227,28 @@ Deno.test("Golden Chart: Lahiri sidereal D1 regression", async () => {
     if (rasi(calculated[code]).number !== expectedRasi) {
       throw new Error(
         `Golden Chart: ${code} expected Rashi ${expectedRasi}, got ${rasi(calculated[code]).number}`,
+      );
+    }
+  }
+
+  for (const [code, expected] of Object.entries(GOLDEN.nakshatra)) {
+    const actual = code === "LAGNA"
+      ? nakshatraIndex(asc)
+      : nakshatraIndex(calculated[code]);
+    if (actual !== expected) {
+      throw new Error(
+        `Golden Chart: ${code} Nakshatra expected ${expected}, got ${actual}`,
+      );
+    }
+  }
+
+  for (const [code, expected] of Object.entries(GOLDEN.pada)) {
+    const actual = code === "LAGNA"
+      ? pada(asc)
+      : pada(calculated[code]);
+    if (actual !== expected) {
+      throw new Error(
+        `Golden Chart: ${code} Pada expected ${expected}, got ${actual}`,
       );
     }
   }
