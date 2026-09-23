@@ -150,7 +150,7 @@ export function allVargaPositions(longitude: number): VargaPosition[] {
     source_rasi_id: sourceRasi,
     division_index: d60Index,
     varga_rasi_id: d60VargaRasi,
-    varga_degree: Math.abs(d60Degree - 30) < 1e-9 ? 0 : d60Degree,
+    varga_degree: d60Degree,
     rule_version,
   });
 
