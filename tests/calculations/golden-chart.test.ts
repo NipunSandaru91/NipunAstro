@@ -169,6 +169,10 @@ Deno.test("Golden Chart: Lahiri sidereal D1 regression", async () => {
       ? result.longitudeSpeed
       : Number.isFinite(result?.longitude_speed)
       ? result.longitude_speed
+      : Number.isFinite(result?.speed_long)
+      ? result.speed_long
+      : Number.isFinite(result?.speed_longitude)
+      ? result.speed_longitude
       : values?.[3];
 
     if (!Number.isFinite(longitude) || !Number.isFinite(speed)) {
@@ -188,6 +192,10 @@ Deno.test("Golden Chart: Lahiri sidereal D1 regression", async () => {
     ? node.longitudeSpeed
     : Number.isFinite(node?.longitude_speed)
     ? node.longitude_speed
+    : Number.isFinite(node?.speed_long)
+    ? node.speed_long
+    : Number.isFinite(node?.speed_longitude)
+    ? node.speed_longitude
     : nodeValues?.[3];
 
   if (!Number.isFinite(rahu) || !Number.isFinite(rahuSpeed)) {
