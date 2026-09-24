@@ -10,6 +10,7 @@ type ChartData = {
   calculation?: Record<string, unknown>;
   lagna?: Record<string, unknown> | null;
   grahas?: Array<Record<string, unknown>>;
+  shadbala?: Array<Record<string, unknown>>;
 };
 
 function textValue(value: unknown, fallback = "—") {
@@ -94,6 +95,7 @@ export default async function CalculationPage({
   const calculation = chart.calculation ?? {};
   const lagna = chart.lagna ?? null;
   const grahas = Array.isArray(chart.grahas) ? chart.grahas : [];
+  const shadbala = Array.isArray(chart.shadbala) ? chart.shadbala : [];
   const lagnaRasiId = Number(pick(lagna, "rasi_id"));
 
   return (
@@ -255,6 +257,59 @@ export default async function CalculationPage({
               </tbody>
             </table>
           </div>
+        </section>
+
+        <section className="panel mt-5 rounded-2xl p-7">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="eyebrow">Ṣaḍbala · ග්‍රහ බල</p>
+              <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+                ෂඩ්බලය
+              </h2>
+            </div>
+            <p className="text-xs text-[#676d76]">ග්‍රහ 7 · Virupa / Rupa</p>
+          </div>
+
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full min-w-[860px] text-left text-sm">
+              <thead className="border-b border-[#343a43] text-[10px] uppercase tracking-[0.12em] text-[#676d76]">
+                <tr>
+                  <th className="px-3 py-3 font-medium">ග්‍රහයා</th>
+                  <th className="px-3 py-3 font-medium">ස්ථාන බල</th>
+                  <th className="px-3 py-3 font-medium">දිග් බල</th>
+                  <th className="px-3 py-3 font-medium">කාල බල</th>
+                  <th className="px-3 py-3 font-medium">චේෂ්ටා බල</th>
+                  <th className="px-3 py-3 font-medium">නෛසර්ගික බල</th>
+                  <th className="px-3 py-3 font-medium">දෘක් බල</th>
+                  <th className="px-3 py-3 font-medium">මුළු බල (Rupa)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shadbala.map((row, index) => {
+                  const graha = grahas.find(
+                    (item) => Number(pick(item, "graha_id")) === Number(pick(row, "graha_id")),
+                  );
+                  return (
+                    <tr key={String(pick(row, "graha_id") ?? index)} className="border-b border-[#252a31] last:border-0">
+                      <td className="px-3 py-4 text-[#eee9de]">
+                        {textValue(graha ? grahaSinhala(graha) : pick(row, "graha_id"))}
+                      </td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "sthana_bala"))}</td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "dig_bala"))}</td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "kala_bala"))}</td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "cheshta_bala"))}</td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "naisargika_bala"))}</td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "drik_bala"))}</td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "total_bala"))}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-4 text-xs leading-6 text-[#676d76]">
+            ගණනය කිරීමේ ඒකකය Virupa වන අතර 60 Virupa = 1 Rupa. දෘක් බලයට සෘණ අගයක් ලැබිය හැක.
+          </p>
         </section>
 
         <footer className="mt-6 border-t border-[#282d35] pt-5 text-xs leading-6 text-[#676d76]">
