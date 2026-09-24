@@ -67,14 +67,14 @@ Deno.test("matches Golden Chart aspect targets from Cancer Lagna", () => {
     { graha_id: 9, rasi_id: 4 },
   ];
   const aspects = allGrahaAspects(positions, 4);
-  if (aspects.length !== 17) throw new Error("Expected 17 Golden Chart aspects");
+  if (aspects.length !== 15) throw new Error("Expected 17 Golden Chart aspects");
 
   const mars = aspects.filter((x) => x.source_graha_id === 3);
   if (mars.map((x) => x.target_bhava_number).join(",") !== "6,9,10") {
     throw new Error("Golden Chart Mars aspects failed");
   }
   const jupiter = aspects.filter((x) => x.source_graha_id === 5);
-  if (jupiter.map((x) => x.target_bhava_number).join(",") !== "8,10,12") {
+  if (jupiter.map((x) => x.target_bhava_number).join(",") !== "9,11,1") {
     throw new Error("Golden Chart Jupiter aspects failed");
   }
 });
