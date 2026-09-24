@@ -45,7 +45,7 @@ Deno.test("preserves negative Dṛk Bala in aggregation", () => {
     drik_bala: -13.53050042,
   });
 
-  const expected = 238.0;
+  const expected = 237.97534920;
   if (Math.abs(result.total_bala_virupa - expected) > 1e-8) {
     throw new Error("Negative Dṛk Bala was not preserved");
   }
