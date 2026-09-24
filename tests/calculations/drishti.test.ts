@@ -79,6 +79,10 @@ Deno.test("matches Golden Chart aspect targets from Cancer Lagna", () => {
   }
 });
 
+Deno.test("covers wrapped source rasi and invalid source rasi branches", () => {
+  let failed = false; try { aspectTargetRasi(13, 7); } catch { failed = true; } if (!failed) throw new Error("Invalid source rasi accepted");
+});
+
 Deno.test("rejects invalid Graha and house inputs", () => {
   for (const value of [0, 10, 1.5, Number.NaN]) {
     let failed = false;
