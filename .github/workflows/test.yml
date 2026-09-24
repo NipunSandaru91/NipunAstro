@@ -5,6 +5,9 @@ on:
     branches: [main, "refactor/**"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -19,4 +22,3 @@ jobs:
 
       - name: Run tests with coverage
         run: deno test --clean --allow-env --coverage=coverage --coverage-threshold=100 tests
-
