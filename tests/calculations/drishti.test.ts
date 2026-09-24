@@ -83,6 +83,28 @@ Deno.test("covers wrapped source rasi and invalid source rasi branches", () => {
   let failed = false; try { aspectTargetRasi(13, 7); } catch { failed = true; } if (!failed) throw new Error("Invalid source rasi accepted");
 });
 
+Deno.test("covers Graha Drishti validation branches", () => {
+  for (const value of [0, 13, 1.5, Number.NaN]) {
+    let failed = false;
+    try { grahaAspects(1, value, 4); } catch { failed = true; }
+    if (!failed) throw new Error("Invalid source rasi accepted by grahaAspects");
+  }
+
+  for (const value of [0, 13, 1.5, Number.NaN]) {
+    let failed = false;
+    try { grahaAspects(1, 4, value); } catch { failed = true; }
+    if (!failed) throw new Error("Invalid lagna rasi accepted");
+  }
+
+  let failed = false;
+  try { grahaAspectOffsets(1.5); } catch { failed = true; }
+  if (!failed) throw new Error("Non-integer graha accepted");
+
+  failed = false;
+  try { aspectTargetRasi(4, 1.5); } catch { failed = true; }
+  if (!failed) throw new Error("Non-integer house offset accepted");
+});
+
 Deno.test("rejects invalid Graha and house inputs", () => {
   for (const value of [0, 10, 1.5, Number.NaN]) {
     let failed = false;
