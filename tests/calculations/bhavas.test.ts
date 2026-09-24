@@ -58,6 +58,22 @@ Deno.test("maps bhava to rasi and lord", () => {
   }
 });
 
+Deno.test("matches Golden Chart Cancer Lagna house structure", () => {
+  const bhavas = allBhavas(4);
+  const expectedLords = [2, 1, 4, 6, 3, 5, 7, 7, 5, 3, 6, 4];
+  const actualLords = bhavas.map((item) => item.lord_graha_id);
+  if (actualLords.join(",") !== expectedLords.join(",")) {
+    throw new Error("Golden Chart bhava lord mapping failed");
+  }
+  const occupied = new Map<number, number>();
+  for (const [rasiId, grahaId] of [[4,5],[4,9],[9,2],[10,7],[10,8],[1,1],[1,6],[3,4]] as const) {
+    occupied.set(grahaId, houseFromRasi(4, rasiId));
+  }
+  if (occupied.get(5) !== 1 || occupied.get(9) !== 1 || occupied.get(2) !== 6 || occupied.get(7) !== 7 || occupied.get(8) !== 7 || occupied.get(1) !== 9 || occupied.get(6) !== 10 || occupied.get(4) !== 12) {
+    throw new Error("Golden Chart graha-to-bhava mapping failed");
+  }
+});
+
 Deno.test("rejects invalid rasi and bhava inputs", () => {
   for (const value of [0, 13, 1.5, Number.NaN]) {
     let failed = false;
