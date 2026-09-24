@@ -94,6 +94,7 @@ export default async function CalculationPage({
   const calculation = chart.calculation ?? {};
   const lagna = chart.lagna ?? null;
   const grahas = Array.isArray(chart.grahas) ? chart.grahas : [];
+  const lagnaRasiId = Number(pick(lagna, "rasi_id"));
 
   return (
     <main className="min-h-screen px-5 py-10 sm:px-8">
@@ -139,62 +140,17 @@ export default async function CalculationPage({
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <DataItem label="ගණනය කිරීමේ ID" value={id} />
-              <DataItem
-                label="තත්ත්වය"
-                value={textValue(pick(calculation, "status"))}
-              />
-              <DataItem
-                label="උපන් දිනය"
-                value={textValue(
-                  pick(calculation, "input_birth_date", "birth_date"),
-                )}
-              />
-              <DataItem
-                label="උපන් වේලාව"
-                value={textValue(
-                  pick(calculation, "input_birth_time", "birth_time"),
-                )}
-              />
-              <DataItem
-                label="වේලා කලාපය"
-                value={textValue(
-                  pick(calculation, "input_timezone", "timezone"),
-                )}
-              />
-              <DataItem
-                label="ස්ථානය"
-                value={textValue(
-                  pick(calculation, "input_place_name", "place_name"),
-                )}
-              />
-              <DataItem
-                label="රට"
-                value={textValue(pick(calculation, "input_country", "country"))}
-              />
-              <DataItem
-                label="අයනාංශය"
-                value={textValue(pick(calculation, "ayanamsa"))}
-              />
-              <DataItem
-                label="රාශි චක්‍රය"
-                value={textValue(
-                  pick(calculation, "zodiac_type", "zodiac"),
-                )}
-              />
-              <DataItem
-                label="භාව ක්‍රමය"
-                value={textValue(pick(calculation, "house_system"))}
-              />
-              <DataItem
-                label="නෝඩ් ක්‍රමය"
-                value={textValue(pick(calculation, "node_method"))}
-              />
-              <DataItem
-                label="එන්ජිම"
-                value={textValue(
-                  pick(calculation, "engine_version", "engine"),
-                )}
-              />
+              <DataItem label="තත්ත්වය" value={textValue(pick(calculation, "status"))} />
+              <DataItem label="උපන් දිනය" value={textValue(pick(calculation, "input_birth_date", "birth_date"))} />
+              <DataItem label="උපන් වේලාව" value={textValue(pick(calculation, "input_birth_time", "birth_time"))} />
+              <DataItem label="වේලා කලාපය" value={textValue(pick(calculation, "input_timezone", "timezone"))} />
+              <DataItem label="ස්ථානය" value={textValue(pick(calculation, "input_place_name", "place_name"))} />
+              <DataItem label="රට" value={textValue(pick(calculation, "input_country", "country"))} />
+              <DataItem label="අයනාංශය" value={textValue(pick(calculation, "ayanamsa"))} />
+              <DataItem label="රාශි චක්‍රය" value={textValue(pick(calculation, "zodiac_type", "zodiac"))} />
+              <DataItem label="භාව ක්‍රමය" value={textValue(pick(calculation, "house_system"))} />
+              <DataItem label="නෝඩ් ක්‍රමය" value={textValue(pick(calculation, "node_method"))} />
+              <DataItem label="එන්ජිම" value={textValue(pick(calculation, "engine_version", "engine"))} />
             </div>
           </div>
 
@@ -208,19 +164,17 @@ export default async function CalculationPage({
               <DataItem
                 label="අංශක"
                 value={textValue(
-                  pick(lagna, "longitude", "degree", "absolute_longitude"),
+                  pick(lagna, "degree_in_rasi", "degree", "longitude_in_rasi"),
                 )}
               />
               <DataItem
                 label="නැකත"
                 value={textValue(
-                  nakshatraSinhala(pick(lagna, "longitude", "longitude_sidereal")) ?? pick(lagna, "nakshatra", "nakshatra_name"),
+                  nakshatraSinhala(pick(lagna, "longitude_sidereal", "longitude")) ??
+                    pick(lagna, "nakshatra", "nakshatra_name"),
                 )}
               />
-              <DataItem
-                label="පාදය"
-                value={textValue(pick(lagna, "pada"))}
-              />
+              <DataItem label="පාදය" value={textValue(pick(lagna, "pada"))} />
             </div>
           </div>
         </section>
@@ -233,16 +187,15 @@ export default async function CalculationPage({
                 නිරයණ ග්‍රහ පිහිටීම්
               </h2>
             </div>
-            <p className="text-xs text-[#676d76]">
-              {grahas.length} ග්‍රහ වාර්තා
-            </p>
+            <p className="text-xs text-[#676d76]">{grahas.length} ග්‍රහ වාර්තා</p>
           </div>
 
           <div className="mt-6 overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="border-b border-[#343a43] text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
                 <tr>
-                  <th className="px-3 py-3 font-medium">භාවය</th>\n                  <th className="px-3 py-3 font-medium">ග්‍රහයා</th>
+                  <th className="px-3 py-3 font-medium">භාවය</th>
+                  <th className="px-3 py-3 font-medium">ග්‍රහයා</th>
                   <th className="px-3 py-3 font-medium">රාශිය</th>
                   <th className="px-3 py-3 font-medium">අංශක</th>
                   <th className="px-3 py-3 font-medium">නැකත</th>
@@ -251,48 +204,54 @@ export default async function CalculationPage({
                 </tr>
               </thead>
               <tbody>
-                {grahas.map((graha, index) => (
-                  <tr
-                    key={textValue(
-                      pick(graha, "code", "graha_code", "name"),
-                      String(index),
-                    )}
-                    className="border-b border-[#252a31] last:border-0"
-                  >
-                    <td className="px-3 py-4 text-[#c9c4b9]">
-                      {textValue(
-                        Number(pick(graha, "rasi_id")) === Number(pick(lagna, "rasi_id"))
-                          ? "1"
-                          : String(
-                              ((Number(pick(graha, "rasi_id")) - Number(pick(lagna, "rasi_id")) + 12) % 12) + 1,
-                            ),
+                {grahas.map((graha, index) => {
+                  const grahaRasiId = Number(pick(graha, "rasi_id"));
+                  const bhava =
+                    Number.isInteger(grahaRasiId) && Number.isInteger(lagnaRasiId)
+                      ? ((grahaRasiId - lagnaRasiId + 12) % 12) + 1
+                      : undefined;
+
+                  return (
+                    <tr
+                      key={textValue(
+                        pick(graha, "code", "graha_code", "name"),
+                        String(index),
                       )}
-                    </td>
-                    <td className="px-3 py-4 text-[#eee9de]">
-                      {textValue(grahaSinhala(graha))}
-                    </td>
-                    <td className="px-3 py-4 text-[#c9c4b9]">
-                      {textValue(rashiSinhala(pick(graha, "rasi_id")) ?? pick(graha, "rashi", "sign", "sign_name"))}
-                    </td>
-                    <td className="px-3 py-4 text-[#c9c4b9]">
-                      {textValue(
-                        pick(graha, "longitude", "degree", "absolute_longitude"),
-                      )}
-                    </td>
-                    <td className="px-3 py-4 text-[#c9c4b9]">
-                      {textValue(nakshatraSinhala(pick(graha, "longitude", "longitude_sidereal")) ?? pick(graha, "nakshatra", "nakshatra_name"))}
-                    </td>
-                    <td className="px-3 py-4 text-[#c9c4b9]">
-                      {textValue(pick(graha, "pada"))}
-                    </td>
-                    <td className="px-3 py-4 text-[#c9c4b9]">
-                      {textValue(
-                        pick(graha, "is_retrograde", "retrograde"),
-                        "false",
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                      className="border-b border-[#252a31] last:border-0"
+                    >
+                      <td className="px-3 py-4 text-[#c9c4b9]">
+                        {textValue(bhava)}
+                      </td>
+                      <td className="px-3 py-4 text-[#eee9de]">
+                        {textValue(grahaSinhala(graha))}
+                      </td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">
+                        {textValue(
+                          rashiSinhala(pick(graha, "rasi_id")) ??
+                            pick(graha, "rashi", "sign", "sign_name"),
+                        )}
+                      </td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">
+                        {textValue(
+                          pick(graha, "degree_in_rasi", "degree", "longitude_in_rasi"),
+                        )}
+                      </td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">
+                        {textValue(
+                          nakshatraSinhala(
+                            pick(graha, "longitude_sidereal", "longitude"),
+                          ) ?? pick(graha, "nakshatra", "nakshatra_name"),
+                        )}
+                      </td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">
+                        {textValue(pick(graha, "pada"))}
+                      </td>
+                      <td className="px-3 py-4 text-[#c9c4b9]">
+                        {textValue(pick(graha, "is_retrograde", "retrograde"), "false")}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -311,9 +270,7 @@ export default async function CalculationPage({
 function DataItem({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-[#252a31] p-3">
-      <p className="text-[10px] tracking-[0.14em] text-[#676d76]">
-        {label}
-      </p>
+      <p className="text-[10px] tracking-[0.14em] text-[#676d76]">{label}</p>
       <p className="mt-1 break-words text-xs text-[#c9c4b9]">{value}</p>
     </div>
   );
