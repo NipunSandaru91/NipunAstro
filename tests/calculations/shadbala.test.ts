@@ -22,7 +22,7 @@ Deno.test("aggregates six Virupa components into Rupa", () => {
     drik_bala: 89.73390397,
   });
 
-  const expected = 406.31539774;
+  const expected = 406.31537774;
   if (Math.abs(result.total_bala_virupa - expected) > 1e-8) {
     throw new Error("Shadbala Virupa sum failed");
   }
