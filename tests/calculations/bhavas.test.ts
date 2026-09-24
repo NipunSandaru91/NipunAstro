@@ -66,7 +66,7 @@ Deno.test("matches Golden Chart Cancer Lagna house structure", () => {
     throw new Error("Golden Chart bhava lord mapping failed");
   }
   const occupied = new Map<number, number>();
-  for (const [rasiId, grahaId] of [[4,5],[4,9],[9,2],[10,7],[10,8],[1,1],[1,6],[3,4]] as const) {
+  for (const [rasiId, grahaId] of [[4,5],[4,9],[9,2],[10,7],[10,8],[12,1],[1,6],[3,4]] as const) {
     occupied.set(grahaId, houseFromRasi(4, rasiId));
   }
   if (occupied.get(5) !== 1 || occupied.get(9) !== 1 || occupied.get(2) !== 6 || occupied.get(7) !== 7 || occupied.get(8) !== 7 || occupied.get(1) !== 9 || occupied.get(6) !== 10 || occupied.get(4) !== 12) {
