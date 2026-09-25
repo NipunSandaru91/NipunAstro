@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createCalculation } from "@/app/calculations/actions";
 import LocationSelector from "@/app/components/location-selector";
+import CalculationSubmit from "@/app/components/calculation-submit";
 
 export default function NewChartPage() {
   return (
@@ -64,12 +65,7 @@ export default function NewChartPage() {
               <LocationSelector />
             </div>
 
-            <button
-              type="submit"
-              className="w-full rounded-2xl border border-[#e0b65b] bg-[#e0b65b] px-4 py-3.5 text-sm font-semibold text-[#15130e] shadow-lg transition hover:brightness-110"
-            >
-              Next
-            </button>
+            <CalculationSubmit />
           </form>
         </section>
 
