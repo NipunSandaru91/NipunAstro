@@ -206,6 +206,8 @@ export default function LocationSelector({
       ) : null}
     </div>
   );
+}
+
 function normalizeLocationText(value: string) {
   return value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
 }
