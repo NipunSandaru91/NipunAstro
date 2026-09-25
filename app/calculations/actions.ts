@@ -11,10 +11,16 @@ export async function createCalculation(formData: FormData) {
   const birthDate = String(formData.get("birth_date") ?? "");
   const birthTime = String(formData.get("birth_time") ?? "");
   const placeName = String(formData.get("place_name") ?? "").trim();
+  const birthCountry = String(formData.get("birth_country") ?? "").trim();
+  const birthState = String(formData.get("birth_state") ?? "").trim();
+
+  const resolvedQuery = [placeName, birthState, birthCountry]
+    .filter(Boolean)
+    .join(", ");
 
   let resolvedPlace;
   try {
-    resolvedPlace = await resolveBirthPlace(placeName);
+    resolvedPlace = await resolveBirthPlace(resolvedQuery || placeName);
   } catch (error) {
     redirect(
       "/?error=" +
