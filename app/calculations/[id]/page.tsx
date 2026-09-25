@@ -93,7 +93,15 @@ export default async function CalculationPage({
     throw new Error(error.message);
   }
 
-  const chart = data as ChartData;
+  const { data: yogaData } = await supabase.rpc(
+    "get_user_calculation_yoga_v1",
+    { p_calculation_id: id },
+  );
+
+  const chart = {
+    ...(data as ChartData),
+    yoga_evaluations: Array.isArray(yogaData) ? yogaData : [],
+  } as ChartData & { yoga_evaluations: Array<Record<string, unknown>> };
   const calculation = chart.calculation ?? {};
   const lagna = chart.lagna ?? null;
   const grahas = Array.isArray(chart.grahas) ? chart.grahas : [];
