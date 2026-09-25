@@ -32,11 +32,15 @@ export async function GET(request: NextRequest) {
 
   try {
     if (level === "country") {
-      const payload = await readJson<Country[]>(`${API}/countries`);
+      const payload = await readJson<Country[]>(`${API}/countries/flag/unicode`);
       const countries = (payload.data ?? [])
         .map((item) => item.name?.trim())
         .filter((name): name is string => Boolean(name))
         .sort((a, b) => a.localeCompare(b));
+
+      if (countries.length === 0) {
+        throw new Error("location_country_list_empty");
+      }
 
       return NextResponse.json({ countries });
     }
