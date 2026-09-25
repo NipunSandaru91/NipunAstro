@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AppNav from "@/app/components/app-nav";
 import { createClient } from "@/lib/supabase/server";
 
 type Calculation = {
@@ -41,34 +42,15 @@ export default async function Home({
   const ownedCalculations = (calculations ?? []) as Calculation[];
 
   return (
-    <main className="min-h-screen px-5 py-10 sm:px-8">
+    <>
+      <AppNav active="dashboard" />
+      <main className="min-h-screen px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-6xl">
-        <header className="flex flex-col gap-5 border-b border-[#282d35] pb-7 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="eyebrow">NipunAstro · Jyotiṣa Observatory</p>
-
-            <h1 className="serif mt-3 text-4xl tracking-tight text-[#eee9de]">
-              Observatory
-            </h1>
-
-            <p className="mt-3 text-sm text-[var(--muted)]">
-              Calculation-first Jyotiṣa analysis.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <p className="text-xs text-[#777d86]">{email}</p>
-
-            <form action="/auth/signout" method="post">
-              <button
-                type="submit"
-                className="rounded-lg border border-[#343a43] px-3 py-2 text-xs text-[#bdb8ad] transition hover:border-[#8f7740] hover:text-[#eee9de]"
-              >
-                Sign out
-              </button>
-            </form>
-          </div>
-        </header>
+        <section className="border-b border-[#282d35] pb-7">
+          <p className="eyebrow">Screen 2 · Observatory</p>
+          <h1 className="serif mt-3 text-4xl tracking-tight text-[#eee9de]">Observatory</h1>
+          <p className="mt-3 text-sm text-[var(--muted)]">Calculation-first Jyotiṣa analysis.</p>
+        </section>
 
         {queryError ? (
           <section className="mt-8 rounded-2xl border border-[#5a3434] bg-[#211416] p-6">
@@ -226,7 +208,8 @@ export default async function Home({
           </div>
         </section>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
 
