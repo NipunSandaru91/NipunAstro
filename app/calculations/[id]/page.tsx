@@ -621,6 +621,89 @@ export default async function CalculationPage({
           </div>
         </section>
 
+
+        <section id="yoga" className="panel mt-5 rounded-2xl p-5 sm:p-7">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="eyebrow">Screen 13 · Yoga</p>
+              <h2 className="serif mt-2 text-2xl text-[#eee9de]">යෝග · Yoga</h2>
+            </div>
+            <p className="text-xs text-[#676d76]">Yoga Engine V1 · Calculation layer</p>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-[#34475b] bg-[#091522] p-4">
+            <p className="text-xs leading-6 text-[#9ca7b3]">
+              මෙහි Yoga formation status එක calculation engine එකෙන් ලැබෙන rule evaluation
+              මත පෙන්වයි. “Formed” යන්න rule conditions සපුරා ඇති බව පමණක් දක්වන අතර
+              එයින් फलादेशයක් හෝ පුද්ගල ජීවිත ප්‍රතිඵලයක් අදහස් නොකරයි.
+            </p>
+          </div>
+
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              ["RUCHAKA", "රුචක යෝගය"],
+              ["BHADRA", "භද්‍ර යෝගය"],
+              ["HAMSA", "හංස යෝගය"],
+              ["MALAVYA", "මාලව්‍ය යෝගය"],
+              ["SASA", "ශශ යෝගය"],
+              ["GAJA_KESARI", "ගජකේසරී යෝගය"],
+              ["KEMADRUMA", "කේමද්‍රුම යෝගය"],
+              ["VIPARITA_HARSA", "විපරීත හර්ෂ යෝගය"],
+              ["VIPARITA_SARALA", "විපරීත සරල යෝගය"],
+              ["VIPARITA_VIMALA", "විපරීත විමල යෝගය"],
+            ].map(([code, name]) => {
+              const yogaRules = (chart as ChartData & { yoga_evaluations?: Array<Record<string, unknown>> }).yoga_evaluations ?? [];
+              const evaluation = yogaRules.find(
+                (row) => String(pick(row, "rule_code", "code")) === code,
+              );
+              const formed = String(pick(evaluation, "formation_status", "status") ?? "").toUpperCase() === "TRUE"
+                || String(pick(evaluation, "formation_status", "status") ?? "").toUpperCase() === "FORMED";
+              return (
+                <article
+                  key={code}
+                  className={formed
+                    ? "rounded-2xl border border-[#8f7740] bg-[#17140e] p-4"
+                    : "rounded-2xl border border-[#34475b] bg-[#091522] p-4"}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.14em] text-[#697787]">{code}</p>
+                      <h3 className="serif mt-1 text-lg text-[#eee9de]">{name}</h3>
+                    </div>
+                    <span className={formed
+                      ? "rounded-full border border-[#8f7740] px-2 py-1 text-[9px] text-[#e0b65b]"
+                      : "rounded-full border border-[#405163] px-2 py-1 text-[9px] text-[#9ba6b2]"}
+                    >
+                      {formed ? "Formed" : "Not formed"}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 border-t border-[#252a31] pt-3">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#697787]">Rule status</p>
+                    <p className="mt-1 text-xs leading-5 text-[#c9c4b9]">
+                      {evaluation
+                        ? textValue(pick(evaluation, "qualification"), formed ? "ALL_FORMATION_CONDITIONS_MET" : "FORMATION_CONDITIONS_NOT_MET")
+                        : "No persisted evaluation in this chart record"}
+                    </p>
+                    {evaluation ? (
+                      <p className="mt-2 text-[10px] text-[#676d76]">
+                        Engine: {textValue(pick(evaluation, "engine_version"), "YOGA_ENGINE_V1")}
+                      </p>
+                    ) : null}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="mt-5 rounded-xl border border-[#252a31] bg-[#0d1014] p-4">
+            <p className="text-xs leading-6 text-[#676d76]">
+              Yoga rules currently exposed by the calculation layer are shown as
+              factual formation checks only. No strength ranking, cancellation
+              interpretation, or prediction is added in this screen.
+            </p>
+          </div>
+        </section>
         <footer className="mt-6 border-t border-[#282d35] pt-5 text-xs leading-6 text-[#676d76]">
           Calculation layer only. Classical interpretation, evidence
           synthesis, modifiers, and prediction output remain downstream
