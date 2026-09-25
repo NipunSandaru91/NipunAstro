@@ -157,26 +157,55 @@ export default async function CalculationPage({
           </div>
 
           <div className="panel rounded-2xl p-7">
-            <p className="eyebrow">ලග්නය</p>
-            <h2 className="serif mt-2 text-3xl text-[#eee9de]">
-              {textValue(rashiSinhala(pick(lagna, "rasi_id")) ?? pick(lagna, "rashi", "sign", "name", "code"))}
-            </h2>
+            <p className="eyebrow">ලග්නය · D1 Ascendant</p>
 
-            <div className="mt-6 space-y-3">
-              <DataItem
-                label="අංශක"
-                value={textValue(
-                  pick(lagna, "degree_in_rasi", "degree", "longitude_in_rasi"),
-                )}
-              />
-              <DataItem
-                label="නැකත"
-                value={textValue(
-                  nakshatraSinhala(pick(lagna, "longitude_sidereal", "longitude")) ??
-                    pick(lagna, "nakshatra", "nakshatra_name"),
-                )}
-              />
-              <DataItem label="පාදය" value={textValue(pick(lagna, "pada"))} />
+            <div className="mt-4 rounded-2xl border border-[#3c3527] bg-[#0d1014] p-5">
+              <div className="flex items-center gap-5">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-[var(--gold)] bg-[#15130e]">
+                  <span className="serif text-2xl text-[var(--gold)]">
+                    {textValue(rashiSinhala(pick(lagna, "rasi_id")) ?? pick(lagna, "rashi", "sign", "name", "code"))}
+                  </span>
+                </div>
+
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-[#676d76]">
+                    Sidereal Lagna
+                  </p>
+                  <h2 className="serif mt-1 text-3xl text-[#eee9de]">
+                    {textValue(rashiSinhala(pick(lagna, "rasi_id")) ?? pick(lagna, "rashi", "sign", "name", "code"))}
+                  </h2>
+                  <p className="mt-1 text-xs text-[#8d929b]">
+                    {textValue(pick(lagna, "degree_in_rasi", "degree", "longitude_in_rasi"))}°
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <DataItem
+                  label="රාශිය"
+                  value={textValue(pick(lagna, "rasi_id"))}
+                />
+                <DataItem
+                  label="නැකත"
+                  value={textValue(
+                    nakshatraSinhala(pick(lagna, "longitude_sidereal", "longitude")) ??
+                      pick(lagna, "nakshatra", "nakshatra_name"),
+                  )}
+                />
+                <DataItem label="පාදය" value={textValue(pick(lagna, "pada"))} />
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-xl border border-[#252a31] bg-[#0d1014] p-4">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-[#676d76]">
+                Sidereal longitude
+              </p>
+              <p className="mt-2 font-mono text-sm text-[#c9c4b9]">
+                {textValue(pick(lagna, "longitude_sidereal", "longitude"))}°
+              </p>
+              <p className="mt-2 text-xs leading-5 text-[#676d76]">
+                Lahiri ayanāṃśa · Whole Sign · Calculation layer only
+              </p>
             </div>
           </div>
         </section>
