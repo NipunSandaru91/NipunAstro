@@ -76,8 +76,8 @@ export function calculateVimshottariBirthState(
   }
   const lon = normalizeLongitude(moonLongitudeSidereal);
   const span = 360 / 27;
-  const nak = Math.floor(lon / span) + 1;
-  const within = lon - (nak - 1) * span;
+  const nak = nakshatraNumber(lon);
+  const within = Math.max(0, lon - (nak - 1) * span);
   const completed = within / span;
   const remaining = 1 - completed;
   const lord = vimshottariLordForNakshatra(nak);
