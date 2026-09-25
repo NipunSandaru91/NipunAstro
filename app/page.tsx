@@ -94,24 +94,42 @@ export default async function Home({
             <span className="text-xs text-[#676d76]">Vedic · Lahiri · Whole Sign</span>
           </div>
 
-          <form action={createCalculation} className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Field label="Birth date" name="birth_date" type="date" defaultValue="1991-04-06" />
-            <Field label="Birth time" name="birth_time" type="time" defaultValue="14:12" />
-            <Field label="Timezone" name="timezone" defaultValue="Asia/Colombo" />
-            <Field label="Place" name="place_name" defaultValue="Colombo" />
-            <Field label="Country" name="country" defaultValue="Sri Lanka" />
-            <Field label="Latitude" name="latitude" defaultValue="6.927079" />
-            <Field label="Longitude" name="longitude" defaultValue="79.861244" />
-            <div className="flex items-end">
+          <form action={createCalculation} className="mt-7 grid gap-4 sm:grid-cols-2">
+            <Field label="Birth date" name="birth_date" type="date" defaultValue="" />
+            <Field label="Birth time" name="birth_time" type="time" defaultValue="" />
+            <div className="sm:col-span-2">
+              <label className="block">
+                <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
+                  Birth place
+                </span>
+                <input
+                  required
+                  name="place_name"
+                  placeholder="Search city / town"
+                  autoComplete="off"
+                  className="w-full rounded-lg border border-[#343a43] bg-[#0d1014] px-3 py-3 text-sm text-[#d4cfc4] outline-none transition focus:border-[#8f7740]"
+                />
+              </label>
+              <p className="mt-2 text-xs leading-5 text-[#676d76]">
+                Beta V1 accepts the place name. Location, country and timezone
+                resolution will be handled by the system.
+              </p>
+            </div>
+
+            <input type="hidden" name="timezone" value="Asia/Colombo" />
+            <input type="hidden" name="country" value="Sri Lanka" />
+            <input type="hidden" name="latitude" value="6.927079" />
+            <input type="hidden" name="longitude" value="79.861244" />
+
+            <div className="sm:col-span-2 pt-2">
               <button
                 type="submit"
-                className="w-full rounded-lg border border-[#8f7740] bg-[#19160f] px-4 py-3 text-xs uppercase tracking-[0.12em] text-[#e4d19b] transition hover:bg-[#242015]"
+                className="w-full rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-4 py-3.5 text-sm font-semibold text-[#15130e] transition hover:brightness-110"
               >
                 Calculate chart
               </button>
             </div>
-          </form>
-        </section>
+          </form>      </section>
 
         {error ? (
           <section className="mt-8 rounded-2xl border border-[#5a3434] bg-[#211416] p-6">
