@@ -2,26 +2,18 @@ import Link from "next/link";
 import { createCalculation } from "@/app/calculations/actions";
 import LocationSelector from "@/app/components/location-selector";
 import CalculationSubmit from "@/app/components/calculation-submit";
+import AppNav from "@/app/components/app-nav";
 
 export default function NewChartPage() {
   return (
-    <main className="min-h-screen bg-[#071321] px-4 py-6 text-[#eee9de] sm:px-6">
-      <div className="mx-auto max-w-md">
-        <header className="flex items-center gap-3">
-          <Link
-            href="/"
-            aria-label="Back to home"
-            className="grid h-9 w-9 place-items-center rounded-full border border-[#34475b] text-lg text-[#d4cfc4] transition hover:border-[#8f7740]"
-          >
-            ←
-          </Link>
-
-          <div>
-            <p className="eyebrow">Nipun Astro</p>
-            <h1 className="serif mt-1 text-xl text-[#eee9de]">
-              Create New Chart
-            </h1>
-          </div>
+    <>
+      <AppNav active="new" />
+      <main className="min-h-screen px-4 py-8 text-[#eee9de] sm:px-6">
+      <div className="mx-auto max-w-2xl">
+        <header className="border-b border-[#282d35] pb-6">
+          <p className="eyebrow">Screen 3 · New Chart</p>
+          <h1 className="serif mt-2 text-3xl text-[#eee9de]">Create New Chart</h1>
+          <p className="mt-2 text-sm text-[var(--muted)]">Birth details → location → calculation. No change to the calculation engine.</p>
         </header>
 
         <section className="mt-7">
@@ -73,7 +65,8 @@ export default function NewChartPage() {
           Vedic · Lahiri Sidereal · Whole Sign
         </p>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
 
