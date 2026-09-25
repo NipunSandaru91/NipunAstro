@@ -282,12 +282,12 @@ export default async function CalculationPage({
                 D1 · Rāśi
               </h2>
             </div>
-            <span className="text-[10px] text-[#687586]">Screen 9</span>
+            <span className="text-[10px] text-[#687586]">Screen 10 · Bhāva</span>
           </div>
 
           <nav className="mt-5 grid grid-cols-4 overflow-hidden rounded-xl border border-[#34475b] bg-[#091522]" aria-label="Chart sections">
             <a href="#d1-chart" className="border-b-2 border-[#e0b65b] bg-[#182a3b] px-2 py-3 text-center text-[10px] font-semibold text-[#eee9de]">D1</a>
-            <a href="#chart-details" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">Bhāva</a>
+            <a href="#bhava" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">භාව</a>
             <a href="#drishti" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">Dṛṣṭi</a>
             <a href="#shadbala" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">Ṣaḍbala</a>
           </nav>
@@ -317,7 +317,65 @@ export default async function CalculationPage({
           </div>
         </section>
 
-        <section id="chart-details" className="panel mt-5 rounded-2xl p-7">
+        
+        <section id="bhava" className="panel mt-5 rounded-2xl p-5 sm:p-7">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="eyebrow">D1 · භාව</p>
+              <h2 className="serif mt-2 text-2xl text-[#eee9de]">භාව 12</h2>
+            </div>
+            <p className="text-xs text-[#676d76]">Whole Sign · Lagna-based</p>
+          </div>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 12 }, (_, index) => {
+              const house = index + 1;
+              const rashiId = ((lagnaRasiId - 1 + index) % 12) + 1;
+              const planets = grahas.filter(
+                (graha) => Number(pick(graha, "rasi_id")) === rashiId,
+              );
+
+              return (
+                <article
+                  key={house}
+                  className={house === 1 ? "rounded-2xl border border-[#b8954f] bg-[#17140e] p-4" : "rounded-2xl border border-[#34475b] bg-[#091522] p-4"}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#8a949f]">
+                        භාව {house}
+                      </p>
+                      <h3 className="serif mt-1 text-lg text-[#eee9de]">
+                        {house === 1 ? "ලග්න භාවය" : "භාව " + house}
+                      </h3>
+                    </div>
+                    {house === 1 ? (
+                      <span className="rounded-full border border-[#8f7740] px-2 py-1 text-[9px] text-[#e0b65b]">
+                        ලග්නය
+                      </span>
+                    ) : null}
+                  </div>
+
+                  <div className="mt-4 border-t border-[#252a31] pt-3">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#697787]">රාශිය</p>
+                    <p className="mt-1 text-sm text-[#d4cfc4]">{rashiSinhala(rashiId) ?? "—"}</p>
+                    <p className="mt-3 text-[9px] uppercase tracking-[0.12em] text-[#697787]">ග්‍රහයන්</p>
+                    <p className="mt-1 text-sm leading-6 text-[#c9c4b9]">
+                      {planets.length ? planets.map((planet) => String(grahaSinhala(planet))).join(" · ") : "ග්‍රහයන් නොමැත"}
+                    </p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <p className="mt-5 text-xs leading-6 text-[#676d76]">
+            භාව mapping එක Lagna Rāśi මත පදනම් වූ Whole Sign calculation එකෙන් ලබා ගනී.
+            භාවාධිපති වැනි interpretation-layer data මෙහි නොගොඩනගයි.
+          </p>
+        </section>
+
+<section id="chart-details" className="panel mt-5 rounded-2xl p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">D1 · ග්‍රහ පිහිටීම්</p>
