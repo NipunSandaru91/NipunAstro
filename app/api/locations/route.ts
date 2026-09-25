@@ -3,16 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 const API = "https://countriesnow.space/api/v0.1";
 
 type Country = { name?: string };
-type State = { name?: string };
+type State = { name?: string; state_code?: string };
 type ApiPayload<T> = { error?: boolean; msg?: string; data?: T };
 
-async function readJson<T>(url: string, init?: RequestInit) {
+async function readJson<T>(url: string) {
   const response = await fetch(url, {
-    ...init,
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
     },
     cache: "no-store",
     signal: AbortSignal.timeout(8000),
@@ -22,7 +19,13 @@ async function readJson<T>(url: string, init?: RequestInit) {
     throw new Error(`location_source_http_${response.status}`);
   }
 
-  return (await response.json()) as ApiPayload<T>;
+  const payload = (await response.json()) as ApiPayload<T>;
+
+  if (payload.error) {
+    throw new Error(payload.msg ?? "location_source_failed");
+  }
+
+  return payload;
 }
 
 export async function GET(request: NextRequest) {
@@ -32,7 +35,10 @@ export async function GET(request: NextRequest) {
 
   try {
     if (level === "country") {
-      const payload = await readJson<Country[]>(`${API}/countries/flag/unicode`);
+      const payload = await readJson<Country[]>(
+        `${API}/countries/flag/unicode`,
+      );
+
       const countries = (payload.data ?? [])
         .map((item) => item.name?.trim())
         .filter((name): name is string => Boolean(name))
@@ -50,12 +56,16 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ states: [] }, { status: 400 });
       }
 
-      const payload = await readJson<State[]>(`${API}/countries/states`, {
-        method: "POST",
-        body: JSON.stringify({ country }),
-      });
+      const url = new URL(`${API}/countries/states/q`);
+      url.searchParams.set("country", country);
 
-      const states = (payload.data ?? [])
+      const payload = await readJson<{
+        name?: string;
+        iso2?: string;
+        states?: State[];
+      }>(url.toString());
+
+      const states = (payload.data?.states ?? [])
         .map((item) => item.name?.trim())
         .filter((name): name is string => Boolean(name))
         .sort((a, b) => a.localeCompare(b));
@@ -68,13 +78,11 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ cities: [] }, { status: 400 });
       }
 
-      const payload = await readJson<string[]>(
-        `${API}/countries/state/cities`,
-        {
-          method: "POST",
-          body: JSON.stringify({ country, state }),
-        },
-      );
+      const url = new URL(`${API}/countries/state/cities/q`);
+      url.searchParams.set("country", country);
+      url.searchParams.set("state", state);
+
+      const payload = await readJson<string[]>(url.toString());
 
       const cities = (payload.data ?? [])
         .map((name) => name.trim())
@@ -84,7 +92,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ cities });
     }
 
-    return NextResponse.json({ error: "invalid_location_level" }, { status: 400 });
+    return NextResponse.json(
+      { error: "invalid_location_level" },
+      { status: 400 },
+    );
   } catch (error) {
     return NextResponse.json(
       {
