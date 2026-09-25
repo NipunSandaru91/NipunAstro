@@ -18,6 +18,18 @@ const SRI_LANKA_PROVINCES = [
   "Western Province",
 ] as const;
 
+const SRI_LANKA_CITIES_BY_PROVINCE: Record<string, string[]> = {
+  "Central Province": ["Kandy", "Matale", "Nawalapitiya", "Hatton", "Gampola", "Dambulla"],
+  "Eastern Province": ["Trincomalee", "Batticaloa", "Kalmunai", "Ampara", "Kattankudy", "Akkaraipattu"],
+  "North Central Province": ["Anuradhapura", "Polonnaruwa", "Kekirawa", "Medawachchiya", "Habarana"],
+  "North Western Province": ["Kurunegala", "Puttalam", "Chilaw", "Kuliyapitiya", "Narammala", "Wennappuwa"],
+  "Northern Province": ["Jaffna", "Kilinochchi", "Mannar", "Mullaitivu", "Vavuniya", "Point Pedro", "Chavakachcheri"],
+  "Sabaragamuwa Province": ["Ratnapura", "Kegalle", "Balangoda", "Embilipitiya", "Mawanella", "Avissawella"],
+  "Southern Province": ["Galle", "Matara", "Hambantota", "Tangalle", "Weligama", "Ambalangoda"],
+  "Uva Province": ["Tanamalwila", "Badulla", "Bandarawela", "Ella", "Haputale", "Monaragala", "Wellawaya", "Mahiyanganaya"],
+  "Western Province": ["Colombo", "Negombo", "Sri Jayawardenepura Kotte", "Gampaha", "Kalutara", "Panadura", "Moratuwa", "Wattala"],
+};
+
 const SRI_LANKA_DISTRICTS_BY_PROVINCE: Record<string, string[]> = {
   "Central Province": [
     "Kandy District",
@@ -179,30 +191,9 @@ export async function GET(request: NextRequest) {
         country.toLocaleLowerCase() === "sri lanka" &&
         SRI_LANKA_DISTRICTS_BY_PROVINCE[state]
       ) {
-        const districts = SRI_LANKA_DISTRICTS_BY_PROVINCE[state];
-        const results = await Promise.all(
-          districts.map((district) => getCitiesForState(country, district)),
-        );
-
-        const cities = results
-          .flat()
-          .map((name) => name.trim())
-          .filter(Boolean);
-
-        if (state === "Uva Province") {
-          cities.push(
-            "Tanamalwila",
-            "Badulla",
-            "Bandarawela",
-            "Ella",
-            "Haputale",
-            "Monaragala",
-            "Wellawaya",
-          );
-        }
-
+        const curatedCities = SRI_LANKA_CITIES_BY_PROVINCE[state] ?? [];
         return NextResponse.json({
-          cities: [...new Set(cities)].sort((a, b) => a.localeCompare(b)),
+          cities: [...new Set(curatedCities)].sort((a, b) => a.localeCompare(b)),
         });
       }
 
