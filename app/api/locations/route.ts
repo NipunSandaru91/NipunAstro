@@ -98,14 +98,32 @@ async function getStates(country: string): Promise<State[]> {
 }
 
 async function getCitiesForState(country: string, state: string): Promise<string[]> {
-  const url = new URL(`${API}/countries/state/cities/q`);
-  url.searchParams.set("country", country);
-  url.searchParams.set("state", state);
+  const candidates = [
+    state,
+    state.replace(/\s+District$/i, ""),
+    state.replace(/\s+Province$/i, ""),
+  ].filter(Boolean);
 
-  const payload = await readJson<string[]>(url.toString());
-  return (payload.data ?? [])
-    .map((name) => name.trim())
-    .filter(Boolean);
+  const results: string[] = [];
+
+  for (const candidate of candidates) {
+    try {
+      const url = new URL(`${API}/countries/state/cities/q`);
+      url.searchParams.set("country", country);
+      url.searchParams.set("state", candidate);
+
+      const payload = await readJson<string[]>(url.toString());
+      results.push(
+        ...(payload.data ?? [])
+          .map((name) => name.trim())
+          .filter(Boolean),
+      );
+    } catch {
+      // CountriesNow uses inconsistent state naming for some Sri Lankan data.
+    }
+  }
+
+  return [...new Set(results)];
 }
 
 export async function GET(request: NextRequest) {
@@ -172,7 +190,15 @@ export async function GET(request: NextRequest) {
           .filter(Boolean);
 
         if (state === "Uva Province") {
-          cities.push("Tanamalwila");
+          cities.push(
+            "Tanamalwila",
+            "Badulla",
+            "Bandarawela",
+            "Ella",
+            "Haputale",
+            "Monaragala",
+            "Wellawaya",
+          );
         }
 
         return NextResponse.json({
