@@ -87,8 +87,8 @@ export default async function Home({
                 Create a natal calculation
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--muted)]">
-                The demo uses the canonical Colombo fixture by default. Inputs
-                are passed to the authenticated calculation pipeline.
+                Enter a city or town name. The existing Open-Meteo geocoder
+                resolves the location, coordinates and timezone before calculation.
               </p>
             </div>
             <span className="text-xs text-[#676d76]">Vedic · Lahiri · Whole Sign</span>
@@ -111,15 +111,10 @@ export default async function Home({
                 />
               </label>
               <p className="mt-2 text-xs leading-5 text-[#676d76]">
-                Beta V1 accepts the place name. Location, country and timezone
-                resolution will be handled by the system.
+                For better matching, you can enter a full place such as
+                “Kiryu, Gunma, Japan” or “Colombo, Sri Lanka”.
               </p>
             </div>
-
-            <input type="hidden" name="timezone" value="Asia/Colombo" />
-            <input type="hidden" name="country" value="Sri Lanka" />
-            <input type="hidden" name="latitude" value="6.927079" />
-            <input type="hidden" name="longitude" value="79.861244" />
 
             <div className="sm:col-span-2 pt-2">
               <button
