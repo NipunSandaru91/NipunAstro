@@ -5,7 +5,7 @@ import { allVargaPositions } from "./core/vargas.ts";
 import { allBhavas, houseFromRasi } from "./core/bhavas.ts";
 import { allGrahaAspects } from "./core/drishti.ts";
 import { evaluateAllYogaRules } from "./core/yoga.ts";
-import { calculateVimshottariBirthState, VIMSHOTTARI_ENGINE_VERSION } from "./core/dasha.ts";
+import { calculateVimshottariBirthState, durationYearsForGraha, VIMSHOTTARI_ENGINE_VERSION } from "./core/dasha.ts";
 let se:any;
 const H={"Content-Type":"application/json"},SE={GREG_CAL:1,ECL_NUT:-1,SUN:0,MOON:1,MERCURY:2,VENUS:3,MARS:4,JUPITER:5,SATURN:6,MEAN_NODE:10,TRUE_NODE:11,MOSEPH:4,SIDEREAL:65536,SPEED:256,SIDM_LAHIRI:1} as const;
 const out=(x:unknown,s=200)=>new Response(JSON.stringify(x),{status:s,headers:H});
@@ -46,7 +46,7 @@ const{error:dbs}=await admin.schema("jyotisha").from("dasha_birth_state").insert
   nakshatra_lord_graha_id:dashaBirth.nakshatra_lord_graha_id,
   nakshatra_elapsed_fraction:dashaBirth.fraction_completed,
   nakshatra_remaining_fraction:dashaBirth.fraction_remaining,
-  birth_mahadasa_duration_years:17,
+  birth_mahadasa_duration_years:durationYearsForGraha(dashaBirth.nakshatra_lord_graha_id),
   birth_mahadasa_balance_years:dashaBirth.starting_mahadasa_years,
   year_convention_days:365.25,
   calculation_version:VIMSHOTTARI_ENGINE_VERSION
