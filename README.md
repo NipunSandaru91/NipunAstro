@@ -45,3 +45,25 @@ Verified engines: Calculation Core, Golden Chart Regression, Bhāva V1, Dṛṣ�
 Architecture rule: the foundation layer is deterministic and calculation-only. Prediction is a separate optional layer and is not part of this freeze.
 
 Freeze commit: `4f782b6816d32bffe2bbc802b041c2b16e382d4f`.
+
+
+## Web Beta V1
+
+Status: **IN DEVELOPMENT**
+
+Release target: Vercel mobile-first web beta before native iOS/Android apps.
+
+Authentication: **Google OAuth via Supabase Auth**.
+
+Apple Sign In is intentionally deferred because Apple Developer Program membership is a paid requirement. The Beta does not depend on it.
+
+Beta foundation:
+- Mobile-first responsive UI
+- Supabase Auth
+- User profiles
+- USER / ADMIN role foundation
+- User-owned charts and calculations
+- Calculation Foundation V1
+- Prediction OFF
+
+The native iOS/Android clients will be added after real-user Web Beta validation.
