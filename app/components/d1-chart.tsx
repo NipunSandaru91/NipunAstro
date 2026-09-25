@@ -60,67 +60,59 @@ export default function D1Chart({
       </div>
 
       <div className="mx-auto aspect-square w-full max-w-[620px]">
-        <svg
-          viewBox="0 0 1000 650"
-          className="h-full w-full"
-          role="img"
-          aria-label="D1 Rashi chart"
-        >
-          <rect x="20" y="20" width="960" height="610" rx="18" fill="#091522" stroke="#405163" strokeWidth="3" />
-          <path
-            d="M20 20 L500 325 L980 20 L980 630 L500 325 L20 630 Z"
-            fill="none"
-            stroke="#6f7d8b"
-            strokeWidth="2"
-          />
-          <path
-            d="M20 20 L980 20 M980 20 L980 630 M980 630 L20 630 M20 630 L20 20"
-            fill="none"
-            stroke="#6f7d8b"
-            strokeWidth="2"
-          />
-          <path d="M20 20 L500 20 L980 20 M20 630 L500 630 L980 630" fill="none" stroke="#273b4d" />
-          <path d="M20 20 L980 630 M980 20 L20 630" fill="none" stroke="#273b4d" strokeWidth="2" />
+        <svg viewBox="0 0 400 400" className="h-full w-full" role="img" aria-label="D1 Rashi chart">
+          <rect x="6" y="6" width="388" height="388" rx="10" fill="#091522" stroke="#405163" strokeWidth="2" />
+
+          {[
+            "200,6 294,100 200,200 106,100",
+            "6,6 200,6 106,100",
+            "6,6 106,100 6,200",
+            "6,200 106,100 200,200 106,300",
+            "6,394 6,200 106,300",
+            "6,394 106,300 200,394",
+            "200,394 294,300 200,200 106,300",
+            "394,394 200,394 294,300",
+            "394,394 394,200 294,300",
+            "394,200 294,300 200,200 294,100",
+            "394,6 394,200 294,100",
+            "394,6 200,6 294,100",
+          ].map((points, index) => (
+            <polygon
+              key={index}
+              points={points}
+              fill={index === 0 ? "#211b0e" : "#0d1b2b"}
+              stroke={index === 0 ? "#d2aa58" : "#405163"}
+              strokeWidth="1.5"
+            />
+          ))}
 
           {houses.map(({ house, rashiId, planets }, index) => {
+            const positions = [
+              [200, 72], [98, 52], [48, 148], [72, 200],
+              [48, 302], [98, 348], [200, 328], [302, 348],
+              [352, 302], [328, 200], [352, 148], [302, 52],
+            ];
             const [x, y] = positions[index];
             const isLagna = house === 1;
             return (
               <g key={house}>
-                <circle
-                  cx={x}
-                  cy={y}
-                  r="42"
-                  fill={isLagna ? "#211b0e" : "#0d1b2b"}
-                  stroke={isLagna ? "#d2aa58" : "#34475b"}
-                  strokeWidth="2"
-                />
-                <text x={x} y={y - 20} textAnchor="middle" fill="#b8954f" fontSize="13" fontWeight="700">
-                  Bhāva {house}
+                <text x={x} y={y - 17} textAnchor="middle" fill="#b8954f" fontSize="9" fontWeight="700">
+                  {house}
                 </text>
-                <text x={x} y={y - 2} textAnchor="middle" fill="#eee9de" fontSize="17" fontWeight="600">
+                <text x={x} y={y - 2} textAnchor="middle" fill="#eee9de" fontSize="13" fontWeight="600">
                   {rashiNames[rashiId - 1] ?? "—"}
                 </text>
-                <text x={x} y={y + 15} textAnchor="middle" fill="#8e9aa8" fontSize="10">
-                  {planets.length ? planets.map((p) => grahaName(p, grahaNames)).join(" · ") : "—"}
-                </text>
-                <text x={x} y={y + 31} textAnchor="middle" fill="#667586" fontSize="9">
-                  {planets.length} graha
+                <text x={x} y={y + 13} textAnchor="middle" fill={isLagna ? "#e0b65b" : "#9aa6b4"} fontSize="9">
+                  {planets.map((p) => grahaName(p, grahaNames)).join(" · ") || "—"}
                 </text>
               </g>
             );
           })}
 
-          <polygon
-            points="500,255 570,325 500,395 430,325"
-            fill="#0d1b2b"
-            stroke="#b8954f"
-            strokeWidth="2"
-          />
-          <text x="500" y="317" textAnchor="middle" fill="#d4cfc4" fontSize="12" fontWeight="600">
+          <text x="200" y="194" textAnchor="middle" fill="#d4cfc4" fontSize="11" fontWeight="600">
             D1
           </text>
-          <text x="500" y="337" textAnchor="middle" fill="#778392" fontSize="9">
+          <text x="200" y="211" textAnchor="middle" fill="#778392" fontSize="8">
             RĀŚI
           </text>
         </svg>
