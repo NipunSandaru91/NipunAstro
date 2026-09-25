@@ -216,10 +216,18 @@ function SearchableSelect({
   }, [value]);
 
   const filteredOptions = useMemo(() => {
-    const normalizedQuery = query.trim().toLocaleLowerCase();
+    const normalizedQuery = query
+      .trim()
+      .toLocaleLowerCase()
+      .replace(/\\s+/g, " ");
+
     if (!normalizedQuery) return options;
+
     return options.filter((option) =>
-      option.toLocaleLowerCase().includes(normalizedQuery),
+      option
+        .toLocaleLowerCase()
+        .replace(/\\s+/g, " ")
+        .includes(normalizedQuery),
     );
   }, [options, query]);
 
@@ -273,7 +281,7 @@ function SearchableSelect({
       </label>
 
       {open && !disabled && (
-        <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-[#343a43] bg-[#0d1014] py-1 shadow-xl">
+        <div className="absolute left-0 right-0 top-full z-[100] mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-[#343a43] bg-[#0d1014] py-1 shadow-xl">
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option) => (
               <button
