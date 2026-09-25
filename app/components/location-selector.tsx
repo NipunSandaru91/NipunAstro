@@ -241,44 +241,72 @@ function SearchableSelect({
     setQuery(nextValue);
     setOpen(true);
 
-    if (!nextValue.trim()) {
+    const normalizedValue = nextValue.trim().toLocaleLowerCase();
+    if (!normalizedValue) {
       onChange("");
       return;
     }
 
     const exactMatch = options.find(
-      (option) => option.toLocaleLowerCase() === nextValue.trim().toLocaleLowerCase(),
+      (option) => option.trim().toLocaleLowerCase() === normalizedValue,
     );
-    if (exactMatch) onChange(exactMatch);
-    else if (value) onChange("");
+
+    if (exactMatch) {
+      onChange(exactMatch);
+    } else if (value) {
+      onChange("");
+    }
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== "Enter") return;
+
+    event.preventDefault();
+
+    const normalizedValue = query.trim().toLocaleLowerCase();
+    const exactMatch = options.find(
+      (option) => option.trim().toLocaleLowerCase() === normalizedValue,
+    );
+
+    if (exactMatch) {
+      selectOption(exactMatch);
+      return;
+    }
+
+    if (filteredOptions.length === 1) {
+      selectOption(filteredOptions[0]);
+      return;
+    }
+
+    setOpen(true);
   }
 
   return (
     <div ref={rootRef} className="relative">
-      <label className="block">
-        <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
-          {label}
+      <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
+        {label}
+      </span>
+
+      <div className="relative">
+        <input
+          type="text"
+          required
+          value={query}
+          disabled={disabled}
+          placeholder={placeholder}
+          autoComplete="off"
+          onFocus={() => setOpen(true)}
+          onChange={(event) => handleInputChange(event.target.value)}
+          onKeyDown={handleKeyDown}
+          className="w-full rounded-lg border border-[#343a43] bg-[#0d1014] px-3 py-3 pr-10 text-sm text-[#d4cfc4] outline-none transition focus:border-[#8f7740] disabled:cursor-not-allowed disabled:opacity-50"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#676d76]"
+        >
+          {open ? "⌃" : "⌄"}
         </span>
-        <div className="relative">
-          <input
-            type="text"
-            required
-            value={query}
-            disabled={disabled}
-            placeholder={placeholder}
-            autoComplete="off"
-            onFocus={() => setOpen(true)}
-            onChange={(event) => handleInputChange(event.target.value)}
-            className="w-full rounded-lg border border-[#343a43] bg-[#0d1014] px-3 py-3 pr-10 text-sm text-[#d4cfc4] outline-none transition focus:border-[#8f7740] disabled:cursor-not-allowed disabled:opacity-50"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#676d76]"
-          >
-            {open ? "⌃" : "⌄"}
-          </span>
-        </div>
-      </label>
+      </div>
 
       {open && !disabled && (
         <div className="absolute left-0 right-0 top-full z-[100] mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-[#343a43] bg-[#0d1014] py-1 shadow-xl">
