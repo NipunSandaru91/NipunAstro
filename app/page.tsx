@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { createCalculation } from "@/app/calculations/actions";
+import LocationSelector from "@/app/components/location-selector";
 
 type Calculation = {
   id: string;
@@ -87,8 +88,8 @@ export default async function Home({
                 Create a natal calculation
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--muted)]">
-                Enter a city or town name. The existing Open-Meteo geocoder
-                resolves the location, coordinates and timezone before calculation.
+                Select country, province / state, and city / town. The selected
+                place is then resolved to coordinates and timezone before calculation.
               </p>
             </div>
             <span className="text-xs text-[#676d76]">Vedic · Lahiri · Whole Sign</span>
@@ -97,24 +98,7 @@ export default async function Home({
           <form action={createCalculation} className="mt-7 grid gap-4 sm:grid-cols-2">
             <Field label="Birth date" name="birth_date" type="date" defaultValue="" />
             <Field label="Birth time" name="birth_time" type="time" defaultValue="" />
-            <div className="sm:col-span-2">
-              <label className="block">
-                <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
-                  Birth place
-                </span>
-                <input
-                  required
-                  name="place_name"
-                  placeholder="Search city / town"
-                  autoComplete="off"
-                  className="w-full rounded-lg border border-[#343a43] bg-[#0d1014] px-3 py-3 text-sm text-[#d4cfc4] outline-none transition focus:border-[#8f7740]"
-                />
-              </label>
-              <p className="mt-2 text-xs leading-5 text-[#676d76]">
-                For better matching, you can enter a full place such as
-                “Kiryu, Gunma, Japan” or “Colombo, Sri Lanka”.
-              </p>
-            </div>
+            <LocationSelector />
 
             <div className="sm:col-span-2 pt-2">
               <button
