@@ -526,57 +526,99 @@ export default async function CalculationPage({
           </div>
         </section>
 
-        <section className="panel mt-5 rounded-2xl p-7">
+        <section id="shadbala" className="panel mt-5 rounded-2xl p-5 sm:p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="eyebrow">Ṣaḍbala · ග්‍රහ බල</p>
-              <h2 className="serif mt-2 text-2xl text-[#eee9de]">
-                ෂඩ්බලය
-              </h2>
+              <p className="eyebrow">Screen 12 · Ṣaḍbala</p>
+              <h2 className="serif mt-2 text-2xl text-[#eee9de]">ෂඩ්බලය · ග්‍රහ බල</h2>
             </div>
-            <p className="text-xs text-[#676d76]">ග්‍රහ 7 · Virupa / Rupa</p>
+            <p className="text-xs text-[#676d76]">Actual calculation output · Virupa</p>
           </div>
 
-          <div className="mt-6 overflow-x-auto">
-            <table className="w-full min-w-[860px] text-left text-sm">
-              <thead className="border-b border-[#343a43] text-[10px] uppercase tracking-[0.12em] text-[#676d76]">
-                <tr>
-                  <th className="px-3 py-3 font-medium">ග්‍රහයා</th>
-                  <th className="px-3 py-3 font-medium">ස්ථාන බල</th>
-                  <th className="px-3 py-3 font-medium">දිග් බල</th>
-                  <th className="px-3 py-3 font-medium">කාල බල</th>
-                  <th className="px-3 py-3 font-medium">චේෂ්ටා බල</th>
-                  <th className="px-3 py-3 font-medium">නෛසර්ගික බල</th>
-                  <th className="px-3 py-3 font-medium">දෘක් බල</th>
-                  <th className="px-3 py-3 font-medium">මුළු බල (Rupa)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {shadbala.map((row, index) => {
-                  const graha = grahas.find(
-                    (item) => Number(pick(item, "graha_id")) === Number(pick(row, "graha_id")),
-                  );
-                  return (
-                    <tr key={String(pick(row, "graha_id") ?? index)} className="border-b border-[#252a31] last:border-0">
-                      <td className="px-3 py-4 text-[#eee9de]">
-                        {textValue(graha ? grahaSinhala(graha) : pick(row, "graha_id"))}
-                      </td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "sthana_bala"))}</td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "dig_bala"))}</td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "kala_bala"))}</td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "cheshta_bala"))}</td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "naisargika_bala"))}</td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "drik_bala"))}</td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">{textValue(pick(row, "total_bala"))}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="mt-5 rounded-2xl border border-[#34475b] bg-[#091522] p-4">
+            <p className="text-xs leading-6 text-[#9ca7b3]">
+              මෙහි අගයන් දැනට පවතින Ṣaḍbala / Kala Bala calculation output එකෙන්
+              සෘජුව ලබා ගනී. UI එක interpretation හෝ strength ranking එකක් නොකරයි.
+            </p>
           </div>
-          <p className="mt-4 text-xs leading-6 text-[#676d76]">
-            ගණනය කිරීමේ ඒකකය Virupa වන අතර 60 Virupa = 1 Rupa. දෘක් බලයට සෘණ අගයක් ලැබිය හැක.
-          </p>
+
+          {shadbala.length ? (
+            <div className="mt-5 grid gap-4 lg:grid-cols-2">
+              {shadbala.map((row, index) => {
+                const graha = grahas.find(
+                  (item) => Number(pick(item, "graha_id")) === Number(pick(row, "graha_id")),
+                );
+                const name = textValue(graha ? grahaSinhala(graha) : pick(row, "graha_id"));
+                const total = Number(pick(row, "total_bala"));
+                const rupa = Number.isFinite(total) ? total / 60 : undefined;
+
+                const items = [
+                  ["ස්ථාන බල", "sthana_bala"],
+                  ["දිග් බල", "dig_bala"],
+                  ["කාල බල", "kala_bala"],
+                  ["චේෂ්ටා බල", "cheshta_bala"],
+                  ["නෛසර්ගික බල", "naisargika_bala"],
+                  ["දෘක් බල", "drik_bala"],
+                ] as const;
+
+                return (
+                  <article
+                    key={String(pick(row, "graha_id") ?? index)}
+                    className="rounded-2xl border border-[#34475b] bg-[#091522] p-4"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-[9px] uppercase tracking-[0.14em] text-[#697787]">
+                          ග්‍රහයා
+                        </p>
+                        <h3 className="serif mt-1 text-xl text-[#eee9de]">{name}</h3>
+                      </div>
+
+                      <div className="rounded-xl border border-[#8f7740] bg-[#15130e] px-3 py-2 text-right">
+                        <p className="text-[9px] uppercase tracking-[0.12em] text-[#8c826c]">
+                          මුළු බල
+                        </p>
+                        <p className="font-mono text-sm text-[#e0b65b]">
+                          {textValue(pick(row, "total_bala"))}
+                        </p>
+                        {rupa !== undefined ? (
+                          <p className="mt-0.5 text-[9px] text-[#8d929b]">
+                            {rupa.toFixed(2)} Rupa
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {items.map(([label, key]) => (
+                        <div
+                          key={key}
+                          className="rounded-xl border border-[#252f3a] bg-[#0d141d] p-3"
+                        >
+                          <p className="text-[9px] leading-4 text-[#697787]">{label}</p>
+                          <p className="mt-1 font-mono text-xs text-[#c9c4b9]">
+                            {textValue(pick(row, key))}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="mt-5 rounded-2xl border border-[#4a3d27] bg-[#15130e] p-5">
+              <p className="text-sm text-[#c9c4b9]">ෂඩ්බල දත්ත මෙම calculation record එකේ නොමැත.</p>
+            </div>
+          )}
+
+          <div className="mt-5 rounded-xl border border-[#252a31] bg-[#0d1014] p-4">
+            <p className="text-xs leading-6 text-[#676d76]">
+              ගණනය කිරීමේ මූලික ඒකකය Virupa වේ. 60 Virupa = 1 Rupa.
+              දෘක් බලයට සෘණ අගයක් ලැබිය හැක. මෙහි Rupa අගය total_bala / 60 ලෙස
+              presentation සඳහා පමණක් පෙන්වයි.
+            </p>
+          </div>
         </section>
 
         <footer className="mt-6 border-t border-[#282d35] pt-5 text-xs leading-6 text-[#676d76]">
