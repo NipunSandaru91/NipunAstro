@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import D1Chart from "@/app/components/d1-chart";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -269,6 +270,49 @@ export default async function CalculationPage({
               <p className="mt-2 text-xs leading-5 text-[#676d76]">
                 Lahiri ayanāṃśa · Whole Sign · Calculation layer only
               </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="panel mt-5 rounded-3xl p-4 sm:p-7">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="eyebrow">Chart Overview</p>
+              <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+                D1 · Rāśi
+              </h2>
+            </div>
+            <span className="text-[10px] text-[#687586]">Screen 9</span>
+          </div>
+
+          <nav className="mt-5 grid grid-cols-4 overflow-hidden rounded-xl border border-[#34475b] bg-[#091522]" aria-label="Chart sections">
+            <a href="#d1-chart" className="border-b-2 border-[#e0b65b] bg-[#182a3b] px-2 py-3 text-center text-[10px] font-semibold text-[#eee9de]">D1</a>
+            <a href="#chart-details" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">Bhāva</a>
+            <a href="#drishti" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">Dṛṣṭi</a>
+            <a href="#shadbala" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">Ṣaḍbala</a>
+          </nav>
+
+          <div id="d1-chart" className="mt-5">
+            <D1Chart
+              lagnaRasiId={lagnaRasiId}
+              grahas={grahas}
+              rashiNames={RASHI_SI}
+              grahaNames={GRAHA_SI}
+            />
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
+              <p className="text-[9px] uppercase tracking-[0.14em] text-[#778392]">Lagna</p>
+              <p className="serif mt-1 text-lg text-[#e0b65b]">{textValue(rashiSinhala(lagnaRasiId))}</p>
+            </div>
+            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
+              <p className="text-[9px] uppercase tracking-[0.14em] text-[#778392]">Grahas</p>
+              <p className="serif mt-1 text-lg text-[#eee9de]">{grahas.length}</p>
+            </div>
+            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
+              <p className="text-[9px] uppercase tracking-[0.14em] text-[#778392]">System</p>
+              <p className="mt-1 text-xs text-[#c9c4b9]">Lahiri · Whole Sign</p>
             </div>
           </div>
         </section>
