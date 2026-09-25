@@ -1,15 +1,12 @@
-import { authenticate } from "@/app/auth/actions";
+import { signInWithGoogle } from "@/app/auth/actions";
 
 type LoginPageProps = {
   searchParams: Promise<{
     error?: string;
-    message?: string;
   }>;
 };
 
-export default async function LoginPage({
-  searchParams,
-}: LoginPageProps) {
+export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
 
   return (
@@ -41,10 +38,10 @@ export default async function LoginPage({
 
               <div className="rounded-xl border border-[#282d35] bg-[#0d1014] p-4">
                 <p className="text-xs uppercase tracking-[0.16em] text-[#676d76]">
-                  Pipeline
+                  Foundation
                 </p>
                 <p className="mt-2 text-sm text-[#d4cfc4]">
-                  Evidence → Rule → Synthesis → Prediction
+                  D1 · Bhāva · Dṛṣṭi · Ṣaḍbala · Yoga · Daśā · Transit
                 </p>
               </div>
             </div>
@@ -63,67 +60,21 @@ export default async function LoginPage({
               </div>
             ) : null}
 
-            {params.message === "check_email" ? (
-              <div className="mt-5 rounded-xl border border-[#365442] bg-[#142019] p-3 text-sm leading-6 text-[#b5d0ba]">
-                Account created. Check your email to confirm the account before
-                signing in.
-              </div>
-            ) : null}
-
-            <form action={authenticate} className="mt-6 space-y-4">
-              <label className="block">
-                <span className="text-xs uppercase tracking-[0.14em] text-[#777d86]">
-                  Email
+            <form action={signInWithGoogle} className="mt-7">
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center gap-3 rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-4 py-3.5 text-sm font-semibold text-[#15130e] transition hover:brightness-110"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold text-[#4285f4]">
+                  G
                 </span>
-
-                <input
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="mt-2 w-full rounded-xl border border-[#2b3038] bg-[#0d1014] px-4 py-3 text-sm text-[#eee9de] outline-none transition focus:border-[#8f7740]"
-                />
-              </label>
-
-              <label className="block">
-                <span className="text-xs uppercase tracking-[0.14em] text-[#777d86]">
-                  Password
-                </span>
-
-                <input
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  minLength={6}
-                  className="mt-2 w-full rounded-xl border border-[#2b3038] bg-[#0d1014] px-4 py-3 text-sm text-[#eee9de] outline-none transition focus:border-[#8f7740]"
-                />
-              </label>
-
-              <div className="grid gap-3 pt-2 sm:grid-cols-2">
-                <button
-                  name="mode"
-                  value="signin"
-                  type="submit"
-                  className="rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-4 py-3 text-sm font-semibold text-[#15130e] transition hover:brightness-110"
-                >
-                  Sign in
-                </button>
-
-                <button
-                  name="mode"
-                  value="signup"
-                  type="submit"
-                  className="rounded-xl border border-[#39404b] bg-[#111722] px-4 py-3 text-sm text-[#d8d3c8] transition hover:border-[#6f6041]"
-                >
-                  Create account
-                </button>
-              </div>
+                Continue with Google
+              </button>
             </form>
 
             <p className="mt-6 text-xs leading-6 text-[#626872]">
-              Your chart data will be isolated by authenticated ownership
-              before personal Jyotiṣa calculations are exposed.
+              Google authentication is the Beta V1 sign-in method. Your
+              calculation data is isolated by authenticated ownership.
             </p>
           </div>
         </section>
