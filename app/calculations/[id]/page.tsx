@@ -375,6 +375,79 @@ export default async function CalculationPage({
           </p>
         </section>
 
+
+        <section id="drishti" className="panel mt-5 rounded-2xl p-5 sm:p-7">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="eyebrow">D1 · දෘෂ්ටි</p>
+              <h2 className="serif mt-2 text-2xl text-[#eee9de]">ග්‍රහ දෘෂ්ටි</h2>
+            </div>
+            <p className="text-xs text-[#676d76]">Graha Dṛṣṭi · Calculation view</p>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-[#34475b] bg-[#091522] p-4">
+            <p className="text-xs leading-6 text-[#9ca7b3]">
+              මෙහි පෙන්වන්නේ D1 රාශි පිහිටීම් මත ගණනය කළ සාම්ප්‍රදායික Graha Dṛṣṭi mapping එකයි.
+              සියලුම ග්‍රහයන්ට 7 වන දෘෂ්ටියද, කුජට 4/8, ගුරුට 5/9, ශනිට 3/10 අමතර දෘෂ්ටිද ගණනය කරයි.
+              රාහු/කේතු සඳහා විකල්ප දෘෂ්ටි පද්ධති මෙහි ඇතුළත් නොකරයි.
+            </p>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {grahas.map((graha, index) => {
+              const rashiId = Number(pick(graha, "rasi_id"));
+              const code = String(pick(graha, "code", "graha_code") ?? "").toUpperCase();
+              const offsets = code === "MANGALA"
+                ? [4, 7, 8]
+                : code === "GURU"
+                  ? [5, 7, 9]
+                  : code === "SHANI"
+                    ? [3, 7, 10]
+                    : [7];
+              const targets = offsets.map((offset) => {
+                const targetRasiId = ((rashiId - 1 + offset - 1) % 12) + 1;
+                const targetBhava =
+                  Number.isInteger(lagnaRasiId) && Number.isInteger(targetRasiId)
+                    ? ((targetRasiId - lagnaRasiId + 12) % 12) + 1
+                    : undefined;
+                return { offset, targetRasiId, targetBhava };
+              });
+
+              return (
+                <article
+                  key={textValue(pick(graha, "code", "graha_code", "name"), String(index))}
+                  className="rounded-2xl border border-[#34475b] bg-[#091522] p-4"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.14em] text-[#697787]">ග්‍රහයා</p>
+                      <h3 className="serif mt-1 text-lg text-[#eee9de]">{textValue(grahaSinhala(graha))}</h3>
+                    </div>
+                    <span className="rounded-full border border-[#405163] px-2 py-1 text-[9px] text-[#9ba6b2]">
+                      {rashiSinhala(rashiId) ?? "—"}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 border-t border-[#252a31] pt-3">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#697787]">දෘෂ්ටි කරන ස්ථාන</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {targets.map(({ offset, targetRasiId, targetBhava }) => (
+                        <span
+                          key={offset}
+                          className="rounded-xl border border-[#3b4652] bg-[#0d1b2b] px-3 py-2 text-xs text-[#d4cfc4]"
+                        >
+                          {offset} වන දෘෂ්ටිය · {rashiSinhala(targetRasiId) ?? "—"}
+                          {targetBhava ? " · භාව " + targetBhava : ""}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
 <section id="chart-details" className="panel mt-5 rounded-2xl p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
