@@ -117,3 +117,65 @@ export async function createCalculation(formData: FormData) {
 
   redirect("/calculations/" + calculationId);
 }
+
+
+export async function calculateTransit(formData: FormData) {
+  const supabase = await createClient();
+  const calculationId = String(formData.get("calculation_id") ?? "").trim();
+  const transitDate = String(formData.get("transit_date") ?? "").trim();
+  const transitTime = String(formData.get("transit_time") ?? "").trim();
+  const timezone = String(formData.get("timezone") ?? "").trim();
+  const nodeMethod = String(formData.get("node_method") ?? "MEAN").trim().toUpperCase();
+
+  if (!calculationId || !transitDate || !transitTime || !timezone) {
+    redirect("/calculations/" + calculationId + "?transit_error=missing_input");
+  }
+
+  const { data: sessionData } = await supabase.auth.getSession();
+  const session = sessionData.session;
+  if (!session) redirect("/login?error=session_expired");
+
+  const functionUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL +
+    "/functions/v1/jyotisha-calculator";
+  const functionKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  try {
+    const response = await fetch(functionUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: functionKey ?? "",
+        Authorization: "Bearer " + session.access_token,
+      },
+      body: JSON.stringify({
+        mode: "transit",
+        calculation_id: calculationId,
+        transit_date: transitDate,
+        transit_time: transitTime,
+        timezone,
+        node_method: nodeMethod === "TRUE" ? "TRUE" : "MEAN",
+      }),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const detail = await response.text();
+      redirect(
+        "/calculations/" +
+          calculationId +
+          "?transit_error=" +
+          encodeURIComponent(detail || "TRANSIT_HTTP_" + response.status),
+      );
+    }
+  } catch (error) {
+    redirect(
+      "/calculations/" +
+        calculationId +
+        "?transit_error=" +
+        encodeURIComponent(error instanceof Error ? error.message : String(error)),
+    );
+  }
+
+  redirect("/calculations/" + calculationId + "?transit=calculated");
+}
