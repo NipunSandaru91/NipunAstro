@@ -1,6 +1,4 @@
 import Link from "next/link";\nimport { createClient } from "@/lib/supabase/server";
-import { createCalculation } from "@/app/calculations/actions";
-import LocationSelector from "@/app/components/location-selector";
 
 type Calculation = {
   id: string;
@@ -228,34 +226,6 @@ export default async function Home({
         </section>
       </div>
     </main>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  defaultValue,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  defaultValue?: string;
-}) {
-  return (
-    <label className="block">
-      <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
-        {label}
-      </span>
-      <input
-        required
-        name={name}
-        type={type}
-        defaultValue={defaultValue}
-        step={type === "number" ? "any" : undefined}
-        className="w-full rounded-lg border border-[#343a43] bg-[#0d1014] px-3 py-3 text-sm text-[#d4cfc4] outline-none transition focus:border-[#8f7740]"
-      />
-    </label>
   );
 }
 
