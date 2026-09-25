@@ -122,64 +122,90 @@ export default function LocationSelector({
   }, [country, state]);
 
   return (
-    <div className="sm:col-span-2 space-y-4">
-      <SearchableSelect
-        label="Country"
-        value={country}
-        disabled={loading === "countries"}
-        options={countries}
-        placeholder={loading === "countries" ? "Loading countries..." : "Search country"}
-        onChange={setCountry}
-      />
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <span className="grid h-6 w-6 place-items-center rounded-full bg-[#e0b65b] text-[10px] font-bold text-[#15130e]">
+          1
+        </span>
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#b8954f]">
+            Birthplace
+          </p>
+          <p className="text-[11px] text-[#778392]">
+            Country → Province / State → City / Town
+          </p>
+        </div>
+      </div>
 
-      <SearchableSelect
-        label="Province / State"
-        value={state}
-        disabled={!country || loading === "states"}
-        options={states}
-        placeholder={
-          !country
-            ? "Select country first"
-            : loading === "states"
-              ? "Loading provinces..."
-              : "Search province / state"
-        }
-        onChange={setState}
-      />
+      <div className="space-y-3">
+        <SearchableSelect
+          label="Country"
+          value={country}
+          disabled={loading === "countries"}
+          options={countries}
+          placeholder={
+            loading === "countries" ? "Loading countries..." : "Search country"
+          }
+          onChange={setCountry}
+        />
 
-      <SearchableSelect
-        label="City / Town"
-        value={city}
-        disabled={!state || loading === "cities"}
-        options={cities}
-        placeholder={
-          !state
-            ? "Select province / state first"
-            : loading === "cities"
-              ? "Loading cities..."
-              : "Search city / town"
-        }
-        onChange={setCity}
-      />
+        <SearchableSelect
+          label="Province / State"
+          value={state}
+          disabled={!country || loading === "states"}
+          options={states}
+          placeholder={
+            !country
+              ? "Select country first"
+              : loading === "states"
+                ? "Loading provinces..."
+                : "Search province / state"
+          }
+          onChange={setState}
+        />
+
+        <SearchableSelect
+          label="City / Town"
+          value={city}
+          disabled={!state || loading === "cities"}
+          options={cities}
+          placeholder={
+            !state
+              ? "Select province / state first"
+              : loading === "cities"
+                ? "Loading cities..."
+                : "Search city / town"
+          }
+          onChange={setCity}
+        />
+      </div>
 
       <input type="hidden" name={name} value={city} />
       <input type="hidden" name="birth_country" value={country} />
       <input type="hidden" name="birth_state" value={state} />
 
+      {country && state && city ? (
+        <div className="rounded-xl border border-[#405645] bg-[#0e1d17] px-3 py-3">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#7fa98a]">
+            Selected birthplace
+          </p>
+          <p className="mt-1 text-xs leading-5 text-[#d4cfc4]">
+            {city}, {state}, {country}
+          </p>
+        </div>
+      ) : (
+        <p className="text-[10px] leading-5 text-[#687586]">
+          Search and select each level from the list. Exact spelling is not required.
+        </p>
+      )}
+
       {error ? (
         <p className="text-xs leading-5 text-[#d8aaaa]">
           Location list could not be loaded: {error}
         </p>
-      ) : (
-        <p className="text-xs leading-5 text-[#676d76]">
-          Search and select the location from the list. You do not need to type
-          the exact spelling.
-        </p>
-      )}
+      ) : null}
     </div>
   );
-}
-
 function normalizeLocationText(value: string) {
   return value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
 }
@@ -296,7 +322,7 @@ function SearchableSelect({
           onFocus={() => setOpen(true)}
           onChange={(event) => handleInputChange(event.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full rounded-lg border border-[#343a43] bg-[#0d1014] px-3 py-3 pr-10 text-sm text-[#d4cfc4] outline-none transition focus:border-[#8f7740] disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-xl border border-[#34475b] bg-[#0a1724] px-3 py-3.5 pr-10 text-sm text-[#d4cfc4] outline-none transition focus:border-[#b8954f] disabled:cursor-not-allowed disabled:opacity-50"
         />
         <span
           aria-hidden="true"
@@ -307,7 +333,7 @@ function SearchableSelect({
       </div>
 
       {open && !disabled && (
-        <div className="absolute left-0 right-0 top-full z-[100] mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-[#343a43] bg-[#0d1014] py-1 shadow-xl">
+        <div className="absolute left-0 right-0 top-full z-[100] mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-[#34475b] bg-[#0a1724] py-1 shadow-2xl">
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option) => (
               <button
