@@ -128,7 +128,7 @@ export async function calculateTransit(formData: FormData) {
   const nodeMethod = String(formData.get("node_method") ?? "MEAN").trim().toUpperCase();
 
   if (!calculationId || !transitDate || !transitTime || !timezone) {
-    redirect("/calculations/" + calculationId + "?transit_error=missing_input");
+    redirect("/calculations/" + calculationId + "/transit?transit_error=missing_input");
   }
 
   const { data: sessionData } = await supabase.auth.getSession();
@@ -172,10 +172,10 @@ export async function calculateTransit(formData: FormData) {
     redirect(
       "/calculations/" +
         calculationId +
-        "?transit_error=" +
+        "/transit?transit_error=" +
         encodeURIComponent(error instanceof Error ? error.message : String(error)),
     );
   }
 
-  redirect("/calculations/" + calculationId + "?transit=calculated");
+  redirect("/calculations/" + calculationId + "/transit?transit=calculated");
 }
