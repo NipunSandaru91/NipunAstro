@@ -48,7 +48,10 @@ export function nakshatraNumber(longitude: number): number {
 
 export function padaNumber(longitude: number): number {
   const lon = normalizeLongitude(longitude);
-  return Math.floor(((lon % (360 / 27)) + BOUNDARY_EPSILON) / (360 / 108)) + 1;
+  const span = 360 / 27;
+  const nakIndex = Math.floor((lon + BOUNDARY_EPSILON) / span);
+  const within = Math.max(0, lon - nakIndex * span);
+  return Math.min(4, Math.floor((within + BOUNDARY_EPSILON) / (360 / 108)) + 1);
 }
 
 export function vimshottariLordForNakshatra(nakshatra: number): number {
