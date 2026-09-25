@@ -91,7 +91,7 @@ export async function resolveBirthPlace(query: string): Promise<ResolvedPlace> {
   // If the complete phrase is not found, retry the final city/town token.
   // This keeps the existing Open-Meteo architecture tolerant of inputs such
   // as "Kiryu City, Gunma" or "Colombo, Sri Lanka".
-  if (results.length === 0) {
+  if (results.filter(isUsablePlace).length === 0) {
     const parts = value
       .split(",")
       .map((part) => part.trim())
