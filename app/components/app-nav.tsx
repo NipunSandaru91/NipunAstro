@@ -5,6 +5,8 @@ export default async function AppNav({ active }: { active?: string }) {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const email = typeof data?.claims?.email === "string" ? data.claims.email : null;
+  const { data: roleRow } = await supabase.from("user_roles").select("role").single();
+  const isAdmin = roleRow?.role === "ADMIN";
 
   const items = [
     ["/", "Dashboard", "dashboard"],
@@ -12,6 +14,8 @@ export default async function AppNav({ active }: { active?: string }) {
     ["/my-chart", "My Chart", "chart"],
     ["/profile", "Profile", "profile"],
   ] as const;
+  const adminItem = isAdmin ? ([["/admin", "Admin", "admin"]] as const) : [];
+  const allItems = [...items, ...adminItem];
 
   return (
     <header className="sticky top-0 z-20 border-b border-[#252a31] bg-[#0a0c0f]/95 backdrop-blur">
@@ -22,7 +26,7 @@ export default async function AppNav({ active }: { active?: string }) {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          {items.map(([href, label, key]) => (
+          {allItems.map(([href, label, key]) => (
             <Link
               key={key}
               href={href}
@@ -46,7 +50,7 @@ export default async function AppNav({ active }: { active?: string }) {
       </div>
 
       <nav className="grid grid-cols-4 border-t border-[#1d2127] md:hidden" aria-label="Mobile">
-        {items.map(([href, label, key]) => (
+        {allItems.map(([href, label, key]) => (
           <Link
             key={key}
             href={href}
