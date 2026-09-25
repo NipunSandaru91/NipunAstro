@@ -1,4 +1,5 @@
-import Link from "next/link";\nimport { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 
 type Calculation = {
   id: string;
