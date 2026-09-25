@@ -288,3 +288,49 @@ Deno.test("Golden Chart: Lahiri sidereal D1 regression", async () => {
     throw new Error("Golden Chart: MC calculation failed");
   }
 });
+
+Deno.test("Golden Chart: Tanamalwila 1996-12-01 11:45 locks Aquarius lagna boundary case", async () => {
+  const se: any = await import(
+    "jsr:@fusionstrings/swisseph-wasm@0.1.5/browser"
+  );
+
+  // Historical Sri Lanka local time on 1996-12-01 was UTC+06:00.
+  // This regression intentionally uses Tanamalwila coordinates because the
+  // same civil time at Colombo crosses the Makara/Kumbha rashi boundary.
+  const birthUtc = julianDayUtc(1996, 12, 1, 5, 45);
+  const jd = se.swe_julday(1996, 12, 1, birthUtc, SE.GREG_CAL);
+
+  se.swe_set_sid_mode(SE.SIDM_LAHIRI, 0, 0);
+
+  const ecl: any = se.swe_calc_ut(jd, SE.ECL_NUT, 0);
+  const eclValues = ecl?.xx ?? ecl?.values;
+  const epsTrue = Number.isFinite(ecl?.longitude)
+    ? ecl.longitude
+    : eclValues?.[0];
+  const nutLon = Number.isFinite(ecl?.distance)
+    ? ecl.distance
+    : eclValues?.[2];
+
+  if (!Number.isFinite(epsTrue) || !Number.isFinite(nutLon)) {
+    throw new Error("Tanamalwila regression: ECL_NUT result incomplete");
+  }
+
+  const siderealTimeHours = se.swe_sidtime(jd);
+  const armc = norm(siderealTimeHours * 15 + 81.1285);
+  const ayanamsa = se.swe_get_ayanamsa_ut(jd);
+  const tropicalAsc = asc1(
+    armc + 90,
+    6.4331,
+    sind(epsTrue),
+    cosd(epsTrue),
+  );
+  const asc = norm(tropicalAsc - ayanamsa - nutLon);
+
+  assertClose(asc, 300.0543618550);
+
+  if (rasi(asc).number !== 11) {
+    throw new Error(
+      `Tanamalwila regression: Lagna must remain Kumbha (Aquarius), got Rashi ${rasi(asc).number}`,
+    );
+  }
+});
