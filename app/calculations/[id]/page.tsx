@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import D1Chart from "@/app/components/d1-chart";
+import AppNav from "@/app/components/app-nav";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -100,7 +101,9 @@ export default async function CalculationPage({
   const lagnaRasiId = Number(pick(lagna, "rasi_id"));
 
   return (
-    <main className="min-h-screen px-5 py-10 sm:px-8">
+    <>
+      <AppNav />
+      <main className="min-h-screen px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-6xl">
         <header className="border-b border-[#282d35] pb-7">
           <p className="eyebrow">NipunAstro · ගණනය කිරීමේ වාර්තාව</p>
@@ -710,7 +713,8 @@ export default async function CalculationPage({
           layers and are not silently mixed into this record.
         </footer>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
 
