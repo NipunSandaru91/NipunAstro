@@ -133,6 +133,7 @@ export default async function CalculationPage({
           </section>
         ) : null}
 
+        {!engineError ? (
         <section className="mt-7 rounded-3xl border border-[#2f4938] bg-[#0d1b16] p-5 shadow-2xl sm:p-7">
           <div className="flex items-start gap-4">
             <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-[#b8954f] bg-[#15130e]">
@@ -192,6 +193,8 @@ export default async function CalculationPage({
             View Chart
           </a>
         </section>
+
+        ) : null}
 
         <section className="mt-7 grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
           <div className="panel rounded-2xl p-7">
