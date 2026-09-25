@@ -2,8 +2,10 @@
 import {
   VIMSHOTTARI_SEQUENCE,
   antardasaDurationYears,
+  durationYearsForGraha,
   calculateVimshottariBirthState,
   nakshatraNumber,
+  normalizeLongitude,
   nextVimshottariLord,
   padaNumber,
   vimshottariLordForNakshatra,
@@ -50,6 +52,9 @@ Deno.test("Vimshottari lord rotation and antardasa duration", () => {
 });
 
 Deno.test("Vimshottari rejects invalid inputs", () => {
+  if (normalizeLongitude(-0.5) !== 359.5 || normalizeLongitude(360) !== 0) throw Error("longitude normalization mismatch");
+  if (Math.abs(calculateVimshottariBirthState(13.3333333333333, 365).fraction_completed) > 1e-12) throw Error("boundary birth-state mismatch");
+  if (durationYearsForGraha(9) !== 7) throw Error("duration lookup mismatch");
   const bad = [
     () => nakshatraNumber(Number.NaN),
     () => padaNumber(Number.POSITIVE_INFINITY),
@@ -57,6 +62,8 @@ Deno.test("Vimshottari rejects invalid inputs", () => {
     () => nextVimshottariLord(99),
     () => antardasaDurationYears(-1, 9),
     () => calculateVimshottariBirthState(0, 0),
+    () => durationYearsForGraha(99),
+    () => antardasaDurationYears(Number.NaN, 9),
   ];
   for (const f of bad) {
     let rejected = false;
