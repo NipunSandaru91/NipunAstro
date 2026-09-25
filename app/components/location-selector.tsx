@@ -180,6 +180,10 @@ export default function LocationSelector({
   );
 }
 
+function normalizeLocationText(value: string) {
+  return value.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+}
+
 function SearchableSelect({
   label,
   value,
@@ -216,18 +220,12 @@ function SearchableSelect({
   }, [value]);
 
   const filteredOptions = useMemo(() => {
-    const normalizedQuery = query
-      .trim()
-      .toLocaleLowerCase()
-      .replace(/\s+/g, " ");
+    const normalizedQuery = normalizeLocationText(query);
 
     if (!normalizedQuery) return options;
 
     return options.filter((option) =>
-      option
-        .toLocaleLowerCase()
-        .replace(/\\s+/g, " ")
-        .includes(normalizedQuery),
+      normalizeLocationText(option).includes(normalizedQuery),
     );
   }, [options, query]);
 
@@ -241,14 +239,14 @@ function SearchableSelect({
     setQuery(nextValue);
     setOpen(true);
 
-    const normalizedValue = nextValue.trim().toLocaleLowerCase();
+    const normalizedValue = normalizeLocationText(nextValue);
     if (!normalizedValue) {
       onChange("");
       return;
     }
 
     const exactMatch = options.find(
-      (option) => option.trim().toLocaleLowerCase() === normalizedValue,
+      (option) => normalizeLocationText(option) === normalizedValue,
     );
 
     if (exactMatch) {
@@ -263,9 +261,9 @@ function SearchableSelect({
 
     event.preventDefault();
 
-    const normalizedValue = query.trim().toLocaleLowerCase();
+    const normalizedValue = normalizeLocationText(query);
     const exactMatch = options.find(
-      (option) => option.trim().toLocaleLowerCase() === normalizedValue,
+      (option) => normalizeLocationText(option) === normalizedValue,
     );
 
     if (exactMatch) {
