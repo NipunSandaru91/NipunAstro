@@ -707,6 +707,21 @@ export default async function CalculationPage({
             </p>
           </div>
         </section>
+        <section className="mt-5 grid gap-5 md:grid-cols-2">
+          <a href={"/calculations/" + id + "/dasha"} className="panel rounded-2xl p-6 transition hover:border-[#8f7740]">
+            <p className="eyebrow">Screen 14</p>
+            <h2 className="serif mt-2 text-2xl text-[#eee9de]">විංශෝත්තරී දශා · Vimśottarī Daśā</h2>
+            <p className="mt-3 text-sm leading-6 text-[#8f9aa7]">Open the persisted Vimśottarī calculation output and Mahādaśā sequence.</p>
+            <span className="mt-5 inline-block text-xs text-[#e0b65b]">Open Face 14 →</span>
+          </a>
+          <a href={"/calculations/" + id + "/transit"} className="panel rounded-2xl p-6 transition hover:border-[#8f7740]">
+            <p className="eyebrow">Screen 15</p>
+            <h2 className="serif mt-2 text-2xl text-[#eee9de]">ගෝචර · Transit</h2>
+            <p className="mt-3 text-sm leading-6 text-[#8f9aa7]">Calculate and inspect the persisted Transit V1 planetary positions.</p>
+            <span className="mt-5 inline-block text-xs text-[#e0b65b]">Open Face 15 →</span>
+          </a>
+        </section>
+
         <footer className="mt-6 border-t border-[#282d35] pt-5 text-xs leading-6 text-[#676d76]">
           Calculation layer only. Classical interpretation, evidence
           synthesis, modifiers, and prediction output remain downstream
