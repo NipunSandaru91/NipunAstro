@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import AppNav from "@/app/components/app-nav";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -22,9 +23,9 @@ export default async function DashaPage({ params }: Props) {
   const { data: periods } = await supabase.schema("jyotisha").from("mahadasa_periods")
     .select("*").eq("calculation_id", id).order("sequence_order", { ascending: true });
 
-  return <main className="min-h-screen px-5 py-10 sm:px-8">
-    <div className="mx-auto max-w-5xl">
-      <a href={"/calculations/" + id} className="text-xs text-[#b8954f]">← Chart</a>
+  return <><AppNav /><main className="min-h-screen px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-6xl">
+      <a href={"/calculations/" + id} className="text-xs text-[#b8954f]">← Calculation report</a>
       <header className="mt-6 border-b border-[#282d35] pb-6">
         <p className="eyebrow">Screen 14 · Vimśottarī Daśā</p>
         <h1 className="serif mt-2 text-4xl text-[#eee9de]">විංශෝත්තරී දශා</h1>
@@ -58,7 +59,7 @@ export default async function DashaPage({ params }: Props) {
 
       <p className="mt-5 text-xs leading-6 text-[#676d76]">මෙය ගණනය කළ Vimśottarī Mahādaśā output එකයි. Antardaśā හෝ फलादेश මෙහි අනුමාන නොකරයි.</p>
     </div>
-  </main>;
+  </main></>;
 }
 
 function Item({label,value}:{label:string,value:string}) {
