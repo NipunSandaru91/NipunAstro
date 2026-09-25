@@ -133,6 +133,66 @@ export default async function CalculationPage({
           </section>
         ) : null}
 
+        <section className="mt-7 rounded-3xl border border-[#2f4938] bg-[#0d1b16] p-5 shadow-2xl sm:p-7">
+          <div className="flex items-start gap-4">
+            <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-[#b8954f] bg-[#15130e]">
+              <span className="text-2xl text-[#e0b65b]">✓</span>
+            </div>
+
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8eb596]">
+                8 / 8 · Chart Ready
+              </p>
+              <h2 className="serif mt-1 text-2xl text-[#eee9de]">
+                Chart calculated successfully
+              </h2>
+              <p className="mt-1 text-xs leading-5 text-[#8f9aa7]">
+                Your verified calculation is ready to explore. The values below
+                come directly from the calculation layer.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#778392]">
+                Lagna · D1
+              </p>
+              <p className="serif mt-1 text-2xl text-[#e0b65b]">
+                {textValue(
+                  rashiSinhala(pick(lagna, "rasi_id")) ??
+                    pick(lagna, "rashi", "sign", "name", "code"),
+                )}
+              </p>
+              <p className="mt-1 text-xs text-[#9ca7b3]">
+                {textValue(pick(lagna, "degree_in_rasi", "degree", "longitude_in_rasi"))}°
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#778392]">
+                Nakṣatra
+              </p>
+              <p className="serif mt-1 text-2xl text-[#eee9de]">
+                {textValue(
+                  nakshatraSinhala(pick(lagna, "longitude_sidereal", "longitude")) ??
+                    pick(lagna, "nakshatra", "nakshatra_name"),
+                )}
+              </p>
+              <p className="mt-1 text-xs text-[#9ca7b3]">
+                Pada {textValue(pick(lagna, "pada"))}
+              </p>
+            </div>
+          </div>
+
+          <a
+            href="#chart-details"
+            className="mt-4 block w-full rounded-2xl border border-[#e0b65b] bg-[#e0b65b] px-4 py-3.5 text-center text-sm font-semibold text-[#15130e] transition hover:brightness-110"
+          >
+            View Chart
+          </a>
+        </section>
+
         <section className="mt-7 grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
           <div className="panel rounded-2xl p-7">
             <p className="eyebrow">ගණනය කිරීම</p>
@@ -210,7 +270,7 @@ export default async function CalculationPage({
           </div>
         </section>
 
-        <section className="panel mt-5 rounded-2xl p-7">
+        <section id="chart-details" className="panel mt-5 rounded-2xl p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">D1 · ග්‍රහ පිහිටීම්</p>
