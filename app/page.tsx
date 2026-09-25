@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";\nimport { createClient } from "@/lib/supabase/server";
 import { createCalculation } from "@/app/calculations/actions";
 import LocationSelector from "@/app/components/location-selector";
 
@@ -81,34 +81,26 @@ export default async function Home({
         ) : null}
 
         <section className="panel mt-8 rounded-2xl p-7 sm:p-9">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">Calculation Workspace</p>
               <h2 className="serif mt-2 text-3xl text-[#eee9de]">
                 Create a natal calculation
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--muted)]">
-                Select country, province / state, and city / town. The selected
-                place is then resolved to coordinates and timezone before calculation.
+                Birth details now follow the mobile-first chart flow. The
+                birthplace is selected as Country → Province / State → City / Town.
               </p>
             </div>
-            <span className="text-xs text-[#676d76]">Vedic · Lahiri · Whole Sign</span>
+
+            <Link
+              href="/chart/new"
+              className="inline-flex items-center justify-center rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-5 py-3 text-sm font-semibold text-[#15130e] transition hover:brightness-110"
+            >
+              Create New Chart
+            </Link>
           </div>
-
-          <form action={createCalculation} className="mt-7 grid gap-4 sm:grid-cols-2">
-            <Field label="Birth date" name="birth_date" type="date" defaultValue="" />
-            <Field label="Birth time" name="birth_time" type="time" defaultValue="" />
-            <LocationSelector />
-
-            <div className="sm:col-span-2 pt-2">
-              <button
-                type="submit"
-                className="w-full rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-4 py-3.5 text-sm font-semibold text-[#15130e] transition hover:brightness-110"
-              >
-                Calculate chart
-              </button>
-            </div>
-          </form>      </section>
+        </section>
 
         {error ? (
           <section className="mt-8 rounded-2xl border border-[#5a3434] bg-[#211416] p-6">
