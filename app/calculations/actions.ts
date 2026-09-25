@@ -23,7 +23,7 @@ export async function createCalculation(formData: FormData) {
     resolvedPlace = await resolveBirthPlace(resolvedQuery || placeName);
   } catch (error) {
     redirect(
-      "/?error=" +
+      "/dashboard?error=" +
         encodeURIComponent(
           error instanceof Error
             ? error.message
@@ -46,7 +46,7 @@ export async function createCalculation(formData: FormData) {
   });
 
   if (!validation.ok) {
-    redirect("/?error=" + validation.error);
+    redirect("/dashboard?error=" + validation.error);
   }
 
   const { data: calculationId, error: createError } =
@@ -62,7 +62,7 @@ export async function createCalculation(formData: FormData) {
 
   if (createError || !calculationId) {
     redirect(
-      "/?error=" +
+      "/dashboard?error=" +
         encodeURIComponent(
           createError?.message ?? "CALCULATION_CREATE_FAILED",
         ),
