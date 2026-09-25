@@ -219,7 +219,7 @@ function SearchableSelect({
     const normalizedQuery = query
       .trim()
       .toLocaleLowerCase()
-      .replace(/\\s+/g, " ");
+      .replace(/\s+/g, " ");
 
     if (!normalizedQuery) return options;
 
