@@ -1,5 +1,6 @@
 export const VIMSHOTTARI_YEAR_DAYS = 365.25;
 export const VIMSHOTTARI_ENGINE_VERSION = "VIMSHOTTARI_365.250_V1" as const;
+const BOUNDARY_EPSILON = 1e-12;
 
 export type VimshottariBirthState = {
   moon_longitude_sidereal: number;
@@ -42,12 +43,12 @@ export function normalizeLongitude(longitude: number): number {
 
 export function nakshatraNumber(longitude: number): number {
   const lon = normalizeLongitude(longitude);
-  return Math.floor(lon / (360 / 27)) + 1;
+  return Math.floor((lon + BOUNDARY_EPSILON) / (360 / 27)) + 1;
 }
 
 export function padaNumber(longitude: number): number {
   const lon = normalizeLongitude(longitude);
-  return Math.floor((lon % (360 / 27)) / (360 / 108)) + 1;
+  return Math.floor(((lon % (360 / 27)) + BOUNDARY_EPSILON) / (360 / 108)) + 1;
 }
 
 export function vimshottariLordForNakshatra(nakshatra: number): number {
