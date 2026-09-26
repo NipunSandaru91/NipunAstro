@@ -4,6 +4,11 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { resolveBirthPlace } from "@/lib/calculations/place-resolution";
 import { validateCalculationInput } from "@/lib/calculations/validation";
+import {
+  buildNatalEngineRequest,
+  buildTransitEngineRequest,
+  validateTransitInput,
+} from "@/lib/calculations/action-contract";
 
 export async function createCalculation(formData: FormData) {
   const supabase = await createClient();
@@ -91,10 +96,7 @@ export async function createCalculation(formData: FormData) {
         apikey: functionKey ?? "",
         Authorization: "Bearer " + session.access_token,
       },
-      body: JSON.stringify({
-        mode: "natal",
-        calculation_id: calculationId,
-      }),
+      body: JSON.stringify(buildNatalEngineRequest(calculationId)),
       cache: "no-store",
     });
 
@@ -127,8 +129,20 @@ export async function calculateTransit(formData: FormData) {
   const timezone = String(formData.get("timezone") ?? "").trim();
   const nodeMethod = String(formData.get("node_method") ?? "MEAN").trim().toUpperCase();
 
-  if (!calculationId || !transitDate || !transitTime || !timezone) {
-    redirect("/calculations/" + calculationId + "/transit?transit_error=missing_input");
+  const transitValidation = validateTransitInput({
+    calculationId,
+    transitDate,
+    transitTime,
+    timezone,
+  });
+
+  if (!transitValidation.ok) {
+    redirect(
+      "/calculations/" +
+        calculationId +
+        "/transit?transit_error=" +
+        transitValidation.error,
+    );
   }
 
   const { data: sessionData } = await supabase.auth.getSession();
@@ -148,14 +162,15 @@ export async function calculateTransit(formData: FormData) {
         apikey: functionKey ?? "",
         Authorization: "Bearer " + session.access_token,
       },
-      body: JSON.stringify({
-        mode: "transit",
-        calculation_id: calculationId,
-        transit_date: transitDate,
-        transit_time: transitTime,
-        timezone,
-        node_method: nodeMethod === "TRUE" ? "TRUE" : "MEAN",
-      }),
+      body: JSON.stringify(
+        buildTransitEngineRequest({
+          calculationId,
+          transitDate,
+          transitTime,
+          timezone,
+          nodeMethod,
+        }),
+      ),
       cache: "no-store",
     });
 
