@@ -57,7 +57,7 @@ Deno.test("career aggregation covers weak and moderate balance branches plus mal
 Deno.test("coverage closes nullish Shadbala, aggregation Set duplicate, and transit precedence branches",()=>{
  const noShad=evaluateBhavaLordPlacement({lagnaRasiId:4,sourceBhava:10,positions,topic:"CAREER",polarity:"SUPPORTING"});
  if(!noShad)throw new Error("optional Shadbala branch failed");
- const dup={code:"FOREIGN_LINKED_CAREER" as const,strength:"WEAK" as const,evidence_refs:["10L-12H-G3","2L-12H-G3"],text_si:"x",rule_version:"CAREER_COMBINATIONS_V1" as const};
+ const dup={code:"FOREIGN_LINKED_CAREER" as const,strength:"WEAK" as const,evidence_refs:["10L-12H-G3","2L-11H-G3"],text_si:"x",rule_version:"CAREER_COMBINATIONS_V1" as const};
  const ag=aggregateCareerThemes([dup],[])[0];
  if(ag.evidence_grahas.length!==1||ag.evidence_grahas[0]!==3)throw new Error("graha Set dedupe branch changed");
  const tr=careerTransitActivation({lagnaRasiId:4,themes:[{code:"X",level:"WEAK",evidence_grahas:[5],evidence_houses:[11]}],transits:[{graha_id:5,rasi_id:2}]})[0];
