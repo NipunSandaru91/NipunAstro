@@ -32,10 +32,10 @@ Status legend: DONE / IN PROGRESS / TODO
 - TODO — Timing contradiction/support aggregation
 
 ## E. Interpretation
-- TODO — Structured conclusion object
-- TODO — Sinhala interpretation renderer
-- TODO — Supporting vs contradicting explanation
-- TODO — No unsupported certainty / probability semantics
+- DONE — Structured Career conclusion object
+- DONE — Sinhala Career interpretation renderer
+- DONE — Career supporting vs contradicting explanation
+- DONE — Career renderer avoids unsupported probability semantics
 
 ## F. Product/UI
 - TODO — Prediction API/service boundary
