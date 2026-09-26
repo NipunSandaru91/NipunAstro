@@ -95,3 +95,32 @@ export function calculatedRunRecord(input: {
     },
   };
 }
+
+
+export const PERSISTENCE_STAGES = [
+  "persist_calculation_temporal_inputs",
+  "clear_previous_position_rows",
+  "insert_graha_positions",
+  "insert_lagna_position",
+  "insert_varga_positions",
+  "insert_calculation_bhavas",
+  "insert_drishti_data",
+  "evaluate_yoga_rules",
+  "materialize_vimshottari_dasha",
+  "materialize_shadbala",
+  "insert_varga_lagna_positions",
+  "finalize_calculation_run",
+  "clear_transit_snapshot",
+  "insert_transit_positions",
+] as const;
+
+export type PersistenceStage = typeof PERSISTENCE_STAGES[number];
+
+export function isPersistenceStage(stage: string): stage is PersistenceStage {
+  return (PERSISTENCE_STAGES as readonly string[]).includes(stage);
+}
+
+export function persistenceFailureRecord(stage: string, error: unknown) {
+  if (!isPersistenceStage(stage)) throw new Error("UNKNOWN_PERSISTENCE_STAGE");
+  return calculationFailureRecord(stage, errorInfo(error));
+}
