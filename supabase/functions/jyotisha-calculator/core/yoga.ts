@@ -1,8 +1,8 @@
 export type YogaPosition = { graha_id: number; rasi_id: number; bhava: number };
 export type YogaRule = { rule_code:string; name:string; formation_conditions:Record<string,unknown>; planets_involved:string[]; houses_involved:number[] };
 export type YogaEvaluation = { rule_code:string; formation_status:"FORMED"|"NOT_FORMED"; qualification:string; strength:"PRIMARY"|"NONE"; matched_conditions:string[]; failed_conditions:string[]; evidence:Record<string,unknown>; engine_version:"YOGA_ENGINE_V1" };
-const OWN:Record<number,number[]>={3:[1,8],4:[3,6],5:[9,12],6:[2,7],7:[10,11]};
-const EXALT:Record<number,number>={3:10,4:6,5:4,6:12,7:7};
+const OWN:Record<number,number[]>={1:[5],2:[4],3:[1,8],4:[3,6],5:[9,12],6:[2,7],7:[10,11]};
+const EXALT:Record<number,number>={1:1,2:2,3:10,4:6,5:4,6:12,7:7};
 const PLANET_BY_CODE:Record<string,number>={SURYA:1,CHANDRA:2,MANGALA:3,BUDHA:4,GURU:5,SHUKRA:6,SHANI:7};
 const RASI_LORD:Record<number,number>={1:3,2:6,3:4,4:2,5:1,6:4,7:6,8:3,9:5,10:7,11:7,12:5};
 function validRasi(v:number){if(!Number.isInteger(v)||v<1||v>12)throw new Error("rasi_id must be an integer from 1 to 12")}
