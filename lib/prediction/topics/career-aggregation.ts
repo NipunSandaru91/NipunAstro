@@ -1,7 +1,7 @@
 import type { CareerCombination } from "./career-combinations.ts";
 import type { EvidenceModifier,EvidenceStrength } from "../strength.ts";
 type EvidenceBucket={ref:string;supporting:EvidenceModifier[];contradicting:EvidenceModifier[]};
-export type AggregatedCareerTheme=CareerCombination&{level:EvidenceStrength;supporting:EvidenceModifier[];contradicting:EvidenceModifier[]};
+export type AggregatedCareerTheme=CareerCombination&{level:EvidenceStrength;supporting:EvidenceModifier[];contradicting:EvidenceModifier[];evidence_grahas:number[]};
 export function aggregateCareerThemes(combinations:readonly CareerCombination[],buckets:readonly EvidenceBucket[]):AggregatedCareerTheme[]{
  return combinations.map(combo=>{
   const relevant=buckets.filter(b=>combo.evidence_refs.includes(b.ref));
@@ -12,6 +12,7 @@ export function aggregateCareerThemes(combinations:readonly CareerCombination[],
   else if(combo.strength==="STRONG"&&balance>=1)level="STRONG";
   else if(combo.strength==="WEAK"&&balance<2)level="WEAK";
   else level="MODERATE";
-  return {...combo,level,supporting,contradicting};
+  const evidence_grahas=[...new Set(combo.evidence_refs.map(ref=>Number(ref.match(/-G(\\d+)$/)?.[1])).filter(Number.isFinite))];
+  return {...combo,level,supporting,contradicting,evidence_grahas};
  });
 }
