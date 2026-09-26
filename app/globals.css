@@ -53,3 +53,92 @@ body {
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
+
+.splash-geometry {
+  position: absolute;
+  inset: -18vmax;
+  overflow: hidden;
+  opacity: 0.68;
+  pointer-events: none;
+  mask-image: radial-gradient(circle at center, black 0%, black 38%, transparent 78%);
+}
+
+.splash-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1px solid rgba(199, 170, 103, 0.18);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: splash-drift 26s linear infinite;
+}
+
+.splash-orbit-a {
+  width: min(82vw, 780px);
+  height: min(82vw, 780px);
+}
+
+.splash-orbit-b {
+  width: min(60vw, 570px);
+  height: min(34vw, 330px);
+  transform: translate(-50%, -50%) rotate(58deg);
+  animation-duration: 34s;
+  animation-direction: reverse;
+  border-color: rgba(83, 109, 145, 0.22);
+}
+
+.splash-orbit-c {
+  width: min(50vw, 470px);
+  height: min(50vw, 470px);
+  transform: translate(-50%, -50%) rotate(24deg);
+  animation-duration: 42s;
+  border-color: rgba(199, 170, 103, 0.12);
+}
+
+.splash-grid {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 900px);
+  height: min(92vw, 900px);
+  transform: translate(-50%, -50%) rotate(15deg);
+  background:
+    linear-gradient(rgba(83, 109, 145, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(199, 170, 103, 0.07) 1px, transparent 1px);
+  background-size: 58px 58px;
+  animation: splash-grid-drift 32s linear infinite;
+}
+
+.splash-node {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(224, 182, 91, 0.8);
+  background: #0a0c0f;
+  box-shadow: 0 0 16px rgba(224, 182, 91, 0.35);
+  transform-origin: 0 0;
+}
+
+.node-a { transform: translate(310px, -40px); }
+.node-b { transform: translate(-260px, -150px); }
+.node-c { transform: translate(180px, 220px); }
+.node-d { transform: translate(-170px, 250px); }
+
+@keyframes splash-drift {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes splash-grid-drift {
+  from { transform: translate(-50%, -50%) rotate(15deg); }
+  to { transform: translate(-50%, -50%) rotate(375deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-orbit,
+  .splash-grid {
+    animation: none;
+  }
+}
