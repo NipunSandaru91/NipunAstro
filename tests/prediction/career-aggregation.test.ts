@@ -21,3 +21,13 @@ Deno.test("strong combination is downgraded when contradictions dominate",()=>{
  const a=aggregateCareerThemes([combo],bad)[0];
  if(a.level!=="WEAK")throw new Error("contradictions did not downgrade theme");
 });
+
+Deno.test("weak combination with two net supports promotes to moderate",()=>{
+ const weak={...combo,strength:"WEAK" as const};
+ const boosted=[{ref:"10L-12H-G3",supporting:[
+  {code:"S1",polarity:"SUPPORTING" as const,text_si:"s1"},
+  {code:"S2",polarity:"SUPPORTING" as const,text_si:"s2"},
+ ],contradicting:[]},{ref:"12L-1H-G4",supporting:[],contradicting:[]}];
+ const a=aggregateCareerThemes([weak],boosted)[0];
+ if(a.level!=="MODERATE")throw new Error("weak combination promotion branch changed");
+});
