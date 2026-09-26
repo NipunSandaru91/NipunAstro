@@ -1,4 +1,4 @@
-import { houseFromRasi } from "../../supabase/functions/jyotisha-calculator/core/bhavas.ts";
+import { houseFromRasi } from "../../../supabase/functions/jyotisha-calculator/core/bhavas.ts";
 import { createPlacementEvidence,type EvidencePolarity,type PredictionTopic } from "../evidence.ts";
 import { grahaQualitySi,rasiQualitySi } from "../qualities.ts";
 type Position={graha_id:number;rasi_id:number};
