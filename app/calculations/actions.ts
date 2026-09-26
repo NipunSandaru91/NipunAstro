@@ -9,6 +9,12 @@ import {
   buildTransitEngineRequest,
   validateTransitInput,
 } from "@/lib/calculations/action-contract";
+import {
+  engineHttpError,
+  errorMessage,
+  hasSession,
+  rpcCreateError,
+} from "@/lib/calculations/action-errors";
 
 export async function createCalculation(formData: FormData) {
   const supabase = await createClient();
@@ -65,19 +71,15 @@ export async function createCalculation(formData: FormData) {
       p_country: country || null,
     });
 
-  if (createError || !calculationId) {
-    redirect(
-      "/dashboard?error=" +
-        encodeURIComponent(
-          createError?.message ?? "CALCULATION_CREATE_FAILED",
-        ),
-    );
+  const createFailure = rpcCreateError(createError, calculationId);
+  if (createFailure) {
+    redirect("/dashboard?error=" + encodeURIComponent(createFailure));
   }
 
   const { data: sessionData } = await supabase.auth.getSession();
   const session = sessionData.session;
 
-  if (!session) {
+  if (!hasSession(session)) {
     redirect("/login?error=session_expired");
   }
 
@@ -102,10 +104,10 @@ export async function createCalculation(formData: FormData) {
 
     if (!response.ok) {
       const detail = await response.text();
-      engineError = detail || `ENGINE_HTTP_${response.status}`;
+      engineError = engineHttpError(response.ok, response.status, detail, "ENGINE");
     }
   } catch (error) {
-    engineError = error instanceof Error ? error.message : String(error);
+    engineError = errorMessage(error);
   }
 
   if (engineError) {
@@ -147,7 +149,7 @@ export async function calculateTransit(formData: FormData) {
 
   const { data: sessionData } = await supabase.auth.getSession();
   const session = sessionData.session;
-  if (!session) redirect("/login?error=session_expired");
+  if (!hasSession(session)) redirect("/login?error=session_expired");
 
   const functionUrl =
     process.env.NEXT_PUBLIC_SUPABASE_URL +
@@ -176,11 +178,17 @@ export async function calculateTransit(formData: FormData) {
 
     if (!response.ok) {
       const detail = await response.text();
+      const transitError = engineHttpError(
+        response.ok,
+        response.status,
+        detail,
+        "TRANSIT",
+      );
       redirect(
         "/calculations/" +
           calculationId +
           "?transit_error=" +
-          encodeURIComponent(detail || "TRANSIT_HTTP_" + response.status),
+          encodeURIComponent(transitError ?? "TRANSIT_HTTP_" + response.status),
       );
     }
   } catch (error) {
@@ -188,7 +196,7 @@ export async function calculateTransit(formData: FormData) {
       "/calculations/" +
         calculationId +
         "/transit?transit_error=" +
-        encodeURIComponent(error instanceof Error ? error.message : String(error)),
+        encodeURIComponent(errorMessage(error)),
     );
   }
 
