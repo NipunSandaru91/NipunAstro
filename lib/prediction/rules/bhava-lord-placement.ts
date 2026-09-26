@@ -1,0 +1,23 @@
+import { allBhavas, houseFromRasi } from "../../supabase/functions/jyotisha-calculator/core/bhavas.ts";
+import { createPlacementEvidence, type EvidencePolarity, type PredictionTopic } from "../evidence.ts";
+import { grahaQualitySi, rasiQualitySi } from "../qualities.ts";
+
+type Position={graha_id:number;rasi_id:number};
+type Input={lagnaRasiId:number;sourceBhava:number;positions:Position[];topic:PredictionTopic;polarity:EvidencePolarity};
+
+export function evaluateBhavaLordPlacement(input:Input){
+  const source=allBhavas(input.lagnaRasiId).find((b)=>b.bhava===input.sourceBhava);
+  if(!source)throw new Error("BHAVA_NOT_FOUND");
+  const position=input.positions.find((p)=>p.graha_id===source.lord_graha_id);
+  if(!position)throw new Error("BHAVA_LORD_POSITION_MISSING");
+  const targetBhava=houseFromRasi(input.lagnaRasiId,position.rasi_id);
+  const graha=grahaQualitySi(position.graha_id);
+  const rasi=rasiQualitySi(position.rasi_id);
+  return createPlacementEvidence({
+    id:`${input.topic.toLowerCase()}-${input.sourceBhava}l-${targetBhava}h-g${position.graha_id}`,
+    topic:input.topic,polarity:input.polarity,grahaId:position.graha_id,rasiId:position.rasi_id,bhava:targetBhava,
+    ruleCode:"BHAVA_LORD_PLACEMENT",
+    ruleTextSi:`${input.sourceBhava} වන භාව අධිපති ${graha.name_si} ${targetBhava} වන භාවයේ ${rasi.name_si} රාශියේ පිහිටයි`,
+    source:{kind:"NATAL_D1",engineVersion:"PREDICTION_RULES_V1"},
+  });
+}
