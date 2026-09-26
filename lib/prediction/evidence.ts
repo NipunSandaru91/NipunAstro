@@ -1,4 +1,5 @@
 import { bhavaQualitySi, grahaQualitySi, rasiQualitySi } from "./qualities.ts";
+import { assessEvidenceStrength, type EvidenceModifier } from "./strength.ts";
 
 export type PredictionTopic = "CAREER"|"EDUCATION"|"RELATIONSHIP"|"FINANCE"|"HEALTH"|"SPIRITUALITY";
 export type EvidencePolarity = "SUPPORTING"|"CONTRADICTING";
@@ -11,11 +12,13 @@ export type PredictionEvidence = {
     rasi:ReturnType<typeof rasiQualitySi>;
     bhava:ReturnType<typeof bhavaQualitySi>;
   };
+  strength:ReturnType<typeof assessEvidenceStrength>;
   source:{kind:"NATAL_D1"|"DASHA"|"TRANSIT";engine_version:string};
 };
 type PlacementEvidenceInput={
   id:string;topic:PredictionTopic;polarity:EvidencePolarity;grahaId:number;rasiId:number;bhava:number;
   ruleCode:string;ruleTextSi:string;
+  modifiers?:readonly EvidenceModifier[];
   source:{kind:PredictionEvidence["source"]["kind"];engineVersion:string};
 };
 function assertIntegerRange(value:number,min:number,max:number,field:string){
@@ -27,5 +30,6 @@ export function createPlacementEvidence(input:PlacementEvidenceInput):Prediction
     placement:{graha_id:input.grahaId,rasi_id:input.rasiId,bhava:input.bhava},
     rule:{code:input.ruleCode,text_si:input.ruleTextSi},
     qualities:{graha:grahaQualitySi(input.grahaId),rasi:rasiQualitySi(input.rasiId),bhava:bhavaQualitySi(input.bhava)},
+    strength:assessEvidenceStrength(input.modifiers??[]),
     source:{kind:input.source.kind,engine_version:input.source.engineVersion}};
 }
