@@ -92,6 +92,10 @@ export function calculatedRunRecord(input: {
       calculation_state: "CALCULATED",
       calculation_contract: "USER_CALCULATION_V1",
       engine_handoff: "jyotisha-calculator/44",
+    } as Record<string, unknown> & {
+      calculation_state: string;
+      calculation_contract: string;
+      engine_handoff: string;
     },
   };
 }
