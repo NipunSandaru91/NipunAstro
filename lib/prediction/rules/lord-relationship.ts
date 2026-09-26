@@ -1,4 +1,4 @@
-import { allBhavas,houseFromRasi } from "../../supabase/functions/jyotisha-calculator/core/bhavas.ts";
+import { allBhavas,houseFromRasi } from "../../../supabase/functions/jyotisha-calculator/core/bhavas.ts";
 import type { EvidencePolarity,PredictionTopic } from "../evidence.ts";
 type Position={graha_id:number;rasi_id:number};
 type Input={lagnaRasiId:number;houseA:number;houseB:number;positions:Position[];topic:PredictionTopic;polarity:EvidencePolarity};
