@@ -4,7 +4,7 @@ import { careerTransitActivation } from "../../lib/prediction/timing/career-tran
 const theme={code:"FOREIGN_LINKED_CAREER",level:"STRONG" as const,evidence_grahas:[3,4],evidence_houses:[10,12]};
 
 Deno.test("transit through a theme evidence house creates a traceable trigger",()=>{
- const a=careerTransitActivation({lagnaRasiId:4,themes:[theme],transits:[{graha_id:5,rasi_id:1},{graha_id:7,rasi_id:12}]})[0];
+ const a=careerTransitActivation({lagnaRasiId:4,themes:[theme],transits:[{graha_id:5,rasi_id:1},{graha_id:7,rasi_id:3}]})[0];
  if(a.status!=="TRIGGERED"||a.activation_level!=="STRONG")throw new Error("multi-trigger transit activation missing");
  if(a.triggers.length!==2)throw new Error("transit trigger trace lost");
 });
