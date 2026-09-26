@@ -13,8 +13,8 @@ Status legend: DONE / IN PROGRESS / TODO
 - DONE — Placement modifiers: exaltation, own sign, debilitation, dusthana
 - DONE — Drishti modifiers with Parashari aspect trace
 - DONE — Shadbala modifier + versioned BPHS minimum thresholds
-- TODO — Wire calculated Shadbala rows into natal rule evidence
-- TODO — Yoga evidence adapter
+- DONE — Wire calculated Shadbala rows into natal rule evidence
+- DONE — Yoga evidence adapter
 - TODO — Additional rule families (lord relationships, conjunctions, house occupancy, topic-specific combinations)
 
 ## C. Topic Models
