@@ -17,22 +17,22 @@ const NATURAL_MALEFICS=new Set([1,3,7,8,9]);
 export function drishtiModifiers(input:{targetGrahaId:number;positions:Position[];lagnaRasiId:number}):DrishtiModifier[]{
  const target=input.positions.find(p=>p.graha_id===input.targetGrahaId);
  if(!target)throw new Error("TARGET_GRAHA_POSITION_MISSING");
- return allGrahaAspects(input.positions,input.lagnaRasiId)
-  .filter(a=>a.target_rasi_id===target.rasi_id&&a.source_graha_id!==input.targetGrahaId)
-  .flatMap(a=>{
+ const modifiers:DrishtiModifier[]=[];
+ for(const a of allGrahaAspects(input.positions,input.lagnaRasiId)
+  .filter(a=>a.target_rasi_id===target.rasi_id&&a.source_graha_id!==input.targetGrahaId)){
     const source=grahaQualitySi(a.source_graha_id);
-    if(NATURAL_BENEFICS.has(a.source_graha_id))return [{
-      code:"BENEFIC_DRISHTI",polarity:"SUPPORTING" as const,
+    if(NATURAL_BENEFICS.has(a.source_graha_id))modifiers.push({
+      code:"BENEFIC_DRISHTI",polarity:"SUPPORTING",
       text_si:`${source.name_si} ග්‍රහයාගේ පූර්ණ දෘෂ්ටිය ලැබේ`,
       source_graha_id:a.source_graha_id,target_graha_id:input.targetGrahaId,
       house_offset:a.house_offset,is_special:a.is_special,rule_version:a.rule_version,
-    }];
-    if(NATURAL_MALEFICS.has(a.source_graha_id))return [{
-      code:"MALEFIC_DRISHTI",polarity:"CONTRADICTING" as const,
+    });
+    else if(NATURAL_MALEFICS.has(a.source_graha_id))modifiers.push({
+      code:"MALEFIC_DRISHTI",polarity:"CONTRADICTING",
       text_si:`${source.name_si} ග්‍රහයාගේ පූර්ණ දෘෂ්ටිය ලැබේ`,
       source_graha_id:a.source_graha_id,target_graha_id:input.targetGrahaId,
       house_offset:a.house_offset,is_special:a.is_special,rule_version:a.rule_version,
-    }];
-    return [];
-  });
+    });
+ }
+ return modifiers;
 }
