@@ -1,7 +1,8 @@
 /// <reference lib="deno.ns" />
 import { buildCareerConclusion, renderCareerConclusionSi } from "../../lib/prediction/interpretation/career.ts";
+import type { AggregatedCareerTheme } from "../../lib/prediction/topics/career-aggregation.ts";
 
-const theme={code:"FOREIGN_LINKED_CAREER",level:"STRONG" as const,text_si:"විදේශ සම්බන්ධ වෘත්තීය තේමාවට සාධක කිහිපයක් සහාය දක්වයි",evidence_refs:["10L-12H-G3"],evidence_grahas:[3],supporting:[{code:"BENEFIC_DRISHTI",polarity:"SUPPORTING" as const,text_si:"ගුරු දෘෂ්ටිය සහාය දක්වයි"}],contradicting:[{code:"DUSTHANA_PLACEMENT",polarity:"CONTRADICTING" as const,text_si:"12 වන භාව පිහිටීම අභියෝග එක් කරයි"}],strength:"STRONG" as const,rule_version:"CAREER_COMBINATIONS_V1" as const};
+const theme:AggregatedCareerTheme={code:"FOREIGN_LINKED_CAREER",level:"STRONG" as const,text_si:"විදේශ සම්බන්ධ වෘත්තීය තේමාවට සාධක කිහිපයක් සහාය දක්වයි",evidence_refs:["10L-12H-G3"],evidence_grahas:[3],supporting:[{code:"BENEFIC_DRISHTI",polarity:"SUPPORTING" as const,text_si:"ගුරු දෘෂ්ටිය සහාය දක්වයි"}],contradicting:[{code:"DUSTHANA_PLACEMENT",polarity:"CONTRADICTING" as const,text_si:"12 වන භාව පිහිටීම අභියෝග එක් කරයි"}],strength:"STRONG" as const,rule_version:"CAREER_COMBINATIONS_V1" as const};
 const reasoning=[{graha:"කුජ",rasi:"මිථුන",bhava:12,rule_si:"10 වන භාව අධිපති කුජ 12 වන භාවයේ මිථුන රාශියේ පිහිටයි"}];
 const timing={theme_code:"FOREIGN_LINKED_CAREER",natal_level:"STRONG" as const,status:"ACTIVE_NOW" as const,level:"STRONG" as const,rule_version:"CAREER_TIMING_V1" as const};
 
