@@ -11,5 +11,6 @@ const TIMING:Record<CareerConclusion["timing_status"],string>={ACTIVE_NOW:"ද�
 function lines(xs:CareerConclusion["supporting"]){return xs.length?xs.map(x=>`• ${x.text_si}`).join("\n"):"• විශේෂ සාධක වාර්තා වී නැත";}
 export function renderCareerConclusionSi(c:CareerConclusion):string{
  const final=c.timing_status==="ACTIVE_NOW"?`${TITLE[c.theme_code]} සඳහා ජන්ම සාධක සහ වත්මන් කාල සක්‍රීයතාව එකිනෙක සහාය දක්වයි.`:`${TITLE[c.theme_code]} ජන්ම සටහනේ පවතින නමුත් එහි කාල සක්‍රීයතාව ${c.timing_level} මට්ටමේය.`;
- const reasoning=c.reasoning.length?c.reasoning.map(x=>`• ග්‍රහ: ${x.graha} | රාශිය: ${x.rasi} | භාවය: ${x.bhava}\n  නීතිය: ${x.rule_si}`).join("\n"):"• සවිස්තර placement reasoning නොමැත";\n return `ප්‍රතිඵලය\n${TITLE[c.theme_code]} — ජන්ම සාධක ශක්තිය: ${c.natal_level}\n\nහේතුව\n${c.reason_si}\n${reasoning}\n\nසහායක සාධක\n${lines(c.supporting)}\n\nවිරුද්ධ සාධක\n${lines(c.contradicting)}\n\nකාල සක්‍රීයතාව\n${TIMING[c.timing_status]}\n\nඅවසාන නිගමනය\n${final}`;
+ const reasoning=c.reasoning.length?c.reasoning.map(x=>`• ග්‍රහ: ${x.graha} | රාශිය: ${x.rasi} | භාවය: ${x.bhava}\n  නීතිය: ${x.rule_si}`).join("\n"):"• සවිස්තර placement reasoning නොමැත";
+ return `ප්‍රතිඵලය\n${TITLE[c.theme_code]} — ජන්ම සාධක ශක්තිය: ${c.natal_level}\n\nහේතුව\n${c.reason_si}\n${reasoning}\n\nසහායක සාධක\n${lines(c.supporting)}\n\nවිරුද්ධ සාධක\n${lines(c.contradicting)}\n\nකාල සක්‍රීයතාව\n${TIMING[c.timing_status]}\n\nඅවසාන නිගමනය\n${final}`;
 }
