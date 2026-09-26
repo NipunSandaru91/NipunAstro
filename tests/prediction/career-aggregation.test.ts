@@ -11,6 +11,7 @@ Deno.test("career aggregation preserves both supporting and contradicting eviden
  const a=aggregateCareerThemes([combo],evidence)[0];
  if(a.supporting.length!==2||a.contradicting.length!==1)throw new Error("career evidence balance lost");
  if(a.level!=="STRONG")throw new Error("convergent career theme should remain strong");
+ if(a.evidence_grahas.join(",")!=="3,4")throw new Error("career evidence graha ids were not parsed");
 });
 Deno.test("strong combination is downgraded when contradictions dominate",()=>{
  const bad=[{ref:"10L-12H-G3",supporting:[],contradicting:[
