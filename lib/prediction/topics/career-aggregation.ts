@@ -12,7 +12,7 @@ export function aggregateCareerThemes(combinations:readonly CareerCombination[],
   else if(combo.strength==="STRONG"&&balance>=1)level="STRONG";
   else if(combo.strength==="WEAK"&&balance<2)level="WEAK";
   else level="MODERATE";
-  const evidence_grahas=[...new Set(combo.evidence_refs.map(ref=>Number(ref.match(/-G(\\d+)$/)?.[1])).filter(Number.isFinite))];
+  const evidence_grahas=[...new Set(combo.evidence_refs.map(ref=>Number(ref.match(/-G(\d+)$/)?.[1])).filter(Number.isFinite))];
   return {...combo,level,supporting,contradicting,evidence_grahas};
  });
 }
