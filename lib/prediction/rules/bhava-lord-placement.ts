@@ -1,4 +1,4 @@
-import { allBhavas, houseFromRasi } from "../../supabase/functions/jyotisha-calculator/core/bhavas.ts";
+import { allBhavas, houseFromRasi } from "../../../supabase/functions/jyotisha-calculator/core/bhavas.ts";
 import { createPlacementEvidence, type EvidencePolarity, type PredictionTopic } from "../evidence.ts";
 import { grahaQualitySi, rasiQualitySi } from "../qualities.ts";
 import { placementModifiers } from "../modifiers/placement.ts";
