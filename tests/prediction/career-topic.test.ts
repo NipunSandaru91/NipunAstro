@@ -27,3 +27,10 @@ Deno.test("Career V1 preserves evidence, not prose verdicts",()=>{
  const m=buildCareerNatalModel({lagnaRasiId:4,positions,shadbala});
  if("prediction_text" in m||"probability" in m)throw new Error("premature prose/probability entered topic model");
 });
+
+Deno.test("Career V1 exposes derived combination themes from its own evidence",()=>{
+ const m=buildCareerNatalModel({lagnaRasiId:4,positions,shadbala});
+ if(!Array.isArray(m.combinations))throw new Error("career combinations missing");
+ const foreign=m.combinations.find(x=>x.code==="FOREIGN_LINKED_CAREER");
+ if(!foreign)throw new Error("foreign-linked career theme missing from model");
+});
