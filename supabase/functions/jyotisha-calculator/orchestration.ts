@@ -45,3 +45,53 @@ export function calculationFailureRecord(stage: string, error: ErrorInfo) {
     },
   };
 }
+
+
+export type OwnedCalculation = {
+  id: string;
+  status: string;
+  owner_user_id?: string | null;
+  calculation_metadata?: Record<string, unknown> | null;
+};
+
+export function assertOwnedCalculation<T extends OwnedCalculation>(run: T | null): T {
+  if (!run) throw new Error("calculation_id not found or not owned by current user");
+  return run;
+}
+
+export function assertCalculableState(status: string): void {
+  if (!["PENDING", "FAILED"].includes(status)) {
+    throw new Error("calculation is not in a calculable state");
+  }
+}
+
+export function calculatedRunRecord(input: {
+  existingMetadata?: Record<string, unknown> | null;
+  ayanamsaValue: number;
+  utcTimestamp: string;
+  julianDay: number;
+  nodeMethod: "MEAN" | "TRUE";
+  calculationTimestamp: string;
+}) {
+  return {
+    ephemeris_version: "2.10.03",
+    ayanamsa_value: input.ayanamsaValue,
+    calculation_timestamp: input.calculationTimestamp,
+    engine_version: "jyotisha-calculator/44; swisseph-wasm/0.1.5 browser-inline",
+    status: "CALCULATED" as const,
+    error_message: null,
+    utc_timestamp: input.utcTimestamp,
+    julian_day: input.julianDay,
+    ephemeris_engine: "SWISS_EPHEMERIS",
+    ayanamsa: "LAHIRI",
+    zodiac_type: "SIDEREAL",
+    house_system: "WHOLE_SIGN",
+    node_method: input.nodeMethod,
+    calculation_metadata: {
+      ...(input.existingMetadata ?? {}),
+      calculation_state: "CALCULATED",
+      calculation_contract: "USER_CALCULATION_V1",
+      engine_handoff: "jyotisha-calculator/44",
+    },
+  };
+}
