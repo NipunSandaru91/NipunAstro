@@ -142,3 +142,15 @@ body {
     animation: none;
   }
 }
+
+.astro-shell{background:radial-gradient(circle at 50% -10%,rgba(34,77,110,.2),transparent 34rem),radial-gradient(circle at 85% 25%,rgba(184,132,43,.09),transparent 24rem),#070a0d}
+.cosmic-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(8,12,17,.97),rgba(7,19,29,.9));box-shadow:inset 0 0 70px rgba(210,156,55,.04),0 24px 80px rgba(0,0,0,.35)}
+.cosmic-hero:before{content:"";position:absolute;inset:0;opacity:.34;background-image:radial-gradient(circle at 15% 25%,#d9b35b 0 1px,transparent 1.4px),radial-gradient(circle at 75% 35%,#739cc3 0 1px,transparent 1.4px),radial-gradient(circle at 55% 80%,#fff 0 1px,transparent 1.2px);background-size:130px 130px,170px 170px,210px 210px;pointer-events:none}
+.cosmic-orbit-card{position:relative;margin-left:auto;width:min(100%,290px);aspect-ratio:2/1;border:1px solid rgba(207,159,68,.42);border-radius:999px;display:grid;place-items:center;color:#e5b958;box-shadow:0 0 45px rgba(207,159,68,.08)}
+.cosmic-orbit-card:after{content:"";position:absolute;width:62%;height:62%;border:1px solid rgba(100,151,190,.3);border-radius:50%;transform:rotate(24deg)}
+.cosmic-orbit-card span{font-size:3rem;text-shadow:0 0 22px #d89b30}.cosmic-orbit-card i,.cosmic-orbit-card b{position:absolute;width:12px;height:12px;border-radius:50%;background:#7298b8}.cosmic-orbit-card i{left:12%;top:35%}.cosmic-orbit-card b{right:12%;bottom:28%;width:auto;height:auto;background:none;font-size:1.3rem;color:#d4a74e}
+.astro-chip{white-space:nowrap;border:1px solid #303944;border-radius:14px;background:#0b1015;padding:.7rem 1rem;font-size:.78rem;color:#9fa5ad}.astro-chip.active{border-color:#a77a32;background:linear-gradient(180deg,#21180b,#12100c);color:#efc66f;box-shadow:0 0 20px rgba(216,157,48,.08)}
+.astro-card{border:1px solid #343c45;border-radius:22px;background:linear-gradient(180deg,rgba(13,19,25,.96),rgba(8,12,16,.98));padding:1.35rem;box-shadow:0 20px 55px rgba(0,0,0,.24)}
+.strength-pill{border:1px solid #775b2b;border-radius:999px;padding:.25rem .55rem;font-size:.62rem;letter-spacing:.08em;color:#e8bc63;background:#171208}
+.why-card{border-top:1px solid #27303a;padding-top:1rem}.why-card summary{cursor:pointer;color:#d8b66b;font-size:.8rem}.reason-flow{display:flex;align-items:center;justify-content:space-between;gap:.3rem;color:#d2b16b;font-size:.68rem}.reason-flow span{border:1px solid #303944;border-radius:999px;padding:.35rem .5rem;color:#bbc0c6}.reason-flow b{font-weight:400;color:#6d747c}
+.timing-strip{display:flex;align-items:center;gap:.45rem;overflow-x:auto;border:1px solid #44351e;border-radius:14px;background:#100d08;padding:.7rem;font-size:.65rem;color:#c9c0ae}.timing-strip strong{margin-left:auto;color:#efbd5c;white-space:nowrap}
