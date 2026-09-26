@@ -18,7 +18,7 @@ Status legend: DONE / IN PROGRESS / TODO
 - DONE — Lord relationships, conjunctions, and house occupancy\n- DONE — Career topic-specific natal combinations and evidence aggregation
 
 ## C. Topic Models
-- DONE — Career / business natal evidence model\n- TODO — Career timing activation (Dasha + Transit)
+- DONE — Career / business natal evidence model\n- IN PROGRESS — Career timing activation (Dasha implemented; Transit next)
 - TODO — Education / knowledge
 - TODO — Relationship / marriage
 - TODO — Finance / wealth
@@ -26,7 +26,7 @@ Status legend: DONE / IN PROGRESS / TODO
 - TODO — Spirituality / dharma
 
 ## D. Timing Activation
-- TODO — Vimshottari Dasha evidence adapter
+- IN PROGRESS — Vimshottari Dasha evidence adapter (Career activation implemented)
 - TODO — Transit evidence adapter
 - TODO — Natal promise -> Dasha activation -> Transit trigger chain
 - TODO — Timing contradiction/support aggregation
