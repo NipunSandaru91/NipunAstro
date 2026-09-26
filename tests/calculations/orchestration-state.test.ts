@@ -52,3 +52,18 @@ Deno.test("calculated run record preserves engine audit and existing metadata", 
     throw new Error("calculation audit contract changed");
   }
 });
+
+
+Deno.test("calculated run record defaults missing metadata without changing audit fields", () => {
+  const record = calculatedRunRecord({
+    ayanamsaValue: 24.1,
+    utcTimestamp: "2026-09-26T00:00:00.000Z",
+    julianDay: 2460000.5,
+    nodeMethod: "TRUE",
+    calculationTimestamp: "2026-09-26T00:00:01.000Z",
+  });
+  if (record.node_method !== "TRUE") throw new Error("node method changed");
+  if (record.calculation_metadata.calculation_state !== "CALCULATED") {
+    throw new Error("default metadata contract failed");
+  }
+});
