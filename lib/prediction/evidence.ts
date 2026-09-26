@@ -1,3 +1,5 @@
+import { bhavaQualitySi, grahaQualitySi, rasiQualitySi } from "./qualities.ts";
+
 export type PredictionTopic =
   | "CAREER"
   | "EDUCATION"
