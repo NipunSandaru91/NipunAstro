@@ -34,3 +34,11 @@ Deno.test("Career V1 exposes derived combination themes from its own evidence",(
  const foreign=m.combinations.find(x=>x.code==="FOREIGN_LINKED_CAREER");
  if(!foreign)throw new Error("foreign-linked career theme missing from model");
 });
+
+Deno.test("Career V1 exposes evidence-balanced themes",()=>{
+ const m=buildCareerNatalModel({lagnaRasiId:4,positions,shadbala});
+ if(!Array.isArray(m.themes))throw new Error("aggregated career themes missing");
+ for(const theme of m.themes){
+  if(!Array.isArray(theme.supporting)||!Array.isArray(theme.contradicting))throw new Error("theme evidence trace missing");
+ }
+});
