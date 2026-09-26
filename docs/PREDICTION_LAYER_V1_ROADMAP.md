@@ -15,7 +15,7 @@ Status legend: DONE / IN PROGRESS / TODO
 - DONE — Shadbala modifier + versioned BPHS minimum thresholds
 - DONE — Wire calculated Shadbala rows into natal rule evidence
 - DONE — Yoga evidence adapter
-- TODO — Additional rule families (lord relationships, conjunctions, house occupancy, topic-specific combinations)
+- DONE — Lord relationships, conjunctions, and house occupancy\n- TODO — Topic-specific natal combinations
 
 ## C. Topic Models
 - TODO — Career / business
