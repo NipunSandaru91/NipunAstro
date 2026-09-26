@@ -43,3 +43,20 @@ Deno.test("calculationFailureRecord preserves stage and error evidence", () => {
     throw new Error("failure stage metadata missing");
   }
 });
+
+
+Deno.test("errorInfo covers primitive and partial error values", () => {
+  const primitive = errorInfo("plain failure");
+  if (primitive.name !== "string" || primitive.message !== "plain failure") {
+    throw new Error("primitive error normalization failed");
+  }
+  if (primitive.code !== null || primitive.details !== null || primitive.hint !== null) {
+    throw new Error("primitive optional fields must default to null");
+  }
+
+  const partial = errorInfo({ name: 42, message: 99, code: "E" });
+  if (partial.name !== "object" || partial.message !== "[object Object]" ||
+      partial.code !== "E" || partial.details !== null || partial.hint !== null) {
+    throw new Error("partial error normalization failed");
+  }
+});
