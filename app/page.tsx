@@ -9,13 +9,13 @@ export default function SplashPage() {
           <span className="serif text-3xl text-[#e0b65b]">N</span>
         </div>
         <h1 className="serif mt-8 text-5xl tracking-tight text-[#eee9de]">NipunAstro</h1>
-        <p className="mt-4 text-sm leading-7 text-[#8d929b]">A calculation-first Jyotiṣa observatory.</p>
+        <p className="mt-4 text-sm leading-7 text-[#8d929b]">සත්‍යාපිත ගණනය කිරීම් මත පදනම් වූ ජ්‍යොතිෂ නිරීක්ෂණාගාරයක්.</p>
         <div className="mt-10">
           <Link href="/welcome" className="inline-flex rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-7 py-3.5 text-sm font-semibold text-[#15130e] hover:brightness-110">
-            Enter Observatory
+            නිරීක්ෂණාගාරයට පිවිසෙන්න
           </Link>
         </div>
-        <p className="mt-8 text-[10px] uppercase tracking-[0.18em] text-[#555b65]">Verified calculation · Interpretation kept separate</p>
+        <p className="mt-8 text-[10px] uppercase tracking-[0.18em] text-[#555b65]">සත්‍යාපිත ගණනය · අර්ථකථනය වෙනම</p>
       </div>
     </main>
   );
