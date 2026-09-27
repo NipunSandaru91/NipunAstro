@@ -1,30 +1,26 @@
 import Link from "next/link";
 import { signInWithGoogle } from "@/app/auth/actions";
+import { SacredMarkArt } from "@/app/components/reference-art";
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
-  const params = await searchParams;
-  return (
-    <main className="reference-auth-screen login-reference">
-      <div className="reference-auth-frame login-layout">
-        <div className="sacred-mark" aria-hidden="true">
-          <span className="diamond d1"/><span className="diamond d2"/><span className="diamond d3"/>
-          <i className="sacred-core">✦</i>
-        </div>
-        <section className="login-copy">
-          <h1>NIPUN ASTRO</h1>
-          <p>ජීවිතයේ නක්ෂත්‍ර මඟ</p>
-        </section>
-        {params.error ? <div className="login-error">{params.error}</div> : null}
-        <div className="login-actions">
-          <form action={signInWithGoogle}>
-            <input type="hidden" name="next" value="/dashboard" />
-            <button className="reference-login-button" type="submit"><b className="google-g">G</b><span>Continue with Google</span></button>
-          </form>
-          <button className="reference-login-button muted" type="button" disabled aria-disabled="true"><b className="apple-g">●</b><span>Continue with Apple</span><small>Beta</small></button>
-          <button className="reference-login-button muted" type="button" disabled aria-disabled="true"><b>✉</b><span>Continue with Email</span><small>Beta</small></button>
-        </div>
-        <Link href="/welcome" className="login-back">← ආපසු</Link>
+export default async function LoginPage({searchParams}:{searchParams:Promise<{error?:string}>}){
+  const params=await searchParams;
+  return <main className="ref-screen">
+    <div className="ref-phone ref-login">
+      <div className="ref-login-mark"><SacredMarkArt/></div>
+      <section className="ref-login-copy">
+        <h1>NIPUN ASTRO</h1>
+        <p>ජීවිතයේ නක්ෂත්‍ර මඟ</p>
+      </section>
+      {params.error?<div className="ref-error">{params.error}</div>:null}
+      <div className="ref-login-actions">
+        <form action={signInWithGoogle}>
+          <input type="hidden" name="next" value="/dashboard"/>
+          <button className="ref-auth-button" type="submit"><span className="google">G</span><b>Continue with Google</b><em/></button>
+        </form>
+        <button className="ref-auth-button disabled" type="button" disabled><span>●</span><b>Continue with Apple</b><em>BETA</em></button>
+        <button className="ref-auth-button disabled" type="button" disabled><span>✉</span><b>Continue with Email</b><em>BETA</em></button>
       </div>
-    </main>
-  );
+      <Link href="/welcome" className="ref-login-back">← ආපසු</Link>
+    </div>
+  </main>;
 }
