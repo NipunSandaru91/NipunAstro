@@ -1,23 +1,16 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "NipunAstro",
-  description: "Jyotiṣa application",
-};
-
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  viewportFit: "cover",
-  themeColor: "#000000",
+  title: "NipunAstro | Jyotiṣa Observatory",
+  description: "Calculation-first Jyotiṣa analysis and evidence observatory.",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="si">
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
