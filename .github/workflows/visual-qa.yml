@@ -60,21 +60,21 @@ jobs:
       - name: Capture entry flow
         run: |
           mkdir -p visual-qa
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/ visual-qa/01-splash.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/welcome visual-qa/02-welcome.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/login visual-qa/03-login.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/ visual-qa/01-splash.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/welcome visual-qa/02-welcome.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/login visual-qa/03-login.png
 
       - name: Capture authenticated-theme fixtures
         run: |
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/dashboard visual-qa/04-dashboard.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/new-chart visual-qa/05-new-chart.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/my-charts visual-qa/06-my-charts.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/calculation visual-qa/07-calculation.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/dasha visual-qa/08-dasha.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/transit visual-qa/09-transit.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/predictions visual-qa/10-predictions.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/profile visual-qa/11-profile.png
-          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/admin visual-qa/12-admin.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/dashboard visual-qa/04-dashboard.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/new-chart visual-qa/05-new-chart.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/my-charts visual-qa/06-my-charts.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/calculation visual-qa/07-calculation.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/dasha visual-qa/08-dasha.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/transit visual-qa/09-transit.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/predictions visual-qa/10-predictions.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/profile visual-qa/11-profile.png
+          npx -y playwright@1.55.0 screenshot --browser=chromium --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/admin visual-qa/12-admin.png
 
       - name: Upload visual QA screenshots
         uses: actions/upload-artifact@v4
