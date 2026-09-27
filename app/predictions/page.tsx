@@ -78,13 +78,13 @@ export default async function PredictionsPage({searchParams}:{searchParams:Promi
       <p className="eyebrow">Prediction Observatory · Calculation Bound</p>
       <div className="mt-3 grid gap-7 lg:grid-cols-[1fr_.55fr] lg:items-end">
         <div><h1 className="serif text-4xl text-[#f3dfb1] sm:text-5xl">භාව 12 පුරෝකථන නිරීක්ෂණය</h1><p className="mt-4 max-w-2xl text-sm leading-7 text-[#b9b4a9]">Prediction එක දැන් explicit calculation එකකට බැඳී ඇත. භාව 12 overview එකෙන් එක් භාවයක් විවෘත කර evidence chain එක බලන්න.</p></div>
-        <div className="rounded-2xl border border-[#755a2e] bg-[#0b1015]/80 p-4"><p className="text-[10px] uppercase tracking-[.15em] text-[#8c8270]">Prediction for</p><p className="serif mt-1 text-xl text-[#efd69b]">{selectedCalc.input_place_name??"Natal chart"}</p><p className="mt-1 text-xs text-[#8d969f]">{selectedCalc.input_birth_date} · {selectedCalc.input_birth_time}</p><p className="mt-1 break-all text-[9px] text-[#5f6871]">ID · {selectedId}</p></div>
+        <div className="rounded-2xl border border-[#755a2e] bg-[#0b1015]/80 p-4"><p className="text-[10px] uppercase tracking-[.15em] text-[#8c8270]">Prediction for</p><p className="serif mt-1 text-xl text-[#efd69b]">{selectedCalc.subject_name??selectedCalc.input_place_name??"Natal chart"}</p><p className="mt-1 text-xs text-[#8d969f]">{selectedCalc.input_birth_date} · {selectedCalc.input_birth_time}</p><p className="mt-1 break-all text-[9px] text-[#5f6871]">ID · {selectedId}</p></div>
       </div>
     </section>
 
     <section className="astro-card mt-5">
       <div className="flex items-end justify-between gap-3"><div><p className="eyebrow">Chart Selector</p><h2 className="serif mt-2 text-2xl text-[#f0e4c8]">පුරෝකථනය සඳහා කේන්දරය තෝරන්න</h2></div><Link href={`/calculations/${selectedId}`} className="text-xs text-[#d8b66b]">ගණනය බලන්න →</Link></div>
-      <div className="mt-4 flex gap-2 overflow-x-auto pb-2">{calculations.map(c=><Link key={c.id} href={`/predictions?calculation=${c.id}&bhava=${selectedBhava}`} className={c.id===selectedId?"astro-chip active":"astro-chip"}><span className="block">{c.input_place_name??"Natal chart"}</span><small className="mt-1 block opacity-60">{c.input_birth_date}</small></Link>)}</div>
+      <div className="mt-4 flex gap-2 overflow-x-auto pb-2">{calculations.map(c=><Link key={c.id} href={`/predictions?calculation=${c.id}&bhava=${selectedBhava}`} className={c.id===selectedId?"astro-chip active":"astro-chip"}><span className="block">{c.subject_name??c.input_place_name??"Natal chart"}</span><small className="mt-1 block opacity-60">{c.input_birth_date}</small></Link>)}</div>
     </section>
 
     <section className="mt-5">
