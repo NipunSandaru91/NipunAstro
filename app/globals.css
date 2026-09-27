@@ -316,3 +316,67 @@ body {
 :lang(si) select {
   letter-spacing: normal;
 }
+
+
+/* NipunAstro Unified UI V3
+   Approved direction: premium dark cosmic observatory, gold structure, live Sinhala copy. */
+:root{
+  --na-bg:#02080d;--na-surface:#07121a;--na-surface-2:#0a1822;--na-line:#233746;
+  --na-gold:#d7a854;--na-gold-soft:#edc97f;--na-ivory:#f2e7d1;--na-muted:#91a0aa;--na-blue:#4f86a7;
+}
+html{background:var(--na-bg)}
+body{background:
+ radial-gradient(circle at 50% -12%,rgba(33,92,126,.18),transparent 35rem),
+ radial-gradient(circle at 85% 30%,rgba(199,137,47,.07),transparent 28rem),
+ var(--na-bg);color:var(--na-ivory)}
+:lang(si),.si-text{
+  font-family:"Sinhala Sangam MN","Noto Sans Sinhala","Iskoola Pota",system-ui,sans-serif;
+  letter-spacing:normal!important;font-kerning:normal;text-rendering:optimizeLegibility;
+}
+.si-text *{letter-spacing:normal}
+.na-entry-screen{min-height:100svh;display:grid;place-items:center;background:#010509;color:var(--na-ivory)}
+.na-entry-frame{position:relative;width:min(100%,430px);min-height:100svh;overflow:hidden;background:#02080d;color:inherit}
+.na-entry-art{position:absolute;inset:0;width:100%;height:63%;object-fit:cover;object-position:center top;filter:saturate(.94) contrast(1.05)}
+.na-entry-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(1,6,10,.02) 0%,rgba(1,6,10,.08) 42%,rgba(2,8,13,.8) 64%,#02080d 82%)}
+.na-splash{display:block;text-decoration:none}
+.na-splash-art{height:72%;object-position:center 12%}
+.na-zodiac-arc{position:absolute;left:50%;top:23%;width:88%;aspect-ratio:1;transform:translate(-50%,-50%);border:1px solid rgba(218,169,80,.48);border-radius:50%;box-shadow:0 0 70px rgba(73,134,171,.1)}
+.na-zodiac-arc:before,.na-zodiac-arc:after,.na-zodiac-arc i{content:"";position:absolute;border-radius:50%;border:1px solid rgba(89,143,176,.25)}
+.na-zodiac-arc:before{inset:13%}.na-zodiac-arc:after{inset:27%;border-color:rgba(218,169,80,.26)}
+.na-zodiac-arc i:nth-child(1){inset:40%;background:radial-gradient(circle,rgba(245,190,91,.28),transparent 65%);box-shadow:0 0 40px rgba(234,160,52,.18)}
+.na-splash-brand{position:absolute;z-index:4;left:0;right:0;bottom:0;padding:1rem 1.5rem calc(2rem + env(safe-area-inset-bottom));text-align:center;background:linear-gradient(180deg,transparent,#02080d 24%,#02080d)}
+.na-sacred-mini{margin:auto;width:54px;height:54px;display:grid;place-items:center;border:1px solid rgba(220,171,82,.62);transform:rotate(45deg);color:#efbd62}
+.na-splash-brand h1,.na-login-brand h1{margin:.9rem 0 .25rem;font-family:Georgia,"Times New Roman",serif;font-size:2.45rem;letter-spacing:.08em;color:#efc36c;text-shadow:0 4px 24px #000}
+.na-splash-brand p,.na-login-brand p{margin:0;color:#e2c17e;font-size:.95rem}
+.na-splash-brand span{display:block;margin-top:.7rem;color:#a8a29a;font-family:Georgia,"Times New Roman",serif;font-size:.72rem;letter-spacing:.09em}
+.na-welcome-art{height:66%;object-position:center top}
+.na-welcome-orbit{position:absolute;left:50%;top:19%;width:92%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(216,167,77,.45);box-shadow:0 0 70px rgba(50,116,151,.13)}
+.na-welcome-orbit:before,.na-welcome-orbit:after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(85,139,173,.26)}.na-welcome-orbit:before{inset:16%}.na-welcome-orbit:after{inset:32%;border-color:rgba(216,167,77,.22)}
+.na-welcome-copy{position:absolute;z-index:3;left:0;right:0;bottom:8.2rem;padding:2rem 1.55rem 1.2rem;background:linear-gradient(180deg,transparent,rgba(2,8,13,.82) 18%,#02080d 58%)}
+.na-kicker{margin:0 0 .65rem;color:#c69244;font-size:.6rem;letter-spacing:.14em!important}
+.na-welcome-copy h1{margin:0;color:#f1dfbc;font-size:2.05rem;line-height:1.38;font-weight:700}.na-welcome-copy h1 span{color:#efba59}
+.na-welcome-copy>p:last-child{margin:.9rem 0 0;color:#bdc3c5;font-size:.88rem;line-height:1.78}
+.na-entry-footer{position:absolute;z-index:4;left:0;right:0;bottom:0;padding:0 1.35rem calc(1.2rem + env(safe-area-inset-bottom))}
+.na-dots{display:flex;justify-content:center;gap:.45rem;margin-bottom:1rem}.na-dots i{width:6px;height:6px;border-radius:99px;background:#58636c}.na-dots i.active{width:24px;background:#e1b35c}
+.na-gold-button{display:flex;align-items:center;justify-content:center;gap:.8rem;width:100%;border:1px solid #e0ad54;border-radius:13px;padding:.95rem 1rem;background:linear-gradient(180deg,#efc878,#c9913f);color:#171008;text-decoration:none;font-weight:700;box-shadow:0 14px 35px rgba(194,129,43,.16)}
+.na-login{display:flex;flex-direction:column;justify-content:center;padding:2rem 1.35rem;background:#02080d}
+.na-login-sky{position:absolute;left:0;right:0;top:0;width:100%;height:31%;object-fit:cover;filter:saturate(.75) brightness(.55)}
+.na-login-haze{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,8,13,.05),#02080d 35%,#02080d)}
+.na-login-brand,.na-login-actions,.na-error{position:relative;z-index:2}
+.na-login-brand{text-align:center;margin-top:-2.5rem}
+.na-sacred-mark{position:relative;margin:0 auto 1rem;width:145px;height:145px;display:grid;place-items:center}
+.na-sacred-mark i{position:absolute;inset:19px;border:1px solid rgba(224,174,82,.72);transform:rotate(45deg)}.na-sacred-mark i:nth-child(2){inset:39px;transform:rotate(0deg);border-color:rgba(77,139,174,.5)}.na-sacred-mark span{position:relative;z-index:2;color:#f1bc59;font-size:2rem;text-shadow:0 0 24px rgba(235,158,50,.55)}
+.na-login-actions{margin-top:2rem}.na-auth-button{width:100%;display:grid;grid-template-columns:32px 1fr 24px;align-items:center;gap:.5rem;border:1px solid #314655;border-radius:12px;padding:.9rem 1rem;background:#f5f5f2;color:#14181b;font-size:.95rem}
+.na-auth-button b{font-weight:700}.na-auth-button em{font-style:normal;color:#6d7478}.na-google{display:grid;width:25px;height:25px;place-items:center;border-radius:50%;font-weight:800;color:#4285f4;background:#fff}
+.na-login-note{margin:1rem auto 0;max-width:320px;text-align:center;color:#76838c;font-size:.72rem;line-height:1.6}.na-back-link{display:block;margin-top:1rem;text-align:center;color:#a79678;font-size:.78rem;text-decoration:none}.na-error{margin-top:1rem;border:1px solid #6a3939;border-radius:12px;padding:.75rem;background:#211416;color:#dfb0b0;font-size:.78rem}
+.na-app-header{position:sticky;top:0;z-index:40;border-bottom:1px solid rgba(183,132,55,.32);background:rgba(2,8,13,.88);backdrop-filter:blur(18px)}
+.na-app-header-inner{height:58px;max-width:1100px;margin:auto;padding:0 1rem;display:grid;grid-template-columns:40px 1fr 40px;align-items:center}
+.na-menu-mark{color:#d8ad5b;text-decoration:none;font-size:1.1rem}.na-wordmark{text-align:center;color:#e7bd6e;text-decoration:none;font-family:Georgia,"Times New Roman",serif;font-size:1rem;letter-spacing:.08em}.na-avatar{justify-self:end;display:grid;width:32px;height:32px;place-items:center;border-radius:50%;border:1px solid #bc8c46;background:#8e6b47;color:#fff6e3;text-decoration:none;font-size:.8rem}
+.na-bottom-nav{position:fixed;z-index:50;left:50%;bottom:0;transform:translateX(-50%);width:min(100%,700px);height:calc(66px + env(safe-area-inset-bottom));padding:7px 12px env(safe-area-inset-bottom);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(3,11,17,.96);border-top:1px solid #233746;backdrop-filter:blur(16px)}
+.na-bottom-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#7f8d96;text-decoration:none}.na-bottom-nav a span{font-size:1rem}.na-bottom-nav a small{font-size:.62rem}.na-bottom-nav a.active{color:#e5b65c}
+.astro-shell,.ref-app-shell{min-height:100svh;padding-bottom:calc(82px + env(safe-area-inset-bottom));background:radial-gradient(circle at 50% -8%,rgba(38,91,123,.17),transparent 31rem),#02080d}
+.astro-card,.panel,.ref-feature-tile,.ref-insight-card,.ref-latest-card{border-color:#233746!important;background:linear-gradient(180deg,rgba(8,21,30,.96),rgba(5,14,21,.98))!important;box-shadow:0 18px 50px rgba(0,0,0,.22)}
+.cosmic-hero,.ref-feature-hero{border-color:#8a6331!important;background:linear-gradient(135deg,rgba(8,19,27,.98),rgba(6,28,40,.92))!important;box-shadow:inset 0 0 70px rgba(215,168,84,.035),0 22px 65px rgba(0,0,0,.3)}
+.cosmic-primary,.ref-pill-button{background:linear-gradient(180deg,#efc879,#c89140)!important;color:#171008!important;border-color:#e1ad54!important}
+input,select,textarea{font-family:"Sinhala Sangam MN","Noto Sans Sinhala",system-ui,sans-serif}
+@media(min-width:700px){.na-entry-screen{padding:3vh 0}.na-entry-frame{min-height:min(920px,94svh);border:1px solid rgba(196,143,64,.45);border-radius:30px}.na-login{min-height:min(820px,92svh)}}
