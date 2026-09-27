@@ -19,11 +19,16 @@ import {
 export async function createCalculation(formData: FormData) {
   const supabase = await createClient();
 
+  const subjectName = String(formData.get("subject_name") ?? "").trim();
   const birthDate = String(formData.get("birth_date") ?? "");
   const birthTime = String(formData.get("birth_time") ?? "");
   const placeName = String(formData.get("place_name") ?? "").trim();
   const birthCountry = String(formData.get("birth_country") ?? "").trim();
   const birthState = String(formData.get("birth_state") ?? "").trim();
+
+  if (!subjectName || subjectName.length > 120) {
+    redirect("/chart/new?error=invalid_subject_name");
+  }
 
   const resolvedQuery = [placeName, birthState, birthCountry]
     .filter(Boolean)
@@ -61,7 +66,7 @@ export async function createCalculation(formData: FormData) {
   }
 
   const { data: calculationId, error: createError } =
-    await supabase.rpc("create_user_calculation", {
+    await supabase.rpc("create_user_calculation_v2", {
       p_birth_date: birthDate,
       p_birth_time: birthTime,
       p_timezone: timezone,
@@ -69,6 +74,7 @@ export async function createCalculation(formData: FormData) {
       p_longitude: lon,
       p_place_name: resolvedPlace.name || placeName || null,
       p_country: country || null,
+      p_subject_name: subjectName,
     });
 
   const createFailure = rpcCreateError(createError, calculationId);
