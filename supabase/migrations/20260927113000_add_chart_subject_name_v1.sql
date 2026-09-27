@@ -137,7 +137,6 @@ with (security_invoker = true)
 as
 select
   id,
-  subject_name,
   input_birth_date,
   input_birth_time,
   input_timezone,
@@ -151,7 +150,8 @@ select
   zodiac_type,
   house_system,
   node_method,
-  created_at
+  created_at,
+  subject_name
 from jyotisha.calculation_runs
 where owner_user_id = (select auth.uid());
 
