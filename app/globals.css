@@ -154,3 +154,29 @@ body {
 .strength-pill{border:1px solid #775b2b;border-radius:999px;padding:.25rem .55rem;font-size:.62rem;letter-spacing:.08em;color:#e8bc63;background:#171208}
 .why-card{border-top:1px solid #27303a;padding-top:1rem}.why-card summary{cursor:pointer;color:#d8b66b;font-size:.8rem}.reason-flow{display:flex;align-items:center;justify-content:space-between;gap:.3rem;color:#d2b16b;font-size:.68rem}.reason-flow span{border:1px solid #303944;border-radius:999px;padding:.35rem .5rem;color:#bbc0c6}.reason-flow b{font-weight:400;color:#6d747c}
 .timing-strip{display:flex;align-items:center;gap:.45rem;overflow-x:auto;border:1px solid #44351e;border-radius:14px;background:#100d08;padding:.7rem;font-size:.65rem;color:#c9c0ae}.timing-strip strong{margin-left:auto;color:#efbd5c;white-space:nowrap}
+
+
+/* Cosmic Design System V1 */
+.cosmic-nav{border-bottom:1px solid rgba(119,91,43,.45);background:rgba(5,8,12,.88);backdrop-filter:blur(18px);box-shadow:0 10px 40px rgba(0,0,0,.18)}
+.brand-orbit{display:grid;height:34px;width:34px;place-items:center;border:1px solid #73592c;border-radius:999px;box-shadow:inset 0 0 18px rgba(215,164,70,.08),0 0 20px rgba(215,164,70,.05)}
+.brand-orbit i{font-style:normal;color:#e0b65b;font-size:.8rem}
+.cosmic-menu-button{display:flex;cursor:pointer;align-items:center;gap:.5rem;border:1px solid #343d47;border-radius:12px;padding:.58rem .8rem;font-size:.75rem;color:#d4cfc4;transition:.2s}
+.cosmic-menu-button:hover{border-color:#8f7740;color:#e0b65b}
+.cosmic-menu-panel{border:1px solid #343d47;border-radius:18px;background:rgba(8,12,17,.98);box-shadow:0 24px 70px rgba(0,0,0,.5);backdrop-filter:blur(18px)}
+.cosmic-nav-link{display:block;border-radius:12px;padding:.68rem .78rem;font-size:.86rem;color:#aaaeb4;transition:.2s}
+.cosmic-nav-link:hover,.cosmic-nav-link.active{background:linear-gradient(90deg,rgba(191,139,53,.12),rgba(30,52,70,.12));color:#edc56f}
+.cosmic-stars{position:absolute;inset:0;pointer-events:none;opacity:.25;background-image:radial-gradient(circle,#e5c171 0 1px,transparent 1.3px),radial-gradient(circle,#8eb1cb 0 1px,transparent 1.2px);background-size:130px 130px,190px 190px;background-position:0 0,40px 60px}
+.cosmic-primary,.cosmic-secondary{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:13px;padding:.78rem 1.05rem;font-size:.82rem;font-weight:600;transition:.2s}
+.cosmic-primary{border:1px solid #d0a34d;background:linear-gradient(180deg,#d7b363,#b88936);color:#15100a;box-shadow:0 10px 30px rgba(188,132,44,.16)}
+.cosmic-primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.cosmic-secondary{border:1px solid #40505f;background:rgba(10,17,24,.72);color:#c7cbd0}.cosmic-secondary:hover{border-color:#8f7740;color:#e6bd66}
+.sage-orbit{position:relative;display:grid;width:min(70vw,300px);aspect-ratio:1;place-items:center;border:1px solid rgba(206,158,70,.38);border-radius:50%;box-shadow:inset 0 0 80px rgba(203,146,48,.04),0 0 70px rgba(27,68,99,.12)}
+.sage-orbit:before,.sage-orbit:after{content:"";position:absolute;border:1px solid rgba(95,139,173,.25);border-radius:50%}.sage-orbit:before{width:72%;height:72%;transform:rotate(25deg)}.sage-orbit:after{width:46%;height:46%;border-color:rgba(206,158,70,.24)}
+.sage-core{display:grid;width:92px;height:92px;place-items:center;border-radius:50%;background:radial-gradient(circle,#231a0d,#0b0e12 68%);border:1px solid #7c5e2a;color:#e5b958;font-family:Georgia,serif;font-size:1.7rem;box-shadow:0 0 45px rgba(210,156,55,.12)}
+.planet{position:absolute;font-style:normal;color:#caa14f;font-size:1rem}.p1{left:6%;top:46%}.p2{right:10%;top:20%;color:#829db5}.p3{right:16%;bottom:15%}.p4{left:18%;bottom:10%;color:#829db5}
+.zodiac-dial{position:relative;margin:auto;display:grid;width:min(68vw,245px);aspect-ratio:1;place-items:center;border:1px solid rgba(208,163,77,.44);border-radius:50%;color:#e3b85e;box-shadow:0 0 55px rgba(190,132,43,.08)}
+.zodiac-dial:before,.zodiac-dial:after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(93,137,171,.26)}.zodiac-dial:before{inset:15%;transform:rotate(35deg)}.zodiac-dial:after{inset:32%;border-color:rgba(210,163,77,.26)}
+.zodiac-dial span{font-family:Georgia,serif;font-size:3.2rem}.zodiac-dial i,.zodiac-dial b{position:absolute;font-style:normal;font-weight:400}.zodiac-dial i{left:10%;top:45%;color:#d9a84c}.zodiac-dial b{right:12%;bottom:20%;color:#86a5be}
+.calculation-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;border:1px solid #2b343d;border-radius:15px;background:rgba(8,13,18,.7);padding:.9rem 1rem;transition:.2s}.calculation-row:hover{border-color:#745a2e;background:rgba(18,17,13,.85)}
+.pipeline-row{display:flex;align-items:center;gap:.8rem;border-bottom:1px solid #27303a;padding-bottom:.75rem}.pipeline-row:last-child{border-bottom:0}.pipeline-row span{font-family:monospace;font-size:.68rem;color:#d8ad57}.pipeline-row p{font-size:.78rem;color:#aeb3b9}
+@media (max-width:640px){.cosmic-hero{border-radius:22px}.cosmic-menu-panel{width:min(82vw,260px)}}
