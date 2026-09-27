@@ -180,3 +180,46 @@ body {
 .calculation-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;border:1px solid #2b343d;border-radius:15px;background:rgba(8,13,18,.7);padding:.9rem 1rem;transition:.2s}.calculation-row:hover{border-color:#745a2e;background:rgba(18,17,13,.85)}
 .pipeline-row{display:flex;align-items:center;gap:.8rem;border-bottom:1px solid #27303a;padding-bottom:.75rem}.pipeline-row:last-child{border-bottom:0}.pipeline-row span{font-family:monospace;font-size:.68rem;color:#d8ad57}.pipeline-row p{font-size:.78rem;color:#aeb3b9}
 @media (max-width:640px){.cosmic-hero{border-radius:22px}.cosmic-menu-panel{width:min(82vw,260px)}}
+
+
+/* Reference Auth Flow V2 — matches approved mobile art direction */
+.reference-auth-screen{min-height:100svh;background:#02070b;color:#f3ead9;display:grid;place-items:center;overflow:hidden}
+.reference-auth-frame{position:relative;width:min(100%,430px);min-height:100svh;display:flex;flex-direction:column;text-decoration:none;color:inherit;background:radial-gradient(circle at 50% 15%,rgba(16,63,91,.22),transparent 32rem),linear-gradient(180deg,#02070b,#03090d 70%,#020609)}
+.splash-reference .reference-auth-frame{justify-content:space-between;border-inline:1px solid rgba(198,139,54,.55)}
+.sage-scene{position:relative;min-height:68svh;overflow:hidden;background:radial-gradient(circle at 52% 47%,rgba(243,159,45,.35),transparent 9rem),radial-gradient(circle at 60% 24%,rgba(22,75,105,.42),transparent 18rem),linear-gradient(180deg,#04090e 0%,#071219 62%,#0c0a08 100%)}
+.sage-scene:before{content:"";position:absolute;inset:0;opacity:.42;background-image:radial-gradient(circle,#d7b565 0 1px,transparent 1.3px),radial-gradient(circle,#77a5c1 0 1px,transparent 1.2px);background-size:82px 82px,127px 127px;background-position:15px 13px,41px 66px}
+.zodiac-ring{position:absolute;left:50%;top:42%;border:1px solid rgba(213,155,67,.62);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 35px rgba(206,140,45,.08)}
+.zodiac-ring:after{content:"♈︎  ♉︎  ♊︎  ♋︎  ♌︎  ♍︎  ♎︎  ♏︎  ♐︎  ♑︎  ♒︎  ♓︎";position:absolute;inset:11%;display:flex;align-items:flex-start;justify-content:center;border:1px solid rgba(213,155,67,.25);border-radius:50%;padding-top:5%;font-size:.85rem;letter-spacing:.22rem;color:#d4a756;word-spacing:.8rem}
+.ring-a{width:86%;aspect-ratio:1}.ring-b{width:68%;aspect-ratio:1;border-color:rgba(83,132,164,.45);transform:translate(-50%,-50%) rotate(20deg)}
+.chakra-line{position:absolute;left:50%;top:11%;z-index:4;display:flex;flex-direction:column;gap:10px;align-items:center;transform:translateX(-50%)}
+.chakra-line:before{content:"";position:absolute;top:-28px;bottom:-95px;width:1px;background:linear-gradient(#d9b162,rgba(217,177,98,.12))}
+.chakra-line i{position:relative;width:22px;height:22px;border-radius:50%;box-shadow:0 0 18px currentColor,0 0 4px rgba(255,255,255,.7) inset}
+.sage-silhouette{position:absolute;left:11%;bottom:1%;z-index:3;width:47%;height:58%;border-radius:46% 46% 20% 20%;background:radial-gradient(circle at 56% 18%,#5d331a 0 8%,transparent 9%),radial-gradient(ellipse at 50% 32%,#2e1a12 0 21%,transparent 22%),radial-gradient(ellipse at 51% 72%,#130d0b 0 47%,transparent 48%);filter:drop-shadow(0 0 20px rgba(199,117,35,.22))}
+.sage-silhouette:before{content:"";position:absolute;left:29%;top:13%;width:33%;height:20%;border-radius:50% 50% 44% 44%;background:#1b100d;box-shadow:-14px 8px 0 -5px #1b100d}
+.sage-silhouette span{position:absolute;left:48%;top:45%;color:#d69035;font-size:1.6rem;opacity:.72}
+.temple-silhouette{position:absolute;right:6%;bottom:4%;width:27%;height:18%;background:linear-gradient(90deg,transparent 0 20%,#100d0b 20% 80%,transparent 80%);clip-path:polygon(10% 100%,20% 48%,36% 48%,50% 14%,64% 48%,80% 48%,90% 100%)}
+.splash-copy{position:relative;z-index:5;padding:1rem 1.5rem 2.25rem;text-align:center;background:linear-gradient(180deg,rgba(2,6,9,.1),rgba(2,6,9,.98) 18%)}
+.splash-copy h1,.login-copy h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,8vw,2.8rem);letter-spacing:.07em;color:#e6b85e;text-shadow:0 0 20px rgba(209,145,50,.14)}
+.si-title{margin-top:.35rem;font-size:1rem;color:#d9b166}
+.gold-rule{width:54%;height:1px;margin:.8rem auto;background:linear-gradient(90deg,transparent,#9c7333,transparent)}
+.tagline{font-family:Georgia,"Times New Roman",serif;font-size:.82rem;color:#dccda9}.tagline span{padding:0 .55rem;color:#b47e31}.ornament{color:#c39242;font-size:1.2rem}.ornament.small{margin-top:.8rem;font-size:.85rem}
+
+.welcome-reference .reference-auth-frame{justify-content:flex-end;padding:0 1.35rem 1.7rem;background:linear-gradient(180deg,#02090e 0%,#06141d 52%,#03080c 100%)}
+.cosmic-horizon{position:absolute;inset:0 0 38%;overflow:hidden;background:radial-gradient(circle at 50% 84%,rgba(255,180,73,.26),transparent 13rem),radial-gradient(circle at 50% 30%,rgba(18,74,108,.32),transparent 18rem)}
+.cosmic-horizon:before{content:"";position:absolute;inset:0;opacity:.32;background-image:radial-gradient(circle,#e0b665 0 1px,transparent 1.3px);background-size:76px 76px}
+.horizon-sun{position:absolute;left:50%;bottom:4%;width:105%;height:28%;transform:translateX(-50%);border-radius:50% 50% 0 0/100% 100% 0 0;background:radial-gradient(circle at 50% 2%,#ffd78d 0 3%,#e49a39 4%,rgba(17,49,67,.9) 8%,#07131b 38%,#03090d 70%);box-shadow:0 -10px 42px rgba(226,150,53,.14)}
+.horizon-arc{position:absolute;left:50%;bottom:6%;border:1px solid rgba(211,155,67,.52);border-radius:50%;transform:translateX(-50%)}.a1{width:88%;aspect-ratio:1}.a2{width:68%;aspect-ratio:1}.a3{width:48%;aspect-ratio:1;border-color:rgba(75,129,163,.5)}
+.horizon-zodiac{position:absolute;left:50%;top:18%;transform:translateX(-50%);width:92%;text-align:center;color:#be914c;font-size:.85rem;letter-spacing:.25rem;opacity:.9}
+.welcome-copy{position:relative;z-index:2;margin-bottom:1.4rem;padding:1.5rem 1.25rem 0;background:linear-gradient(180deg,transparent,rgba(2,7,10,.84) 18%,#02070b 55%)}
+.welcome-copy h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,8.7vw,2.7rem);line-height:1.32;color:#efbf66}.welcome-copy p{margin-top:1rem;font-size:.96rem;line-height:1.8;color:#d0cbc0}
+.welcome-controls{position:relative;z-index:3}.pager{display:flex;justify-content:center;gap:.45rem;margin-bottom:1.2rem}.pager i{width:6px;height:6px;border-radius:99px;background:#55606a}.pager i.active{width:22px;background:#f0d7a4}
+.reference-outline-button{display:flex;align-items:center;justify-content:center;gap:.8rem;width:100%;border:1px solid #c28a3a;border-radius:999px;padding:1rem;color:#ead4a3;font-size:1rem;background:rgba(11,11,9,.55);box-shadow:inset 0 0 25px rgba(194,138,58,.05)}
+
+.login-reference .reference-auth-frame{justify-content:center;padding:2rem 1.5rem;background:radial-gradient(circle at 50% 18%,rgba(23,67,91,.18),transparent 16rem),linear-gradient(180deg,#02070b,#03090d)}
+.sacred-mark{position:relative;margin:0 auto 2rem;width:180px;height:180px;display:grid;place-items:center}
+.diamond{position:absolute;inset:25px;border:1px solid rgba(217,166,76,.62);transform:rotate(45deg)}.d2{inset:45px;transform:rotate(0deg);border-color:rgba(217,166,76,.4)}.d3{inset:62px;transform:rotate(45deg);border-color:rgba(76,130,161,.45)}.sacred-core{position:relative;z-index:2;font-style:normal;font-size:2rem;color:#f0b84d;text-shadow:0 0 22px #c77e20}
+.login-copy{text-align:center}.login-copy h1{font-size:2.35rem}.login-copy p{margin-top:.55rem;color:#b7b0a3}
+.login-actions{display:grid;gap:.75rem;margin-top:2rem}.reference-login-button{position:relative;width:100%;display:grid;grid-template-columns:32px 1fr 42px;align-items:center;gap:.4rem;border:1px solid #33404a;border-radius:11px;padding:.86rem 1rem;background:linear-gradient(180deg,#091219,#071017);color:#e9e5dc;font-family:Georgia,"Times New Roman",serif;font-size:.95rem}.reference-login-button:not(.muted):hover{border-color:#b27c33}.reference-login-button b{font-family:Arial,sans-serif;font-size:1rem}.google-g{color:#4285f4}.apple-g{color:#fff}.reference-login-button small{font-family:Arial,sans-serif;font-size:.58rem;color:#69727b;text-transform:uppercase}.reference-login-button.muted{opacity:.58}
+.login-error{margin-top:1rem;border:1px solid #5a3434;border-radius:11px;background:#211416;padding:.75rem;color:#d8aaaa;font-size:.8rem}
+.login-back{margin-top:1.4rem;text-align:center;color:#8b8f94;font-size:.78rem}
+@media (min-width:700px){.reference-auth-frame{min-height:min(900px,94svh);border:1px solid rgba(195,139,57,.45);border-radius:30px;overflow:hidden}.reference-auth-screen{padding:3vh 0}}
