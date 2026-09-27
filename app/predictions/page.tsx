@@ -7,6 +7,7 @@ import { buildBhavaOverview } from "@/lib/prediction/ui/bhava-overview.ts";
 
 type Calculation={
   id:string;
+  subject_name:string|null;
   input_birth_date:string;
   input_birth_time:string;
   input_timezone:string;
