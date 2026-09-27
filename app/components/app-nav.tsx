@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import BackButton from "@/app/components/back-button";
 
 const items=[
   ["/dashboard","⌂","මුල් පිටුව","dashboard"],
   ["/my-chart","⌁","කේන්දර","chart"],
   ["/predictions","◉","පුරෝකථන","predictions"],
+  ["/predictions?view=forecast","◌","කාල අනාවැකි","forecast"],
   ["/profile","•••","තවත්","profile"],
 ] as const;
 
@@ -18,10 +20,13 @@ export default async function AppNav({active}:{active?:string}){
   return <>
     <header className="ref-app-header">
       <div className="ref-app-header-inner">
-        <Link href="/dashboard" className="ref-user-block">
+        <div className="flex items-center gap-3">
+          {active !== "dashboard" ? <BackButton /> : null}
+          <Link href="/dashboard" className="ref-user-block">
           <span className="ref-avatar">{name.slice(0,1).toUpperCase()}</span>
           <span><b>{name}</b><small>සුභ දවසක් !</small></span>
-        </Link>
+          </Link>
+        </div>
         <Link href="/profile" className="ref-bell" aria-label="Profile">♢</Link>
       </div>
     </header>
