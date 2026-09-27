@@ -291,3 +291,19 @@ body {
 .welcome-kicker{margin:0 0 .65rem;color:#b9863d;font-size:.58rem;letter-spacing:.18em}.real-art-welcome-copy h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,9vw,2.75rem);line-height:1.28;color:#ecd19a;text-shadow:0 2px 20px rgba(0,0,0,.9)}.real-art-welcome-copy h1 span{color:#efb754}.real-art-welcome-copy>p:last-child{margin:1rem 0 0;color:#c4c2bd;font-size:.92rem;line-height:1.85}
 .real-art-welcome-footer{position:relative;z-index:3;margin-top:auto;padding:0 1.35rem calc(1.2rem + env(safe-area-inset-bottom))}
 @media (min-width:700px){.real-art-splash,.real-art-welcome{min-height:min(920px,94svh)}}
+
+
+.ref-back-button{
+  display:grid;
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  place-items:center;
+  border:1px solid #34475b;
+  border-radius:999px;
+  background:#091016;
+  color:#d9b35b;
+  font-size:1.15rem;
+  line-height:1;
+}
+.ref-back-button:hover{border-color:#8f7740;color:#f0c86d}
