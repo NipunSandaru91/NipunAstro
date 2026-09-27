@@ -23,7 +23,7 @@ export default async function DashaPage({ params }: Props) {
   const { data: periods } = await supabase.schema("jyotisha").from("mahadasa_periods")
     .select("*").eq("calculation_id", id).order("sequence_order", { ascending: true });
 
-  return <><AppNav /><main className="min-h-screen px-4 py-8 sm:px-6">
+  return <><AppNav /><main className="astro-shell min-h-screen px-4 py-8 sm:px-6">
     <div className="mx-auto max-w-6xl">
       <a href={"/calculations/" + id} className="text-xs text-[#b8954f]">← Calculation report</a>
       <header className="mt-6 border-b border-[#282d35] pb-6">
