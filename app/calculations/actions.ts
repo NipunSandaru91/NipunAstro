@@ -331,7 +331,7 @@ export async function generatePredictionWindow(formData: FormData) {
                   response.ok,
                   response.status,
                   detail,
-                  "PREDICTION_WINDOW_TRANSIT",
+                  "TRANSIT",
                 ) ?? "PREDICTION_WINDOW_TRANSIT_HTTP_" + response.status,
               sample: windowSample.key,
             };
