@@ -32,7 +32,7 @@ export default async function AdminPage() {
   return (
     <>
       <AppNav />
-      <main className="min-h-screen px-4 py-8 sm:px-6">
+      <main className="astro-shell min-h-screen px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-6xl">
           <p className="eyebrow">Screen 18 · Administration</p>
           <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
