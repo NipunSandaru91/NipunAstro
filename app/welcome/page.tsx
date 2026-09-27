@@ -1,25 +1,22 @@
 import Link from "next/link";
 
-const COSMOLOGY_ART="https://upload.wikimedia.org/wikipedia/commons/b/bf/Earth_in_a_cosmology.jpg";
-
-export default function WelcomePage(){
-  return <main className="ref-screen">
-    <div className="ref-phone real-art-welcome">
-      <img className="real-art-welcome-image" src={COSMOLOGY_ART} alt="" aria-hidden="true"/>
-      <div className="real-art-welcome-wash" aria-hidden="true"/>
-      <div className="welcome-orbit-glow" aria-hidden="true"><i/><i/><i/></div>
-
-      <section className="real-art-welcome-copy">
-        <p className="welcome-kicker">VEDIC COSMOLOGY · JYOTIṢA</p>
-        <h1>වේද නක්ෂත්‍ර විද්‍යාවේ<br/>පුරාණ දැනුම<br/><span>ඔබේ ජීවිතයට</span></h1>
-        <p>ජන්ම ගණනය, දශා, ගෝචර සහ evidence-driven පුරෝකථන එකම පැහැදිලි නිරීක්ෂණයකින්.</p>
-      </section>
-
-      <div className="real-art-welcome-footer">
-        <div className="ref-pager"><i className="active"/><i/><i/><i/></div>
-        <Link href="/login" className="ref-pill-button">ආරම්භ කරන්න <span>→</span></Link>
-        <small className="art-credit">Cosmology manuscript, 1468 · Public domain</small>
+export default function WelcomePage() {
+  return (
+    <main className="na-entry-screen">
+      <div className="na-entry-frame na-welcome">
+        <img className="na-entry-art na-welcome-art" src="/art/welcome-v3.webp" alt="" aria-hidden="true" />
+        <div className="na-entry-shade" aria-hidden="true" />
+        <div className="na-welcome-orbit" aria-hidden="true" />
+        <section className="na-welcome-copy si-text">
+          <p className="na-kicker">VEDIC JYOTIṢA · COSMIC OBSERVATORY</p>
+          <h1>ඔබගේ ජීවිත ගමනට<br/><span>ජ්‍යෝතිෂය සමඟ දෘෂ්ටියක්</span></h1>
+          <p>ජන්ම හදහන, දශා, ගෝචර සහ evidence-backed පුරෝකථන එකම පැහැදිලි අත්දැකීමකින්.</p>
+        </section>
+        <footer className="na-entry-footer">
+          <div className="na-dots" aria-hidden="true"><i className="active"/><i/><i/></div>
+          <Link href="/login" className="na-gold-button">ආරම්භ කරන්න <span>→</span></Link>
+        </footer>
       </div>
-    </div>
-  </main>;
+    </main>
+  );
 }
