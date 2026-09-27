@@ -28,7 +28,7 @@ export default async function TransitPage({ params, searchParams }: Props) {
   return (
     <>
       <AppNav />
-      <main className="min-h-screen px-4 py-8 sm:px-6">
+      <main className="astro-shell min-h-screen px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-6xl">
           <header className="border-b border-[#282d35] pb-6">
             <a href={"/calculations/" + id} className="text-xs text-[#b8954f]">← Calculation report</a>
