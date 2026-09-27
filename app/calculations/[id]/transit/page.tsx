@@ -195,10 +195,14 @@ export default async function TransitPage({ params, searchParams }: Props) {
   const requestedSnapshot = paramsValue.snapshot
     ? decodeURIComponent(paramsValue.snapshot)
     : undefined;
+  const nowMs = Date.now();
+  const latestPastSnapshot = snapshots.find(
+    (snapshot) => new Date(snapshot).getTime() <= nowMs,
+  );
   const selectedAt =
     requestedSnapshot && snapshots.includes(requestedSnapshot)
       ? requestedSnapshot
-      : snapshots[0];
+      : latestPastSnapshot ?? snapshots[0];
 
   const selectedIndex = selectedAt ? snapshots.indexOf(selectedAt) : -1;
   const previousAt =
