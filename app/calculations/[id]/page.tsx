@@ -2,10 +2,11 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import D1Chart from "@/app/components/d1-chart";
 import AppNav from "@/app/components/app-nav";
+import { updateChartSubjectName } from "@/app/calculations/actions";
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; saved?: string }>;
 };
 
 type ChartData = {
@@ -77,7 +78,7 @@ export default async function CalculationPage({
   searchParams,
 }: PageProps) {
   const { id } = await params;
-  const { error: engineError } = await searchParams;
+  const { error: engineError, saved } = await searchParams;
   const supabase = await createClient();
 
   const { data, error } = await supabase.rpc(
@@ -128,6 +129,19 @@ export default async function CalculationPage({
               <h1 className="serif text-4xl tracking-tight text-[#eee9de]">
                 {runMeta?.subject_name ?? "උපන් කේන්දරය"}
               </h1>
+              <form action={updateChartSubjectName} className="mt-4 flex max-w-xl gap-2">
+                <input type="hidden" name="calculation_id" value={id} />
+                <input
+                  name="subject_name"
+                  defaultValue={runMeta?.subject_name ?? ""}
+                  maxLength={120}
+                  required
+                  aria-label="කේන්දර හිමියාගේ නම"
+                  className="min-w-0 flex-1 rounded-xl border border-[#34475b] bg-[#091522] px-3 py-2.5 text-sm text-[#eee9de] outline-none focus:border-[#b8954f]"
+                />
+                <button type="submit" className="cosmic-secondary">නම සුරකින්න</button>
+              </form>
+              {saved ? <p className="mt-2 text-xs text-[#9ec4a8]">නම යාවත්කාලීන කර ඇත.</p> : null}
               <p className="mt-3 text-sm text-[var(--muted)]">
                 Verified calculation output. Interpretation is deliberately
                 separated from the astronomical calculation layer.
