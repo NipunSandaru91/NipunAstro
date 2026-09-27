@@ -46,12 +46,12 @@ export default async function ProfilePage({
   return (
     <>
       <AppNav active="profile" />
-      <main className="min-h-screen px-4 py-8 sm:px-6">
+      <main className="astro-shell min-h-screen px-4 py-6 sm:px-6 sm:py-8">
         <div className="mx-auto max-w-3xl">
-          <p className="eyebrow">Screen 17 · Profile</p>
-          <h1 className="serif mt-2 text-4xl text-[#eee9de]">Profile</h1>
+          <p className="eyebrow">Account Observatory</p>
+          <h1 className="serif mt-2 text-4xl text-[#eee9de]">පැතිකඩ</h1>
           <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
-            Account identity and display preferences. Authentication remains managed by Supabase Auth.
+            ගිණුම් අනන්‍යතාව, භාෂාව සහ timezone සැකසුම්. Authentication Supabase Auth මඟින් පවත්වා ගනී.
           </p>
 
           {params.saved ? (
@@ -61,7 +61,7 @@ export default async function ProfilePage({
             <div className="mt-6 rounded-xl border border-[#5a3434] bg-[#211416] p-4 text-sm text-[#d8aaaa]">{decodeURIComponent(params.error)}</div>
           ) : null}
 
-          <section className="panel mt-7 rounded-2xl p-6 sm:p-8">
+          <section className="astro-card mt-7 p-6 sm:p-8">
             <div className="flex items-center gap-4 border-b border-[#252a31] pb-6">
               {profile?.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -98,7 +98,7 @@ export default async function ProfilePage({
               </label>
 
               <button type="submit" className="rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-5 py-3 text-sm font-semibold text-[#15130e]">
-                Save profile
+                පැතිකඩ සුරකින්න
               </button>
             </form>
           </section>
