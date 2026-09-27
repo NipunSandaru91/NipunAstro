@@ -1,0 +1,94 @@
+name: Visual QA
+
+on:
+  pull_request:
+    paths:
+      - "app/**"
+      - "lib/**"
+      - "public/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/visual-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VISUAL_QA_MODE: "1"
+      NEXT_PUBLIC_SUPABASE_URL: "https://visual-qa.invalid"
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "visual-qa-placeholder"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install app dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Install Chromium for visual QA
+        run: npx -y playwright@1.55.0 install --with-deps chromium
+
+      - name: Start application
+        run: |
+          npm start > /tmp/nipunastro.log 2>&1 &
+          echo $! > /tmp/nipunastro.pid
+
+      - name: Wait for application
+        run: |
+          for i in {1..45}; do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/nipunastro.log
+          exit 1
+
+      - name: Capture entry flow
+        run: |
+          mkdir -p visual-qa
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/ visual-qa/01-splash.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/welcome visual-qa/02-welcome.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/login visual-qa/03-login.png
+
+      - name: Capture authenticated-theme fixtures
+        run: |
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/dashboard visual-qa/04-dashboard.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/new-chart visual-qa/05-new-chart.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/my-charts visual-qa/06-my-charts.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/calculation visual-qa/07-calculation.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/dasha visual-qa/08-dasha.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/transit visual-qa/09-transit.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/predictions visual-qa/10-predictions.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/profile visual-qa/11-profile.png
+          npx -y playwright@1.55.0 screenshot --device="iPhone 15 Pro" --full-page http://127.0.0.1:3000/visual-qa/admin visual-qa/12-admin.png
+
+      - name: Upload visual QA screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: nipunastro-visual-qa
+          path: visual-qa/*.png
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload server log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nipunastro-visual-qa-server-log
+          path: /tmp/nipunastro.log
+          if-no-files-found: ignore
+          retention-days: 7
