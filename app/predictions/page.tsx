@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppNav from "@/app/components/app-nav";
-import {
-  generatePredictionWindow,
-} from "@/app/calculations/actions";
+import { generatePredictionWindow } from "@/app/calculations/actions";
 import { createClient } from "@/lib/supabase/server";
+import type { PredictionTopic } from "@/lib/prediction/evidence.ts";
 import { buildCareerNatalModel } from "@/lib/prediction/topics/career.ts";
+import {
+  buildGenericTopicNatalModel,
+  parsePredictionTopic,
+  TOPIC_LABEL_SI,
+} from "@/lib/prediction/topics/generic-topic.ts";
 import { buildBhavaOverview } from "@/lib/prediction/ui/bhava-overview.ts";
 import { buildTransitNatalAnalysis } from "@/lib/prediction/timing/transit-analysis.ts";
 import { activateThemesByDasha } from "@/lib/prediction/timing/generic-dasha.ts";
@@ -31,6 +35,7 @@ import {
 type Search = {
   calculation?: string;
   bhava?: string;
+  topic?: string;
   window?: string;
   date?: string;
   window_generated?: string;
@@ -75,6 +80,29 @@ type TransitRow = {
   is_retrograde: boolean | null;
 };
 
+type TopicEvidenceItem = {
+  source_bhava: number;
+  evidence: ReturnType<typeof buildCareerNatalModel>["primary"][number]["evidence"];
+};
+
+type TopicTheme = {
+  code: string;
+  level: "WEAK" | "MODERATE" | "STRONG";
+  text_si: string;
+  evidence_refs: string[];
+  evidence_grahas: number[];
+  evidence_houses: number[];
+  supporting: Array<{ code: string; polarity: "SUPPORTING" | "CONTRADICTING"; text_si: string }>;
+  contradicting: Array<{ code: string; polarity: "SUPPORTING" | "CONTRADICTING"; text_si: string }>;
+};
+
+type NormalizedTopicModel = {
+  topic: PredictionTopic;
+  primary: TopicEvidenceItem[];
+  contextual: TopicEvidenceItem[];
+  themes: TopicTheme[];
+};
+
 function pick(
   obj: Record<string, unknown> | null | undefined,
   ...keys: string[]
@@ -112,9 +140,46 @@ function formatAt(value: string, timezone: string) {
   }).format(new Date(value));
 }
 
+function evidenceHousesFromRefs(refs: readonly string[]) {
+  const houses: number[] = [];
+  for (const ref of refs) {
+    const match = ref.match(/^(\d+)L-(\d+)H-G\d+$/);
+    if (!match) continue;
+    houses.push(Number(match[1]), Number(match[2]));
+  }
+  return [...new Set(houses)];
+}
+
+function normalizeTopicModel(
+  topic: PredictionTopic,
+  model:
+    | ReturnType<typeof buildCareerNatalModel>
+    | ReturnType<typeof buildGenericTopicNatalModel>,
+): NormalizedTopicModel {
+  return {
+    topic,
+    primary: model.primary as TopicEvidenceItem[],
+    contextual: model.contextual as TopicEvidenceItem[],
+    themes: model.themes.map((theme) => ({
+      code: theme.code,
+      level: theme.level,
+      text_si: theme.text_si,
+      evidence_refs: [...theme.evidence_refs],
+      evidence_grahas: [...theme.evidence_grahas],
+      evidence_houses:
+        "evidence_houses" in theme && Array.isArray(theme.evidence_houses)
+          ? [...theme.evidence_houses]
+          : evidenceHousesFromRefs(theme.evidence_refs),
+      supporting: [...theme.supporting],
+      contradicting: [...theme.contradicting],
+    })),
+  };
+}
+
 function predictionHref(input: {
   calculation: string;
   bhava: number;
+  topic: PredictionTopic;
   window: PredictionWindowType;
   date: string;
 }) {
@@ -123,6 +188,8 @@ function predictionHref(input: {
     encodeURIComponent(input.calculation) +
     "&bhava=" +
     input.bhava +
+    "&topic=" +
+    input.topic +
     "&window=" +
     input.window +
     "&date=" +
@@ -156,6 +223,15 @@ const GRAHA = [
   "ශනි",
   "රාහු",
   "කේතු",
+];
+
+const TOPICS: PredictionTopic[] = [
+  "CAREER",
+  "EDUCATION",
+  "RELATIONSHIP",
+  "FINANCE",
+  "HEALTH",
+  "SPIRITUALITY",
 ];
 
 const WINDOW_LABEL: Record<PredictionWindowType, string> = {
@@ -198,6 +274,7 @@ export default async function PredictionsPage({
     ? params.calculation
     : calculations[0]?.id;
   const selectedBhava = Math.min(12, Math.max(1, Number(params.bhava) || 1));
+  const selectedTopic = parsePredictionTopic(params.topic?.toUpperCase());
 
   if (!selectedId) {
     return (
@@ -226,9 +303,7 @@ export default async function PredictionsPage({
   const selectedCalc = calculations.find(
     (calculation) => calculation.id === selectedId,
   )!;
-  const windowType = parsePredictionWindowType(
-    params.window?.toUpperCase(),
-  );
+  const windowType = parsePredictionWindowType(params.window?.toUpperCase());
   const todayForChart = localDateInTimezone(
     new Date(),
     selectedCalc.input_timezone,
@@ -336,15 +411,29 @@ export default async function PredictionsPage({
         row !== null,
     );
 
-  let career: ReturnType<typeof buildCareerNatalModel> | null = null;
+  let selectedModel: NormalizedTopicModel | null = null;
   try {
-    career = buildCareerNatalModel({
-      lagnaRasiId,
-      positions,
-      shadbala: shad,
-    });
+    if (selectedTopic === "CAREER") {
+      selectedModel = normalizeTopicModel(
+        selectedTopic,
+        buildCareerNatalModel({
+          lagnaRasiId,
+          positions,
+          shadbala: shad,
+        }),
+      );
+    } else {
+      selectedModel = normalizeTopicModel(
+        selectedTopic,
+        buildGenericTopicNatalModel(selectedTopic, {
+          lagnaRasiId,
+          positions,
+          shadbala: shad,
+        }),
+      );
+    }
   } catch {
-    career = null;
+    selectedModel = null;
   }
 
   const natalGrahas = grahas
@@ -387,12 +476,12 @@ export default async function PredictionsPage({
       } => row !== null,
     );
 
-  const timingThemes = (career?.themes ?? []).map((theme) => ({
-    topic: "CAREER",
+  const timingThemes = (selectedModel?.themes ?? []).map((theme) => ({
+    topic: selectedTopic,
     code: theme.code,
     level: theme.level,
     evidence_grahas: theme.evidence_grahas,
-    evidence_houses: theme.evidence_houses ?? [],
+    evidence_houses: theme.evidence_houses,
   }));
 
   const currentMd = allMd.find((row) => containsAt(row, nowIso)) ?? null;
@@ -497,7 +586,9 @@ export default async function PredictionsPage({
 
   for (const windowSample of windowPlan.samples) {
     const snapshotRows = groupedWindowRows.get(windowSample.key) ?? [];
-    const uniqueGrahas = new Set(snapshotRows.map((row) => Number(row.graha_id)));
+    const uniqueGrahas = new Set(
+      snapshotRows.map((row) => Number(row.graha_id)),
+    );
     if (uniqueGrahas.size < 9) continue;
 
     const sampleAt = snapshotRows[0]?.transit_at;
@@ -625,10 +716,12 @@ export default async function PredictionsPage({
         new Date(a.start_at).getTime() - new Date(b.start_at).getTime(),
     );
 
-  const careerItems = career ? [...career.primary, ...career.contextual] : [];
+  const topicItems = selectedModel
+    ? [...selectedModel.primary, ...selectedModel.contextual]
+    : [];
   const backedBhavas = [
     ...new Set(
-      careerItems.flatMap((item) => [
+      topicItems.flatMap((item) => [
         item.source_bhava,
         item.evidence.placement.bhava,
       ]),
@@ -640,11 +733,12 @@ export default async function PredictionsPage({
     careerEvidenceBhavas: backedBhavas,
   });
   const detail = overview[selectedBhava - 1];
-  const evidence = careerItems.filter(
+  const evidence = topicItems.filter(
     (item) =>
       item.source_bhava === selectedBhava ||
       item.evidence.placement.bhava === selectedBhava,
   );
+  const topicLabel = TOPIC_LABEL_SI[selectedTopic];
 
   return (
     <>
@@ -653,16 +747,17 @@ export default async function PredictionsPage({
         <div className="mx-auto max-w-6xl">
           <section className="cosmic-hero rounded-[28px] border border-[#725626] p-6 sm:p-9">
             <p className="eyebrow">
-              Prediction Observatory · Calculation Bound
+              Prediction Observatory · {selectedTopic} V1
             </p>
             <div className="mt-3 grid gap-7 lg:grid-cols-[1fr_.55fr] lg:items-end">
               <div>
                 <h1 className="serif text-4xl text-[#f3dfb1] sm:text-5xl">
-                  භාව 12 පුරෝකථන නිරීක්ෂණය
+                  {topicLabel} · භාව 12 විශ්ලේෂණය
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-[#b9b4a9]">
                   Natal evidence, Vimśottarī Daśā සහ transit snapshots එකට
-                  බැඳී timing state සහ කාල කවුළු විශ්ලේෂණය පෙන්වයි.
+                  බැඳී timing state සහ Daily / Weekly / Monthly / Yearly
+                  windows පෙන්වයි.
                 </p>
               </div>
               <div className="rounded-2xl border border-[#755a2e] bg-[#0b1015]/80 p-4">
@@ -677,11 +772,46 @@ export default async function PredictionsPage({
                 <p className="mt-1 text-xs text-[#8d969f]">
                   {selectedCalc.input_birth_date} · {selectedCalc.input_birth_time}
                 </p>
-                <p className="mt-1 break-all text-[9px] text-[#5f6871]">
-                  ID · {selectedId}
+                <p className="mt-1 text-[10px] text-[#8d969f]">
+                  Topic · {topicLabel}
                 </p>
               </div>
             </div>
+          </section>
+
+          <section className="astro-card mt-5">
+            <p className="eyebrow">Prediction Topic</p>
+            <h2 className="serif mt-2 text-2xl text-[#f0e4c8]">
+              විශ්ලේෂණ අංශය තෝරන්න
+            </h2>
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+              {TOPICS.map((topic) => (
+                <Link
+                  key={topic}
+                  href={predictionHref({
+                    calculation: selectedId,
+                    bhava: selectedBhava,
+                    topic,
+                    window: windowType,
+                    date: anchorDate,
+                  })}
+                  className={
+                    topic === selectedTopic
+                      ? "rounded-xl border border-[#b8954f] bg-[#17140e] px-3 py-3 text-center text-xs text-[#e5cc92]"
+                      : "rounded-xl border border-[#303944] bg-[#09121a] px-3 py-3 text-center text-xs text-[#89939d]"
+                  }
+                >
+                  {TOPIC_LABEL_SI[topic]}
+                </Link>
+              ))}
+            </div>
+            {selectedTopic === "HEALTH" ? (
+              <p className="mt-4 rounded-xl border border-[#4a3d27] bg-[#15130e] p-3 text-[11px] leading-6 text-[#a8a091]">
+                සුවතාව section එක සාම්ප්‍රදායික ජ්‍යොතිෂ wellbeing pattern
+                එකක් පමණයි. රෝග නිර්ණය, වෛද්‍ය අවදානම් අනාවැකි හෝ ප්‍රතිකාර
+                උපදෙස් ලෙස භාවිතා නොකරයි.
+              </p>
+            ) : null}
           </section>
 
           <section className="astro-card mt-5">
@@ -706,6 +836,7 @@ export default async function PredictionsPage({
                   href={predictionHref({
                     calculation: calculation.id,
                     bhava: selectedBhava,
+                    topic: selectedTopic,
                     window: windowType,
                     date: anchorDate,
                   })}
@@ -757,6 +888,7 @@ export default async function PredictionsPage({
                     href={predictionHref({
                       calculation: selectedId,
                       bhava: selectedBhava,
+                      topic: selectedTopic,
                       window: item,
                       date: anchorDate,
                     })}
@@ -777,16 +909,13 @@ export default async function PredictionsPage({
               className="mt-5 grid gap-3 rounded-2xl border border-[#303944] bg-[#081017] p-4 md:grid-cols-[1fr_auto]"
             >
               <input type="hidden" name="calculation_id" value={selectedId} />
+              <input type="hidden" name="topic" value={selectedTopic} />
               <input
                 type="hidden"
                 name="timezone"
                 value={selectedCalc.input_timezone}
               />
-              <input
-                type="hidden"
-                name="window_type"
-                value={windowType}
-              />
+              <input type="hidden" name="window_type" value={windowType} />
               <input type="hidden" name="bhava" value={selectedBhava} />
               <input
                 type="hidden"
@@ -823,7 +952,7 @@ export default async function PredictionsPage({
             {params.window_generated ? (
               <div className="mt-4 rounded-xl border border-[#2f4938] bg-[#0d1b16] p-4 text-xs leading-6 text-[#b5d0ba]">
                 {windowPlan.samples.length} planned transit snapshots generate
-                කර window aggregation සඳහා සුරකින ලදී.
+                කර {topicLabel} window aggregation සඳහා සුරකින ලදී.
               </div>
             ) : null}
 
@@ -873,8 +1002,8 @@ export default async function PredictionsPage({
                 ))
               ) : (
                 <div className="rounded-xl border border-dashed border-[#39434e] p-4 text-xs leading-6 text-[#7e8892] md:col-span-3">
-                  Career V1 theme එකක් නොමැති නිසා window aggregation result
-                  නිකුත් කරන්නේ නැහැ.
+                  {topicLabel} V1 theme data නොමැති නිසා window aggregation
+                  result නිකුත් කරන්නේ නැහැ.
                 </div>
               )}
             </div>
@@ -941,61 +1070,59 @@ export default async function PredictionsPage({
               <div>
                 <p className="eyebrow">12 Bhāva Overview</p>
                 <h2 className="serif mt-2 text-3xl text-[#f0e4c8]">
-                  භාව 12
+                  {topicLabel} · භාව 12
                 </h2>
               </div>
               <p className="text-[10px] text-[#67717b]">
-                Career V1 backed houses are marked
+                {selectedTopic} V1 evidence houses are marked
               </p>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
-              {overview.map((row) => (
-                <Link
-                  key={row.bhava}
-                  href={predictionHref({
-                    calculation: selectedId,
-                    bhava: row.bhava,
-                    window: windowType,
-                    date: anchorDate,
-                  })}
-                  className={
-                    row.bhava === selectedBhava
-                      ? "bhava-prediction-card active"
-                      : "bhava-prediction-card"
-                  }
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="bhava-number">{row.bhava}</span>
-                    <span
-                      className={
-                        row.prediction_status === "CAREER_V1"
-                          ? "bhava-status ready"
-                          : "bhava-status"
-                      }
-                    >
-                      {row.prediction_status === "CAREER_V1"
-                        ? "Evidence"
-                        : "Foundation"}
-                    </span>
-                  </div>
-                  <h3 className="serif mt-3 text-base text-[#eadcbf]">
-                    {row.title_si}
-                  </h3>
-                  <p className="mt-2 text-[11px] text-[#7f8992]">
-                    {RASI[row.rasi_id - 1]} ·{" "}
-                    {row.graha_ids.length
-                      ? row.graha_ids.map((id) => GRAHA[id]).join(" · ")
-                      : "ග්‍රහයන් නැත"}
-                  </p>
-                </Link>
-              ))}
+              {overview.map((row) => {
+                const backed = backedBhavas.includes(row.bhava);
+                return (
+                  <Link
+                    key={row.bhava}
+                    href={predictionHref({
+                      calculation: selectedId,
+                      bhava: row.bhava,
+                      topic: selectedTopic,
+                      window: windowType,
+                      date: anchorDate,
+                    })}
+                    className={
+                      row.bhava === selectedBhava
+                        ? "bhava-prediction-card active"
+                        : "bhava-prediction-card"
+                    }
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="bhava-number">{row.bhava}</span>
+                      <span
+                        className={backed ? "bhava-status ready" : "bhava-status"}
+                      >
+                        {backed ? "Evidence" : "Foundation"}
+                      </span>
+                    </div>
+                    <h3 className="serif mt-3 text-base text-[#eadcbf]">
+                      {row.title_si}
+                    </h3>
+                    <p className="mt-2 text-[11px] text-[#7f8992]">
+                      {RASI[row.rasi_id - 1]} ·{" "}
+                      {row.graha_ids.length
+                        ? row.graha_ids.map((id) => GRAHA[id]).join(" · ")
+                        : "ග්‍රහයන් නැත"}
+                    </p>
+                  </Link>
+                );
+              })}
             </div>
           </section>
 
           <section className="astro-card mt-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="eyebrow">Bhāva Detail</p>
+                <p className="eyebrow">Bhāva Detail · {selectedTopic} V1</p>
                 <h2 className="serif mt-2 text-3xl text-[#f0e4c8]">
                   භාව {detail.bhava} · {detail.title_si}
                 </h2>
@@ -1005,13 +1132,13 @@ export default async function PredictionsPage({
               </div>
               <span
                 className={
-                  detail.prediction_status === "CAREER_V1"
+                  backedBhavas.includes(detail.bhava)
                     ? "strength-pill"
                     : "bhava-status"
                 }
               >
-                {detail.prediction_status === "CAREER_V1"
-                  ? "CAREER V1 EVIDENCE"
+                {backedBhavas.includes(detail.bhava)
+                  ? `${selectedTopic} V1 EVIDENCE`
                   : "FOUNDATION ONLY"}
               </span>
             </div>
@@ -1076,8 +1203,8 @@ export default async function PredictionsPage({
             ) : (
               <div className="mt-6 rounded-2xl border border-dashed border-[#39434e] p-5">
                 <p className="text-sm leading-7 text-[#9098a1]">
-                  මෙම භාවයට Career V1 rule evidence තවම සම්බන්ධ වී නැත. UI
-                  එක අසත්‍ය prediction එකක් නිර්මාණය නොකර foundation data
+                  මෙම භාවයට {topicLabel} V1 rule evidence තවම සම්බන්ධ වී නැත.
+                  UI එක අසත්‍ය prediction එකක් නිර්මාණය නොකර foundation data
                   පමණක් පෙන්වයි.
                 </p>
               </div>
@@ -1137,7 +1264,7 @@ export default async function PredictionsPage({
                       ))
                   ) : (
                     <p className="text-[11px] text-[#68717a]">
-                      මෙම භාවයට timing-bound Career theme එකක් නොමැත.
+                      මෙම භාවයට timing-bound {topicLabel} theme එකක් නොමැත.
                     </p>
                   )}
                 </div>
@@ -1169,24 +1296,24 @@ export default async function PredictionsPage({
                           row.theme.evidence_houses.includes(selectedBhava) &&
                           row.timing.status === "ACTIVE_NOW",
                       )
-                      ? "මෙම භාවයට සම්බන්ධ Career natal evidence සමඟ වත්මන් දශා සහ ගෝචර timing සාධක එකවර සක්‍රීය වේ."
-                      : "මෙම භාවයට Career natal evidence ඇත. වත්මන් timing state එක evidence සමඟ වෙනම පෙන්වා ඇති අතර data නොමැති තැන නිගමනයක් නිර්මාණය නොකරයි."
-                    : "මෙම භාවයට සම්පූර්ණ prediction model එක තවම නොමැත. Foundation-only state."}
+                      ? `${topicLabel} natal evidence සමඟ වත්මන් දශා සහ ගෝචර timing සාධක එකවර සක්‍රීය වන theme එකක් මෙම භාවයට සම්බන්ධ වේ.`
+                      : `${topicLabel} natal evidence ඇත. වත්මන් timing state එක evidence සමඟ වෙනම පෙන්වා ඇති අතර data නොමැති තැන නිගමනයක් නිර්මාණය නොකරයි.`
+                    : `මෙම භාවයට ${topicLabel} V1 සම්පූර්ණ prediction model evidence එක තවම නොමැත.`}
                 </p>
               </div>
             </div>
           </section>
 
-          {career?.themes.length ? (
+          {selectedModel?.themes.length ? (
             <section className="astro-card mt-5">
               <p className="eyebrow">
-                Career V1 Themes · Generic Timing Adapter
+                {selectedTopic} V1 Themes · Generic Timing Adapter
               </p>
               <h2 className="serif mt-2 text-2xl text-[#f0e4c8]">
-                වෘත්තීය තේමා සහ වත්මන් timing state
+                {topicLabel} තේමා සහ timing state
               </h2>
               <div className="mt-4 grid gap-3 md:grid-cols-3">
-                {career.themes.map((theme) => {
+                {selectedModel.themes.map((theme) => {
                   const row = timingRows.find(
                     (item) => item.theme.code === theme.code,
                   );
