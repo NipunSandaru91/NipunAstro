@@ -8,6 +8,11 @@ function withSessionCookies(from: NextResponse, to: NextResponse) {
 }
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  if (process.env.VISUAL_QA_MODE === "1" && (isAuthEntryPath(pathname) || pathname.startsWith("/visual-qa"))) {
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -31,8 +36,6 @@ export async function updateSession(request: NextRequest) {
 
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
-  const pathname = request.nextUrl.pathname;
-
   const visualQaPath = process.env.VISUAL_QA_MODE === "1" && pathname.startsWith("/visual-qa");
   const isPublicPath = isAuthEntryPath(pathname) || pathname.startsWith("/auth") || visualQaPath;
 
