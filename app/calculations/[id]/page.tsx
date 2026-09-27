@@ -93,10 +93,17 @@ export default async function CalculationPage({
     throw new Error(error.message);
   }
 
-  const { data: yogaData } = await supabase.rpc(
-    "get_user_calculation_yoga_v1",
-    { p_calculation_id: id },
-  );
+  const [{ data: yogaData }, { data: runMeta }] = await Promise.all([
+    supabase.rpc(
+      "get_user_calculation_yoga_v1",
+      { p_calculation_id: id },
+    ),
+    supabase
+      .from("user_calculation_runs_v1")
+      .select("subject_name")
+      .eq("id", id)
+      .maybeSingle(),
+  ]);
 
   const chart = {
     ...(data as ChartData),
@@ -119,7 +126,7 @@ export default async function CalculationPage({
           <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="serif text-4xl tracking-tight text-[#eee9de]">
-                උපන් කේන්දරය
+                {runMeta?.subject_name ?? "උපන් කේන්දරය"}
               </h1>
               <p className="mt-3 text-sm text-[var(--muted)]">
                 Verified calculation output. Interpretation is deliberately
@@ -216,6 +223,7 @@ export default async function CalculationPage({
             </h2>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <DataItem label="කේන්දර හිමියා" value={runMeta?.subject_name ?? "—"} />
               <DataItem label="ගණනය කිරීමේ ID" value={id} />
               <DataItem label="තත්ත්වය" value={textValue(pick(calculation, "status"))} />
               <DataItem label="උපන් දිනය" value={textValue(pick(calculation, "input_birth_date", "birth_date"))} />
