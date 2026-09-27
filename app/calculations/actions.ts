@@ -15,6 +15,10 @@ import {
   hasSession,
   rpcCreateError,
 } from "@/lib/calculations/action-errors";
+import {
+  buildPredictionWindowPlan,
+  parsePredictionWindowType,
+} from "@/lib/prediction/timing/prediction-window";
 
 export async function createCalculation(formData: FormData) {
   const supabase = await createClient();
@@ -223,4 +227,145 @@ export async function calculateTransit(formData: FormData) {
       "/transit?transit=calculated" +
       snapshotParam,
   );
+}
+
+
+export async function generatePredictionWindow(formData: FormData) {
+  const supabase = await createClient();
+  const calculationId = String(formData.get("calculation_id") ?? "").trim();
+  const timezone = String(formData.get("timezone") ?? "").trim();
+  const anchorDate = String(formData.get("anchor_date") ?? "").trim();
+  const nodeMethod = String(formData.get("node_method") ?? "MEAN")
+    .trim()
+    .toUpperCase();
+  const selectedBhava = Math.min(
+    12,
+    Math.max(1, Number(formData.get("bhava")) || 1),
+  );
+  const windowType = parsePredictionWindowType(
+    String(formData.get("window_type") ?? "DAILY").toUpperCase(),
+  );
+
+  let planError: string | null = null;
+  let plan: ReturnType<typeof buildPredictionWindowPlan> | null = null;
+
+  try {
+    plan = buildPredictionWindowPlan(windowType, anchorDate);
+  } catch (error) {
+    planError = errorMessage(error);
+  }
+
+  const baseQuery =
+    "?calculation=" +
+    encodeURIComponent(calculationId) +
+    "&bhava=" +
+    selectedBhava +
+    "&window=" +
+    windowType +
+    "&date=" +
+    encodeURIComponent(anchorDate);
+
+  if (!plan || planError) {
+    redirect(
+      "/predictions" +
+        baseQuery +
+        "&window_error=" +
+        encodeURIComponent(planError ?? "INVALID_PREDICTION_WINDOW"),
+    );
+  }
+
+  const { data: sessionData } = await supabase.auth.getSession();
+  const session = sessionData.session;
+  if (!hasSession(session)) redirect("/login?error=session_expired");
+
+  const functionUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL +
+    "/functions/v1/jyotisha-calculator";
+  const functionKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  let windowError: string | null = null;
+
+  for (let index = 0; index < plan.samples.length; index += 4) {
+    const batch = plan.samples.slice(index, index + 4);
+    const results = await Promise.all(
+      batch.map(async (windowSample) => {
+        const validation = validateTransitInput({
+          calculationId,
+          transitDate: windowSample.local_date,
+          transitTime: windowSample.local_time,
+          timezone,
+        });
+
+        if (!validation.ok) {
+          return {
+            error: validation.error,
+            sample: windowSample.key,
+          };
+        }
+
+        try {
+          const response = await fetch(functionUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: functionKey ?? "",
+              Authorization: "Bearer " + session.access_token,
+            },
+            body: JSON.stringify(
+              buildTransitEngineRequest({
+                calculationId,
+                transitDate: windowSample.local_date,
+                transitTime: windowSample.local_time,
+                timezone,
+                nodeMethod,
+              }),
+            ),
+            cache: "no-store",
+          });
+
+          if (!response.ok) {
+            const detail = await response.text();
+            return {
+              error:
+                engineHttpError(
+                  response.ok,
+                  response.status,
+                  detail,
+                  "PREDICTION_WINDOW_TRANSIT",
+                ) ?? "PREDICTION_WINDOW_TRANSIT_HTTP_" + response.status,
+              sample: windowSample.key,
+            };
+          }
+
+          return { error: null, sample: windowSample.key };
+        } catch (error) {
+          return {
+            error: errorMessage(error),
+            sample: windowSample.key,
+          };
+        }
+      }),
+    );
+
+    const failed = results.find((result) => result.error);
+    if (failed) {
+      windowError =
+        "WINDOW_SAMPLE_FAILED_" +
+        failed.sample +
+        ": " +
+        String(failed.error ?? "UNKNOWN");
+      break;
+    }
+  }
+
+  if (windowError) {
+    redirect(
+      "/predictions" +
+        baseQuery +
+        "&window_error=" +
+        encodeURIComponent(windowError),
+    );
+  }
+
+  redirect("/predictions" + baseQuery + "&window_generated=1");
 }
