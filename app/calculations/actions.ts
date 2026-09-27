@@ -375,3 +375,54 @@ export async function generatePredictionWindow(formData: FormData) {
 
   redirect("/predictions" + baseQuery + "&window_generated=1");
 }
+
+
+export async function updateChartSubjectName(formData: FormData) {
+  const supabase = await createClient();
+  const calculationId = String(formData.get("calculation_id") ?? "").trim();
+  const subjectName = String(formData.get("subject_name") ?? "").trim();
+
+  if (!calculationId || !subjectName || subjectName.length > 120) {
+    redirect(
+      "/calculations/" +
+        encodeURIComponent(calculationId) +
+        "?error=" +
+        encodeURIComponent("INVALID_SUBJECT_NAME"),
+    );
+  }
+
+  const { error } = await supabase.rpc("update_user_calculation_subject_name_v1", {
+    p_calculation_id: calculationId,
+    p_subject_name: subjectName,
+  });
+
+  if (error) {
+    redirect(
+      "/calculations/" +
+        encodeURIComponent(calculationId) +
+        "?error=" +
+        encodeURIComponent(error.message),
+    );
+  }
+
+  redirect("/calculations/" + encodeURIComponent(calculationId) + "?saved=1");
+}
+
+export async function deleteChart(formData: FormData) {
+  const supabase = await createClient();
+  const calculationId = String(formData.get("calculation_id") ?? "").trim();
+
+  if (!calculationId) {
+    redirect("/my-chart?error=" + encodeURIComponent("INVALID_CALCULATION_ID"));
+  }
+
+  const { error } = await supabase.rpc("delete_user_calculation_v1", {
+    p_calculation_id: calculationId,
+  });
+
+  if (error) {
+    redirect("/my-chart?error=" + encodeURIComponent(error.message));
+  }
+
+  redirect("/my-chart?deleted=1");
+}
