@@ -111,7 +111,7 @@ export default async function CalculationPage({
   return (
     <>
       <AppNav />
-      <main className="min-h-screen px-4 py-8 sm:px-6">
+      <main className="astro-shell min-h-screen px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-6xl">
         <header className="border-b border-[#282d35] pb-7">
           <p className="eyebrow">NipunAstro · ගණනය කිරීමේ වාර්තාව</p>
@@ -119,7 +119,7 @@ export default async function CalculationPage({
           <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="serif text-4xl tracking-tight text-[#eee9de]">
-                උපන් කේන්දරය
+                උපන් හදහනය
               </h1>
               <p className="mt-3 text-sm text-[var(--muted)]">
                 Verified calculation output. Interpretation is deliberately
