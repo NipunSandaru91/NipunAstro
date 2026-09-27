@@ -12,6 +12,7 @@ export default async function AppNav({ active }: { active?: string }) {
     ["/dashboard", "Dashboard", "dashboard"],
     ["/chart/new", "New Chart", "new"],
     ["/my-chart", "My Chart", "chart"],
+    ["/predictions", "පුරෝකථන", "predictions"],
     ["/profile", "Profile", "profile"],
   ] as const;
   const adminItem = isAdmin ? ([["/admin", "Admin Dashboard", "admin"]] as const) : [];

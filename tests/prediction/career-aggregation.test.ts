@@ -1,0 +1,34 @@
+/// <reference lib="deno.ns" />
+import { aggregateCareerThemes } from "../../lib/prediction/topics/career-aggregation.ts";
+
+const combo={code:"FOREIGN_LINKED_CAREER" as const,strength:"STRONG" as const,evidence_refs:["10L-12H-G3","12L-1H-G4"],text_si:"x",rule_version:"CAREER_COMBINATIONS_V1" as const};
+const evidence=[
+ {ref:"10L-12H-G3",supporting:[{code:"JUPITER_DRISHTI",polarity:"SUPPORTING" as const,text_si:"ගුරු දෘෂ්ටිය"}],contradicting:[{code:"DUSTHANA_PLACEMENT",polarity:"CONTRADICTING" as const,text_si:"12 භාවය"}]},
+ {ref:"12L-1H-G4",supporting:[{code:"SHADBALA_ABOVE_MINIMUM",polarity:"SUPPORTING" as const,text_si:"ෂඩ්බලය"}],contradicting:[]},
+];
+
+Deno.test("career aggregation preserves both supporting and contradicting evidence",()=>{
+ const a=aggregateCareerThemes([combo],evidence)[0];
+ if(a.supporting.length!==2||a.contradicting.length!==1)throw new Error("career evidence balance lost");
+ if(a.level!=="STRONG")throw new Error("convergent career theme should remain strong");
+ if(a.evidence_grahas.join(",")!=="3,4")throw new Error("career evidence graha ids were not parsed");
+});
+Deno.test("strong combination is downgraded when contradictions dominate",()=>{
+ const bad=[{ref:"10L-12H-G3",supporting:[],contradicting:[
+  {code:"A",polarity:"CONTRADICTING" as const,text_si:"a"},
+  {code:"B",polarity:"CONTRADICTING" as const,text_si:"b"},
+  {code:"C",polarity:"CONTRADICTING" as const,text_si:"c"},
+ ]},{ref:"12L-1H-G4",supporting:[],contradicting:[]}];
+ const a=aggregateCareerThemes([combo],bad)[0];
+ if(a.level!=="WEAK")throw new Error("contradictions did not downgrade theme");
+});
+
+Deno.test("weak combination with two net supports promotes to moderate",()=>{
+ const weak={...combo,strength:"WEAK" as const};
+ const boosted=[{ref:"10L-12H-G3",supporting:[
+  {code:"S1",polarity:"SUPPORTING" as const,text_si:"s1"},
+  {code:"S2",polarity:"SUPPORTING" as const,text_si:"s2"},
+ ],contradicting:[]},{ref:"12L-1H-G4",supporting:[],contradicting:[]}];
+ const a=aggregateCareerThemes([weak],boosted)[0];
+ if(a.level!=="MODERATE")throw new Error("weak combination promotion branch changed");
+});
