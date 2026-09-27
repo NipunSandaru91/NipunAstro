@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppNav from "@/app/components/app-nav";
+import { signOut } from "@/app/auth/actions";
 
 export async function updateProfile(formData: FormData) {
   "use server";
@@ -101,6 +102,25 @@ export default async function ProfilePage({
                 පැතිකඩ සුරකින්න
               </button>
             </form>
+          </section>
+
+          <section className="mt-5 rounded-2xl border border-[#252a31] bg-[#0d1014] p-5">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="eyebrow">Session</p>
+                <p className="mt-2 text-xs leading-6 text-[#777d86]">
+                  මෙම device එකේ Google session එකෙන් ඉවත් වන්න.
+                </p>
+              </div>
+              <form action={signOut}>
+                <button
+                  type="submit"
+                  className="rounded-xl border border-[#6a3b3b] bg-[#1d1113] px-4 py-3 text-sm font-semibold text-[#d8aaaa]"
+                >
+                  ගිණුමෙන් ඉවත් වන්න
+                </button>
+              </form>
+            </div>
           </section>
 
           <section className="mt-5 rounded-2xl border border-[#252a31] bg-[#0d1014] p-5">
