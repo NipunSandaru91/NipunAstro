@@ -798,6 +798,7 @@ export default async function PredictionsPage({
                     topic,
                     window: windowType,
                     date: anchorDate,
+                    view: predictionView,
                   })}
                   className={
                     topic === selectedTopic
@@ -843,6 +844,7 @@ export default async function PredictionsPage({
                     topic: selectedTopic,
                     window: windowType,
                     date: anchorDate,
+                    view: predictionView,
                   })}
                   className={
                     calculation.id === selectedId
@@ -896,6 +898,8 @@ export default async function PredictionsPage({
                       topic: selectedTopic,
                       window: item,
                       date: anchorDate,
+                    view: predictionView,
+                      view: predictionView,
                     })}
                     className={
                       item === windowType
@@ -1071,6 +1075,8 @@ export default async function PredictionsPage({
           </section>
           ) : null}
 
+          {predictionView === "predictions" ? (
+          <>
           <section className="mt-5">
             <div className="flex items-end justify-between gap-3">
               <div>
@@ -1095,6 +1101,8 @@ export default async function PredictionsPage({
                       topic: selectedTopic,
                       window: windowType,
                       date: anchorDate,
+                    view: predictionView,
+                      view: predictionView,
                     })}
                     className={
                       row.bhava === selectedBhava
@@ -1356,6 +1364,8 @@ export default async function PredictionsPage({
                 })}
               </div>
             </section>
+          ) : null}
+          </>
           ) : null}
 
           <p className="mt-6 text-center text-[10px] leading-5 text-[#66707a]">
