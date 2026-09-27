@@ -615,3 +615,10 @@ body{
 }
 @keyframes apSlowSpin{to{transform:rotate(360deg)}}
 @keyframes apFloat{0%,100%{translate:0 0}50%{translate:0 -5px}}
+
+.ap-rashi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.65rem}
+.ap-rashi-grid>div{min-height:82px;border:1px solid #283e4f;border-radius:12px;background:linear-gradient(180deg,#071522,#061019);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:.55rem}
+.ap-rashi-grid>div.active{border-color:#b77d34;background:linear-gradient(180deg,#171207,#081019);box-shadow:inset 0 0 24px rgba(224,164,67,.07)}
+.ap-rashi-grid span{font-family:Georgia,"Times New Roman",serif;color:#e5ad4d;font-size:1.25rem}
+.ap-rashi-grid b{margin-top:.2rem;color:#e8e0d3;font-size:.66rem}
+.ap-rashi-grid small{margin-top:.18rem;color:#75828d;font-size:.52rem;line-height:1.25}
