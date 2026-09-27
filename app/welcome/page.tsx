@@ -4,7 +4,7 @@ export default function WelcomePage() {
   return (
     <main className="na-entry-screen">
       <div className="na-entry-frame na-welcome">
-        <img className="na-entry-art na-welcome-art" src="/art/welcome-v3.webp" alt="" aria-hidden="true" />
+        <img className="na-entry-art na-welcome-art" src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Earth_in_a_cosmology.jpg" alt="" aria-hidden="true" />
         <div className="na-entry-shade" aria-hidden="true" />
         <div className="na-welcome-orbit" aria-hidden="true" />
         <section className="na-welcome-copy si-text">
