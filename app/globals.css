@@ -180,3 +180,13 @@ body {
 .calculation-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;border:1px solid #2b343d;border-radius:15px;background:rgba(8,13,18,.7);padding:.9rem 1rem;transition:.2s}.calculation-row:hover{border-color:#745a2e;background:rgba(18,17,13,.85)}
 .pipeline-row{display:flex;align-items:center;gap:.8rem;border-bottom:1px solid #27303a;padding-bottom:.75rem}.pipeline-row:last-child{border-bottom:0}.pipeline-row span{font-family:monospace;font-size:.68rem;color:#d8ad57}.pipeline-row p{font-size:.78rem;color:#aeb3b9}
 @media (max-width:640px){.cosmic-hero{border-radius:22px}.cosmic-menu-panel{width:min(82vw,260px)}}
+
+
+/* Calculation-bound Prediction V1 */
+.bhava-prediction-card{display:block;border:1px solid #2d3741;border-radius:18px;background:linear-gradient(180deg,rgba(10,16,22,.96),rgba(6,10,14,.98));padding:1rem;transition:.2s}
+.bhava-prediction-card:hover,.bhava-prediction-card.active{border-color:#8f6a32;background:linear-gradient(180deg,rgba(25,20,12,.96),rgba(8,12,16,.98));box-shadow:0 12px 36px rgba(0,0,0,.2)}
+.bhava-number{display:grid;width:28px;height:28px;place-items:center;border-radius:50%;border:1px solid #6d542d;color:#e1b45d;font-family:Georgia,"Times New Roman",serif;font-size:.8rem}
+.bhava-status{border:1px solid #33404b;border-radius:999px;padding:.2rem .45rem;font-size:.55rem;letter-spacing:.08em;color:#77818b;background:#091117}
+.bhava-status.ready{border-color:#765927;color:#ddb25c;background:#151108}
+.evidence-chain-card{border:1px solid #38424c;border-radius:18px;background:linear-gradient(180deg,rgba(11,17,23,.97),rgba(7,11,15,.98));padding:1rem;box-shadow:0 16px 46px rgba(0,0,0,.18)}
+.timing-panel{border:1px solid #353f49;border-radius:18px;background:linear-gradient(180deg,rgba(9,15,21,.96),rgba(7,11,15,.98));padding:1rem}
