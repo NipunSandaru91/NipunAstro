@@ -1,5 +1,26 @@
-import { redirect } from "next/navigation";
+import Link from "next/link";
+import { signInWithGoogle } from "@/app/auth/actions";
+import { SacredMarkArt } from "@/app/components/reference-art";
 
-export default function LoginCompatibility() {
-  redirect("/welcome");
+export default async function LoginPage({searchParams}:{searchParams:Promise<{error?:string}>}){
+  const params=await searchParams;
+  return <main className="ref-screen">
+    <div className="ref-phone ref-login">
+      <div className="ref-login-mark"><SacredMarkArt/></div>
+      <section className="ref-login-copy">
+        <h1>NIPUN ASTRO</h1>
+        <p>ජීවිතයේ නක්ෂත්‍ර මඟ</p>
+      </section>
+      {params.error?<div className="ref-error">{params.error}</div>:null}
+      <div className="ref-login-actions">
+        <form action={signInWithGoogle}>
+          <input type="hidden" name="next" value="/dashboard"/>
+          <button className="ref-auth-button" type="submit"><span className="google">G</span><b>Continue with Google</b><em/></button>
+        </form>
+        <button className="ref-auth-button disabled" type="button" disabled><span>●</span><b>Continue with Apple</b><em>BETA</em></button>
+        <button className="ref-auth-button disabled" type="button" disabled><span>✉</span><b>Continue with Email</b><em>BETA</em></button>
+      </div>
+      <Link href="/welcome" className="ref-login-back">← ආපසු</Link>
+    </div>
+  </main>;
 }
