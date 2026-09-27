@@ -2,9 +2,10 @@ import type {
   PredictionEvidence,
   PredictionTopic,
 } from "../evidence.ts";
-import type {
-  EvidenceModifier,
-  EvidenceStrength,
+import {
+  assessEvidenceStrength,
+  type EvidenceModifier,
+  type EvidenceStrength,
 } from "../strength.ts";
 import { evaluateBhavaLordPlacement } from "../rules/bhava-lord-placement.ts";
 
@@ -217,9 +218,10 @@ function themeFrom(
   const contradicting = relevant.flatMap(
     (entry) => entry.evidence.strength.contradicting,
   );
-  const balance = supporting.length - contradicting.length;
-  const level: EvidenceStrength =
-    balance >= 2 ? "STRONG" : balance <= -2 ? "WEAK" : "MODERATE";
+  const level = assessEvidenceStrength([
+    ...supporting,
+    ...contradicting,
+  ]).level;
 
   return {
     code: config.code,
