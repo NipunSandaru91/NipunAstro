@@ -33,7 +33,8 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
   const pathname = request.nextUrl.pathname;
 
-  const isPublicPath = isAuthEntryPath(pathname) || pathname.startsWith("/auth");
+  const visualQaPath = process.env.VISUAL_QA_MODE === "1" && pathname.startsWith("/visual-qa");
+  const isPublicPath = isAuthEntryPath(pathname) || pathname.startsWith("/auth") || visualQaPath;
 
   if (user && isAuthEntryPath(pathname)) {
     const url = request.nextUrl.clone();
