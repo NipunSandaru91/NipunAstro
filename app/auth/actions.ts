@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { safeNextPath } from "@/lib/auth/routes";
 
 async function getSiteOrigin() {
   const headerStore = await headers();
@@ -14,8 +15,7 @@ async function getSiteOrigin() {
 export async function signInWithGoogle(formData?: FormData) {
   const supabase = await createClient();
   const origin = await getSiteOrigin();
-  const next = String(formData?.get("next") ?? "/dashboard");
-  const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+  const safeNext = safeNextPath(String(formData?.get("next") ?? "/dashboard"));
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -23,7 +23,7 @@ export async function signInWithGoogle(formData?: FormData) {
   });
 
   if (error || !data.url) {
-    redirect("/welcome?error=" + encodeURIComponent(error?.message ?? "GOOGLE_OAUTH_INIT_FAILED"));
+    redirect("/login?error=" + encodeURIComponent(error?.message ?? "GOOGLE_OAUTH_INIT_FAILED"));
   }
 
   redirect(data.url);
