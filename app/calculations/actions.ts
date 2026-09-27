@@ -19,6 +19,7 @@ import {
   buildPredictionWindowPlan,
   parsePredictionWindowType,
 } from "@/lib/prediction/timing/prediction-window";
+import { parsePredictionTopic } from "@/lib/prediction/topics/generic-topic";
 
 export async function createCalculation(formData: FormData) {
   const supabase = await createClient();
@@ -242,6 +243,9 @@ export async function generatePredictionWindow(formData: FormData) {
     12,
     Math.max(1, Number(formData.get("bhava")) || 1),
   );
+  const topic = parsePredictionTopic(
+    String(formData.get("topic") ?? "CAREER").toUpperCase(),
+  );
   const windowType = parsePredictionWindowType(
     String(formData.get("window_type") ?? "DAILY").toUpperCase(),
   );
@@ -260,6 +264,8 @@ export async function generatePredictionWindow(formData: FormData) {
     encodeURIComponent(calculationId) +
     "&bhava=" +
     selectedBhava +
+    "&topic=" +
+    topic +
     "&window=" +
     windowType +
     "&date=" +
