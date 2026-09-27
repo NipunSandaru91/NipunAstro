@@ -1,17 +1,18 @@
 import Link from "next/link";
+import { CosmicSageArt } from "@/app/components/reference-art";
 
 export default function SplashPage() {
   return (
-    <main className="na-entry-screen">
-      <Link href="/welcome" className="na-entry-frame na-splash" aria-label="NipunAstro වෙත පිවිසෙන්න">
-        <img className="na-entry-art na-splash-art" src="https://upload.wikimedia.org/wikipedia/commons/7/70/Varma_-_Vishvamitra_Meditation.jpg" alt="" aria-hidden="true" />
-        <div className="na-entry-shade" aria-hidden="true" />
-        <div className="na-zodiac-arc" aria-hidden="true"><i/><i/><i/></div>
-        <section className="na-splash-brand si-text">
-          <div className="na-sacred-mini" aria-hidden="true">✦</div>
+    <main className="ap-entry">
+      <Link href="/welcome" className="ap-entry-frame ap-splash" aria-label="NipunAstro වෙත පිවිසෙන්න">
+        <div className="ap-splash-visual" aria-hidden="true"><CosmicSageArt /></div>
+        <div className="ap-entry-vignette" aria-hidden="true" />
+        <section className="ap-splash-copy">
+          <div className="ap-diamond-mark" aria-hidden="true"><span>✦</span></div>
           <h1>NIPUN ASTRO</h1>
-          <p>ජ්‍යෝතිෂය, ජීවිතයට දෘෂ්ටියක්</p>
-          <span>Ancient Wisdom · Modern Clarity</span>
+          <p>ජීවිතයේ නක්ෂත්‍ර මග</p>
+          <div className="ap-gold-rule" />
+          <small>Ancient Wisdom <i>•</i> Modern Clarity</small>
         </section>
       </Link>
     </main>

@@ -9,126 +9,40 @@ type D1ChartProps = {
   grahaNames: Record<string, string>;
 };
 
-function pick(obj: Graha | null | undefined, ...keys: string[]) {
-  if (!obj) return undefined;
-  for (const key of keys) {
-    if (obj[key] !== undefined && obj[key] !== null && obj[key] !== "") return obj[key];
-  }
-  return undefined;
-}
+const SIGN_GLYPHS=["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+const PLANET_GLYPHS:Record<string,string>={SURYA:"☉",CHANDRA:"☽",MANGALA:"♂",BUDHA:"☿",GURU:"♃",SHUKRA:"♀",SHANI:"♄",RAHU:"☊",KETU:"☋"};
 
-function grahaName(graha: Graha, names: Record<string, string>) {
-  const code = String(pick(graha, "code", "graha_code") ?? "").toUpperCase();
-  return names[code] ?? String(pick(graha, "name", "english_name", "code") ?? "—");
-}
+function pick(obj:Graha|null|undefined,...keys:string[]){if(!obj)return undefined;for(const key of keys){if(obj[key]!==undefined&&obj[key]!==null&&obj[key]!=="")return obj[key]}return undefined}
+function codeOf(graha:Graha){return String(pick(graha,"code","graha_code")??"").toUpperCase()}
+function grahaName(graha:Graha,names:Record<string,string>){const code=codeOf(graha);return names[code]??String(pick(graha,"name","english_name","code")??"—")}
 
-export default function D1Chart({
-  lagnaRasiId,
-  grahas,
-  rashiNames,
-  grahaNames,
-}: D1ChartProps) {
-  const houses = Array.from({ length: 12 }, (_, i) => {
-    const house = i + 1;
-    const rashiId = ((lagnaRasiId - 1 + i) % 12) + 1;
-    const planets = grahas.filter(
-      (graha) => Number(pick(graha, "rasi_id")) === rashiId,
-    );
-    return { house, rashiId, planets };
-  });
-
-  const positions = [
-    [250, 94], [374, 38], [500, 94], [626, 38],
-    [752, 94], [878, 38], [878, 250], [878, 406],
-    [752, 562], [626, 618], [500, 562], [374, 618],
-  ];
-
+export default function D1Chart({lagnaRasiId,grahas,rashiNames,grahaNames}:D1ChartProps){
+  const grouped=Array.from({length:12},(_,i)=>grahas.filter(g=>Number(pick(g,"rasi_id"))===i+1));
   return (
-    <div className="overflow-hidden rounded-3xl border border-[#34475b] bg-[#081522] p-3 sm:p-5">
-      <div className="flex items-center justify-between px-2 pb-3">
-        <div>
-          <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#b8954f]">
-            D1 · Rāśi Chart
-          </p>
-          <p className="mt-1 text-xs text-[#7f8a98]">
-            Whole Sign · Lahiri Sidereal
-          </p>
-        </div>
-        <span className="rounded-full border border-[#405163] px-2.5 py-1 text-[9px] text-[#9ba6b2]">
-          Calculation layer
-        </span>
-      </div>
-
-      <div className="mx-auto aspect-square w-full max-w-[620px]">
-        <svg viewBox="0 0 400 400" className="h-full w-full" role="img" aria-label="D1 Rashi chart">
-          <rect x="6" y="6" width="388" height="388" rx="10" fill="#091522" stroke="#405163" strokeWidth="2" />
-
-          {[
-            "200,6 294,100 200,200 106,100",
-            "6,6 200,6 106,100",
-            "6,6 106,100 6,200",
-            "6,200 106,100 200,200 106,300",
-            "6,394 6,200 106,300",
-            "6,394 106,300 200,394",
-            "200,394 294,300 200,200 106,300",
-            "394,394 200,394 294,300",
-            "394,394 394,200 294,300",
-            "394,200 294,300 200,200 294,100",
-            "394,6 394,200 294,100",
-            "394,6 200,6 294,100",
-          ].map((points, index) => (
-            <polygon
-              key={index}
-              points={points}
-              fill={index === 0 ? "#211b0e" : "#0d1b2b"}
-              stroke={index === 0 ? "#d2aa58" : "#405163"}
-              strokeWidth="1.5"
-            />
-          ))}
-
-          {houses.map(({ house, rashiId, planets }, index) => {
-            const positions = [
-              [200, 72], [98, 52], [48, 148], [72, 200],
-              [48, 302], [98, 348], [200, 328], [302, 348],
-              [352, 302], [328, 200], [352, 148], [302, 52],
-            ];
-            const [x, y] = positions[index];
-            const isLagna = house === 1;
-            return (
-              <g key={house}>
-                <text x={x} y={y - 17} textAnchor="middle" fill="#b8954f" fontSize="9" fontWeight="700">
-                  {house}
-                </text>
-                <text x={x} y={y - 2} textAnchor="middle" fill="#eee9de" fontSize="13" fontWeight="600">
-                  {rashiNames[rashiId - 1] ?? "—"}
-                </text>
-                <text x={x} y={y + 13} textAnchor="middle" fill={isLagna ? "#e0b65b" : "#9aa6b4"} fontSize="9">
-                  {planets.map((p) => grahaName(p, grahaNames)).join(" · ") || "—"}
-                </text>
-              </g>
-            );
-          })}
-
-          <text x="200" y="194" textAnchor="middle" fill="#d4cfc4" fontSize="11" fontWeight="600">
-            D1
-          </text>
-          <text x="200" y="211" textAnchor="middle" fill="#778392" fontSize="8">
-            RĀŚI
-          </text>
+    <section className="ap-chart-card">
+      <div className="ap-chart-stage">
+        <svg viewBox="0 0 420 420" role="img" aria-label="D1 Rashi circular chart">
+          <defs>
+            <radialGradient id="apChartBg"><stop offset="0" stopColor="#132536"/><stop offset=".45" stopColor="#071522"/><stop offset="1" stopColor="#02070b"/></radialGradient>
+            <radialGradient id="apMoon"><stop offset="0" stopColor="#dfe6e7"/><stop offset=".7" stopColor="#748392"/><stop offset="1" stopColor="#1b2730"/></radialGradient>
+            <filter id="apGlow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <circle cx="210" cy="210" r="199" fill="url(#apChartBg)" stroke="#c48a35" strokeWidth="1.6"/>
+          <circle cx="210" cy="210" r="168" fill="none" stroke="#31536b" strokeWidth="1"/>
+          <circle cx="210" cy="210" r="136" fill="none" stroke="#a8712d" strokeOpacity=".78"/>
+          <circle cx="210" cy="210" r="104" fill="none" stroke="#31536b" strokeOpacity=".72"/>
+          {Array.from({length:12},(_,i)=>{const a=(i*30-90)*Math.PI/180;return <line key={i} x1="210" y1="210" x2={210+168*Math.cos(a)} y2={210+168*Math.sin(a)} stroke="#355266" strokeOpacity=".42"/>})}
+          {SIGN_GLYPHS.map((glyph,i)=>{const a=(i*30-75)*Math.PI/180;return <g key={glyph}><text x={210+184*Math.cos(a)} y={216+184*Math.sin(a)} textAnchor="middle" fill={i+1===lagnaRasiId?"#ffd06b":"#e6a94b"} fontSize="21" fontFamily="Georgia">{glyph}</text><text x={210+149*Math.cos(a)} y={214+149*Math.sin(a)} textAnchor="middle" fill="#aab8c4" fontSize="7">{rashiNames[i]??""}</text></g>})}
+          {grouped.flatMap((group,rashiIndex)=>group.map((graha,index)=>{const a=(rashiIndex*30-75+(index-(group.length-1)/2)*6)*Math.PI/180;const code=codeOf(graha);return <g key={code+"-"+index} filter="url(#apGlow)"><circle cx={210+112*Math.cos(a)} cy={210+112*Math.sin(a)} r="12" fill="#07121c" stroke={code==="SURYA"?"#e5a63f":"#7fa2ba"} strokeWidth="1.2"/><text x={210+112*Math.cos(a)} y={215+112*Math.sin(a)} textAnchor="middle" fill={code==="SURYA"?"#ffd36f":"#d9e6ee"} fontSize="14">{PLANET_GLYPHS[code]??"•"}</text></g>}))}
+          <circle cx="210" cy="210" r="50" fill="url(#apMoon)" opacity=".92"/>
+          <circle cx="197" cy="196" r="8" fill="#53616b" opacity=".6"/>
+          <circle cx="226" cy="218" r="10" fill="#52616c" opacity=".45"/>
+          <text x="210" y="282" textAnchor="middle" fill="#d7ae5a" fontSize="9" letterSpacing="2">D1 · RĀŚI</text>
         </svg>
       </div>
-
-      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {houses.slice(0, 4).map(({ house, rashiId, planets }) => (
-          <div key={house} className="rounded-xl border border-[#24384b] bg-[#091522] px-3 py-2">
-            <p className="text-[9px] uppercase tracking-[0.12em] text-[#697787]">Bhāva {house}</p>
-            <p className="mt-1 text-xs text-[#d4cfc4]">{rashiNames[rashiId - 1]}</p>
-            <p className="mt-1 text-[10px] text-[#8e9aa8]">
-              {planets.map((p) => grahaName(p, grahaNames)).join(" · ") || "Empty"}
-            </p>
-          </div>
-        ))}
+      <div className="ap-chart-legend">
+        {grahas.slice(0,9).map((graha,index)=><span key={index}><i>{PLANET_GLYPHS[codeOf(graha)]??"•"}</i>{grahaName(graha,grahaNames)}</span>)}
       </div>
-    </div>
+    </section>
   );
 }
