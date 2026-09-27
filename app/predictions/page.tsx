@@ -42,7 +42,7 @@ export default async function PredictionsPage({searchParams}:{searchParams:Promi
   const selectedBhava=Math.min(12,Math.max(1,Number(params.bhava)||1));
 
   if(!selectedId){
-    return <><AppNav active="predictions"/><main className="astro-shell min-h-screen px-4 py-6 sm:px-6"><div className="mx-auto max-w-5xl"><section className="cosmic-hero rounded-[28px] border border-[#725626] p-6 sm:p-9"><p className="eyebrow">Prediction Observatory</p><h1 className="serif mt-3 text-4xl text-[#f3dfb1]">පුරෝකථන</h1><p className="mt-4 text-sm leading-7 text-[#b9b4a9]">පුරෝකථනයක් සඳහා මුලින් සත්‍යාපිත calculation එකක් අවශ්‍යයි.</p><Link href="/chart/new" className="cosmic-primary mt-6">නව කේන්දරයක් සාදන්න</Link></section></div></main></>;
+    return <><AppNav active="predictions"/><main className="astro-shell min-h-screen px-4 py-6 sm:px-6"><div className="mx-auto max-w-5xl"><section className="cosmic-hero rounded-[28px] border border-[#725626] p-6 sm:p-9"><p className="eyebrow">Prediction Observatory</p><h1 className="serif mt-3 text-4xl text-[#f3dfb1]">පුරෝකථන</h1><p className="mt-4 text-sm leading-7 text-[#b9b4a9]">පුරෝකථනයක් සඳහා මුලින් සත්‍යාපිත calculation එකක් අවශ්‍යයි.</p><Link href="/chart/new" className="cosmic-primary mt-6">නව හදහනක් සාදන්න</Link></section></div></main></>;
   }
 
   const {data:chartData,error}=await supabase.rpc("get_user_calculation_chart_v1",{p_calculation_id:selectedId});
@@ -83,7 +83,7 @@ export default async function PredictionsPage({searchParams}:{searchParams:Promi
     </section>
 
     <section className="astro-card mt-5">
-      <div className="flex items-end justify-between gap-3"><div><p className="eyebrow">Chart Selector</p><h2 className="serif mt-2 text-2xl text-[#f0e4c8]">පුරෝකථනය සඳහා කේන්දරය තෝරන්න</h2></div><Link href={`/calculations/${selectedId}`} className="text-xs text-[#d8b66b]">ගණනය බලන්න →</Link></div>
+      <div className="flex items-end justify-between gap-3"><div><p className="eyebrow">Chart Selector</p><h2 className="serif mt-2 text-2xl text-[#f0e4c8]">පුරෝකථනය සඳහා හදහන තෝරන්න</h2></div><Link href={`/calculations/${selectedId}`} className="text-xs text-[#d8b66b]">ගණනය බලන්න →</Link></div>
       <div className="mt-4 flex gap-2 overflow-x-auto pb-2">{calculations.map(c=><Link key={c.id} href={`/predictions?calculation=${c.id}&bhava=${selectedBhava}`} className={c.id===selectedId?"astro-chip active":"astro-chip"}><span className="block">{c.input_place_name??"Natal chart"}</span><small className="mt-1 block opacity-60">{c.input_birth_date}</small></Link>)}</div>
     </section>
 
