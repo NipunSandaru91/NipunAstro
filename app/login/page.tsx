@@ -6,7 +6,7 @@ export default async function LoginPage({searchParams}:{searchParams:Promise<{er
   return (
     <main className="na-entry-screen">
       <div className="na-entry-frame na-login">
-        <img className="na-login-sky" src="/art/login-v3.webp" alt="" aria-hidden="true" />
+        <img className="na-login-sky" src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Earth_in_a_cosmology.jpg" alt="" aria-hidden="true" />
         <div className="na-login-haze" aria-hidden="true" />
         <section className="na-login-brand si-text">
           <div className="na-sacred-mark" aria-hidden="true"><i/><i/><span>✦</span></div>
