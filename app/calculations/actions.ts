@@ -135,7 +135,9 @@ export async function calculateTransit(formData: FormData) {
   const transitDate = String(formData.get("transit_date") ?? "").trim();
   const transitTime = String(formData.get("transit_time") ?? "").trim();
   const timezone = String(formData.get("timezone") ?? "").trim();
-  const nodeMethod = String(formData.get("node_method") ?? "MEAN").trim().toUpperCase();
+  const nodeMethod = String(formData.get("node_method") ?? "MEAN")
+    .trim()
+    .toUpperCase();
 
   const transitValidation = validateTransitInput({
     calculationId,
@@ -162,6 +164,9 @@ export async function calculateTransit(formData: FormData) {
     "/functions/v1/jyotisha-calculator";
   const functionKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
+  let transitError: string | null = null;
+  let transitAt: string | null = null;
+
   try {
     const response = await fetch(functionUrl, {
       method: "POST",
@@ -184,27 +189,38 @@ export async function calculateTransit(formData: FormData) {
 
     if (!response.ok) {
       const detail = await response.text();
-      const transitError = engineHttpError(
+      transitError = engineHttpError(
         response.ok,
         response.status,
         detail,
         "TRANSIT",
       );
-      redirect(
-        "/calculations/" +
-          calculationId +
-          "?transit_error=" +
-          encodeURIComponent(transitError ?? "TRANSIT_HTTP_" + response.status),
-      );
+    } else {
+      const payload = (await response.json()) as { transit_at?: unknown };
+      transitAt =
+        typeof payload.transit_at === "string" ? payload.transit_at : null;
     }
   } catch (error) {
+    transitError = errorMessage(error);
+  }
+
+  if (transitError) {
     redirect(
       "/calculations/" +
         calculationId +
         "/transit?transit_error=" +
-        encodeURIComponent(errorMessage(error)),
+        encodeURIComponent(transitError),
     );
   }
 
-  redirect("/calculations/" + calculationId + "/transit?transit=calculated");
+  const snapshotParam = transitAt
+    ? "&snapshot=" + encodeURIComponent(transitAt)
+    : "";
+
+  redirect(
+    "/calculations/" +
+      calculationId +
+      "/transit?transit=calculated" +
+      snapshotParam,
+  );
 }
