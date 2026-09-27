@@ -291,3 +291,28 @@ body {
 .welcome-kicker{margin:0 0 .65rem;color:#b9863d;font-size:.58rem;letter-spacing:.18em}.real-art-welcome-copy h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,9vw,2.75rem);line-height:1.28;color:#ecd19a;text-shadow:0 2px 20px rgba(0,0,0,.9)}.real-art-welcome-copy h1 span{color:#efb754}.real-art-welcome-copy>p:last-child{margin:1rem 0 0;color:#c4c2bd;font-size:.92rem;line-height:1.85}
 .real-art-welcome-footer{position:relative;z-index:3;margin-top:auto;padding:0 1.35rem calc(1.2rem + env(safe-area-inset-bottom))}
 @media (min-width:700px){.real-art-splash,.real-art-welcome{min-height:min(920px,94svh)}}
+
+
+/* Sinhala typography guardrail
+   Keep Sinhala as live text in the UI. Do not bake Sinhala copy into artwork.
+   Sinhala combining marks must not inherit Latin tracking/letter-spacing. */
+:lang(si),
+.si-text,
+.ref-si-brand {
+  font-family: "Noto Sans Sinhala", "Noto Serif Sinhala", "Iskoola Pota", "Malithi Web", system-ui, sans-serif;
+  letter-spacing: normal !important;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+
+:lang(si) h1,
+:lang(si) h2,
+:lang(si) h3,
+:lang(si) p,
+:lang(si) button,
+:lang(si) a,
+:lang(si) label,
+:lang(si) input,
+:lang(si) select {
+  letter-spacing: normal;
+}
