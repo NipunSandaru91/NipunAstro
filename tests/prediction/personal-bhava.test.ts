@@ -1,5 +1,6 @@
 /// <reference lib="deno.ns" />
 import { buildPersonalBhavaCards } from "../../lib/prediction/ui/personal-bhava.ts";
+import { evaluateBhavaLordPlacement } from "../../lib/prediction/rules/bhava-lord-placement.ts";
 
 const golden=[
   {graha_id:1,rasi_id:12},{graha_id:2,rasi_id:9},{graha_id:3,rasi_id:3},
@@ -32,4 +33,22 @@ Deno.test("Personal Bhava V1 covers strength tones and missing-lord guard",()=>{
   let rejected=false;
   try{buildPersonalBhavaCards({lagnaRasiId:4,positions:golden.filter(x=>x.graha_id!==3)})}catch{rejected=true}
   if(!rejected)throw Error("missing lord position must be rejected");
+});
+
+
+Deno.test("Bhava V1 foundation evidence exists for every one of the 12 houses",()=>{
+  const seen=new Set<number>();
+  for(let sourceBhava=1;sourceBhava<=12;sourceBhava++){
+    const evidence=evaluateBhavaLordPlacement({
+      lagnaRasiId:4,
+      sourceBhava,
+      positions:golden,
+      topic:"CAREER",
+      polarity:"SUPPORTING",
+    });
+    if(evidence.rule.code!=="BHAVA_LORD_PLACEMENT")throw Error(`Bhava ${sourceBhava} missing base rule`);
+    if(!evidence.rule.text_si)throw Error(`Bhava ${sourceBhava} missing readable evidence`);
+    seen.add(sourceBhava);
+  }
+  if(seen.size!==12)throw Error("all 12 bhavas must have base evidence");
 });
