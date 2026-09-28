@@ -3,19 +3,25 @@ import { createClient } from "@/lib/supabase/server";
 import BackButton from "@/app/components/back-button";
 import { signOut } from "@/app/auth/actions";
 
-const items=[
+const professionalItems=[
   ["/dashboard","⌂","මුල් පිටුව","dashboard"],
   ["/my-chart","⌁","කේන්දර","chart"],
   ["/predictions","◉","පුරෝකථන","predictions"],
   ["/forecast","◌","කාල අනාවැකි","forecast"],
+] as const;
+const personalItems=[
+  ["/dashboard","⌂","මුල් පිටුව","dashboard"],
+  ["/my-chart","⌁","මගේ කේන්දර","chart"],
+  ["/chart/new","＋","නව කේන්දරය","new"],
 ] as const;
 
 export default async function AppNav({active}:{active?:string}){
   const supabase=await createClient();
   const {data:claims}=await supabase.auth.getClaims();
   const email=typeof claims?.claims?.email==="string"?claims.claims.email:null;
-  const {data:profile}=await supabase.from("profiles").select("display_name").single();
+  const {data:profile}=await supabase.from("profiles").select("display_name,account_type").single();
   const name=profile?.display_name||email?.split("@")[0]||"Nipun";
+  const items=profile?.account_type==="PERSONAL"?personalItems:professionalItems;
 
   return <>
     <header className="ref-app-header">
