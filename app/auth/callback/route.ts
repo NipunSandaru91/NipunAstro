@@ -28,11 +28,16 @@ export async function GET(request: Request) {
     );
   }
 
-  const { error: profileError } = await supabase
-    .from("profiles")
-    .update({ account_type: accountType, updated_at: new Date().toISOString() })
-    .select("id")
-    .single();
+  const { data: claims } = await supabase.auth.getClaims();
+  const userId = typeof claims?.claims?.sub === "string" ? claims.claims.sub : null;
+  const { error: profileError } = userId
+    ? await supabase
+      .from("profiles")
+      .update({ account_type: accountType, updated_at: new Date().toISOString() })
+      .eq("id", userId)
+      .select("id")
+      .single()
+    : { error: new Error("AUTH_USER_MISSING") };
 
   if (profileError) {
     return NextResponse.redirect(

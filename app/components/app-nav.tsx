@@ -19,7 +19,10 @@ export default async function AppNav({active}:{active?:string}){
   const supabase=await createClient();
   const {data:claims}=await supabase.auth.getClaims();
   const email=typeof claims?.claims?.email==="string"?claims.claims.email:null;
-  const {data:profile}=await supabase.from("profiles").select("display_name,account_type").single();
+  const [{data:profile},{data:roleRow}]=await Promise.all([
+    supabase.from("profiles").select("display_name,account_type").single(),
+    supabase.from("user_roles").select("role").single(),
+  ]);
   const name=profile?.display_name||email?.split("@")[0]||"Nipun";
   const items=profile?.account_type==="PERSONAL"?personalItems:professionalItems;
 
@@ -39,6 +42,7 @@ export default async function AppNav({active}:{active?:string}){
           <div className="ref-more-panel">
             <Link href="/profile"><span>♙</span><b>Profile</b></Link>
             <Link href="/settings"><span>⚙</span><b>Settings</b></Link>
+            {roleRow?.role==="ADMIN"?<Link href="/admin"><span>◆</span><b>Admin Dashboard</b></Link>:null}
             <button type="button" disabled className="disabled"><span>!</span><b>Report</b><small>COMING SOON</small></button>
             <form action={signOut}>
               <button type="submit" className="danger"><span>↪</span><b>Sign out</b></button>

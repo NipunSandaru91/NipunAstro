@@ -19,10 +19,12 @@ export default async function Dashboard(){
   const supabase=await createClient();
   const {data:claims}=await supabase.auth.getClaims();
   if(!claims?.claims?.sub)redirect("/login");
-  const [{data:calculations},{data:profile}]=await Promise.all([
+  const [{data:calculations},{data:profile},{data:roleRow}]=await Promise.all([
     supabase.from("user_calculation_runs_v1").select("*").order("calculation_timestamp",{ascending:false}),
     supabase.from("profiles").select("account_type").single(),
+    supabase.from("user_roles").select("role").single(),
   ]);
+  const isAdmin=roleRow?.role==="ADMIN";
   const owned=(calculations??[]) as Calculation[];
   const latest=owned[0];
 
@@ -33,6 +35,7 @@ export default async function Dashboard(){
     {href:"/my-chart",icon:"▤",label:"කේන්දර ඉතිහාසය"},
     {href:"/predictions",icon:"◇",label:"පුරෝකථන"},
     {href:"/profile",icon:"✣",label:"පැතිකඩ"},
+    ...(isAdmin?[{href:"/admin",icon:"◆",label:"Admin Dashboard"}]:[]),
   ];
 
   const latestTitle=latest?.subject_name??latest?.input_place_name??"Natal chart";
@@ -54,6 +57,7 @@ export default async function Dashboard(){
         <Link href="/chart/new" className="ref-feature-tile"><span className="ref-feature-icon">＋</span><b>නව කේන්දරය</b></Link>
         <Link href="/my-chart" className="ref-feature-tile"><span className="ref-feature-icon">▤</span><b>මගේ කේන්දර</b></Link>
         <Link href="/settings" className="ref-feature-tile"><span className="ref-feature-icon">⚙</span><b>Account type</b></Link>
+        {isAdmin?<Link href="/admin" className="ref-feature-tile"><span className="ref-feature-icon">◆</span><b>Admin Dashboard</b></Link>:null}
       </section>
 
       <section className="ref-insight-card">
