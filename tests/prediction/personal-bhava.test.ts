@@ -19,3 +19,17 @@ Deno.test("Personal Bhava V1 creates 12 deterministic readable cards",()=>{
     if(card.description_si.split(".").filter(Boolean).length<7)throw Error("Personal card detail is too short");
   }
 });
+
+
+Deno.test("Personal Bhava V1 covers strength tones and missing-lord guard",()=>{
+  const high=[1,2,3,4,5,6,7].map(graha_id=>({graha_id,total_bala_rupa:100}));
+  const low=[1,2,3,4,5,6,7].map(graha_id=>({graha_id,total_bala_rupa:0}));
+  const strong=buildPersonalBhavaCards({lagnaRasiId:4,positions:golden,shadbala:high});
+  const challenged=buildPersonalBhavaCards({lagnaRasiId:4,positions:golden,shadbala:low});
+  if(!strong.some(x=>x.description_si.includes("සහායක රටාවක්")))throw Error("supporting tone not covered");
+  if(!challenged.some(x=>x.description_si.includes("ඉවසීම")))throw Error("challenging tone not covered");
+
+  let rejected=false;
+  try{buildPersonalBhavaCards({lagnaRasiId:4,positions:golden.filter(x=>x.graha_id!==3)})}catch{rejected=true}
+  if(!rejected)throw Error("missing lord position must be rejected");
+});
