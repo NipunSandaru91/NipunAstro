@@ -47,7 +47,6 @@ const PRACTICAL = [
 ] as const;
 
 function joinKeywords(values: readonly string[]) {
-  if (values.length <= 1) return values[0] ?? "";
   return values.slice(0, -1).join(", ") + " සහ " + values[values.length - 1];
 }
 
