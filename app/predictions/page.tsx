@@ -898,7 +898,6 @@ export default async function PredictionsPage({
                       topic: selectedTopic,
                       window: item,
                       date: anchorDate,
-                    view: predictionView,
                       view: predictionView,
                     })}
                     className={
@@ -1101,7 +1100,6 @@ export default async function PredictionsPage({
                       topic: selectedTopic,
                       window: windowType,
                       date: anchorDate,
-                    view: predictionView,
                       view: predictionView,
                     })}
                     className={
