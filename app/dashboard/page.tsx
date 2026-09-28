@@ -19,7 +19,10 @@ export default async function Dashboard(){
   const supabase=await createClient();
   const {data:claims}=await supabase.auth.getClaims();
   if(!claims?.claims?.sub)redirect("/login");
-  const {data:calculations}=await supabase.from("user_calculation_runs_v1").select("*").order("calculation_timestamp",{ascending:false});
+  const [{data:calculations},{data:profile}]=await Promise.all([
+    supabase.from("user_calculation_runs_v1").select("*").order("calculation_timestamp",{ascending:false}),
+    supabase.from("profiles").select("account_type").single(),
+  ]);
   const owned=(calculations??[]) as Calculation[];
   const latest=owned[0];
 
@@ -33,6 +36,34 @@ export default async function Dashboard(){
   ];
 
   const latestTitle=latest?.subject_name??latest?.input_place_name??"Natal chart";
+
+  if(profile?.account_type==="PERSONAL"){
+    return <><AppNav active="dashboard"/><main className="ref-app-shell"><div className="ref-app-main">
+      <section className="ref-feature-hero">
+        <div className="ref-feature-copy">
+          <p>PERSONAL · D1</p>
+          <h1>{latest?latestTitle:"ඔබේ පළමු කේන්දරය"}</h1>
+          <span>{latest?(latest.input_place_name?latest.input_place_name+" · ":"")+latest.input_birth_date:"උපන් තොරතුරු ඇතුළත් කර සරල D1 කියවීමක් සාදන්න"}</span>
+        </div>
+        <Link href={latest?"/calculations/"+latest.id:"/chart/new"} className="ref-round-arrow">→</Link>
+        <div className="ref-hero-orbit" aria-hidden="true"><i/><b/><span>✦</span></div>
+      </section>
+
+      <section className="mt-5 grid grid-cols-2 gap-3">
+        <Link href={latest?"/calculations/"+latest.id:"/chart/new"} className="ref-feature-tile"><span className="ref-feature-icon">✧</span><b>මගේ D1 කියවීම</b></Link>
+        <Link href="/chart/new" className="ref-feature-tile"><span className="ref-feature-icon">＋</span><b>නව කේන්දරය</b></Link>
+        <Link href="/my-chart" className="ref-feature-tile"><span className="ref-feature-icon">▤</span><b>මගේ කේන්දර</b></Link>
+        <Link href="/settings" className="ref-feature-tile"><span className="ref-feature-icon">⚙</span><b>Account type</b></Link>
+      </section>
+
+      <section className="ref-insight-card">
+        <div><p>භාව 12</p><h2>ජීවිත ක්ෂේත්‍ර 12 සඳහා සරල, එකට ගැළපූ සිංහල විග්‍රහය</h2></div>
+        <Link href={latest?"/calculations/"+latest.id:"/chart/new"} className="ref-round-arrow">→</Link>
+      </section>
+
+      {latest?<section className="ref-latest-card"><div><small>දැනට තෝරාගත් chart එක</small><h3>{latestTitle}</h3><p>{latest.input_place_name?latest.input_place_name+" · ":""}{latest.input_birth_date} · {latest.input_birth_time}</p></div><Link href={"/calculations/"+latest.id} className="ref-small-gold">කියවීම →</Link></section>:null}
+    </div></main></>;
+  }
 
   return <><AppNav active="dashboard"/><main className="ref-app-shell"><div className="ref-app-main">
     <section className="ref-feature-hero">
