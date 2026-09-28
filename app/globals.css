@@ -307,3 +307,26 @@ body {
   line-height:1;
 }
 .ref-back-button:hover{border-color:#8f7740;color:#f0c86d}
+
+
+/* Account menu + account mode selector */
+.ref-more-menu{position:relative}
+.ref-more-menu>summary{list-style:none;display:grid;width:38px;height:38px;place-items:center;cursor:pointer;border:1px solid #37414a;border-radius:50%;color:#dfc186;font-weight:700;letter-spacing:.08em;user-select:none}
+.ref-more-menu>summary::-webkit-details-marker{display:none}
+.ref-more-menu[open]>summary{border-color:#8f7740;background:#15130f;color:#f0c86d}
+.ref-more-panel{position:absolute;right:0;top:46px;width:210px;overflow:hidden;border:1px solid #3a4650;border-radius:16px;background:rgba(5,11,16,.99);box-shadow:0 22px 60px rgba(0,0,0,.55);padding:.4rem;z-index:80}
+.ref-more-panel a,.ref-more-panel button{width:100%;display:grid;grid-template-columns:24px 1fr auto;align-items:center;gap:.55rem;border:0;border-radius:11px;background:transparent;padding:.72rem .7rem;color:#d7d1c6;text-decoration:none;text-align:left;font-size:.78rem}
+.ref-more-panel a:hover,.ref-more-panel button:hover:not(:disabled){background:#101820;color:#efc66f}
+.ref-more-panel b{font-weight:500}
+.ref-more-panel small{font-size:.48rem;letter-spacing:.08em;color:#69727a}
+.ref-more-panel .disabled{opacity:.42;cursor:not-allowed}
+.ref-more-panel .danger{color:#d8aaaa}
+.ref-account-type-select{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;border:0;padding:0;margin:0}
+.ref-account-type-select legend{width:100%;margin-bottom:.45rem;color:#7f8992;font-size:.58rem;text-transform:uppercase;letter-spacing:.13em}
+.ref-account-type-select label{position:relative;display:block;cursor:pointer}
+.ref-account-type-select input{position:absolute;opacity:0;pointer-events:none}
+.ref-account-type-select span{display:block;border:1px solid #34414b;border-radius:12px;background:#071017;padding:.65rem .7rem}
+.ref-account-type-select b{display:block;color:#ddd5c7;font-size:.72rem;font-weight:600}
+.ref-account-type-select small{display:block;margin-top:.15rem;color:#707981;font-size:.55rem}
+.ref-account-type-select input:checked+span{border-color:#b58a43;background:#171208;box-shadow:inset 0 0 0 1px rgba(215,179,99,.12)}
+.ref-account-type-select input:checked+span b{color:#efc66f}
