@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import D1Chart from "@/app/components/d1-chart";
 import AppNav from "@/app/components/app-nav";
-import { updateChartSubjectName } from "@/app/calculations/actions";
+import ChartNameEditor from "@/app/components/chart-name-editor";
+import DeleteChartButton from "@/app/components/delete-chart-button";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -129,18 +130,7 @@ export default async function CalculationPage({
               <h1 className="serif text-4xl tracking-tight text-[#eee9de]">
                 {runMeta?.subject_name ?? "උපන් කේන්දරය"}
               </h1>
-              <form action={updateChartSubjectName} className="mt-4 flex max-w-xl gap-2">
-                <input type="hidden" name="calculation_id" value={id} />
-                <input
-                  name="subject_name"
-                  defaultValue={runMeta?.subject_name ?? ""}
-                  maxLength={120}
-                  required
-                  aria-label="කේන්දර හිමියාගේ නම"
-                  className="min-w-0 flex-1 rounded-xl border border-[#34475b] bg-[#091522] px-3 py-2.5 text-sm text-[#eee9de] outline-none focus:border-[#b8954f]"
-                />
-                <button type="submit" className="cosmic-secondary">නම සුරකින්න</button>
-              </form>
+              <ChartNameEditor calculationId={id} initialName={runMeta?.subject_name ?? ""} />
               {saved ? <p className="mt-2 text-xs text-[#9ec4a8]">නම යාවත්කාලීන කර ඇත.</p> : null}
               <p className="mt-3 text-sm text-[var(--muted)]">
                 Verified calculation output. Interpretation is deliberately
@@ -148,12 +138,15 @@ export default async function CalculationPage({
               </p>
             </div>
 
-            <a
-              href="/"
-              className="rounded-lg border border-[#343a43] px-3 py-2 text-xs text-[#bdb8ad] transition hover:border-[#8f7740] hover:text-[#eee9de]"
-            >
-              නිරීක්ෂණාගාරය
-            </a>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href="/my-chart"
+                className="rounded-lg border border-[#343a43] px-3 py-2 text-xs text-[#bdb8ad] transition hover:border-[#8f7740] hover:text-[#eee9de]"
+              >
+                මගේ කේන්දර
+              </a>
+              <DeleteChartButton calculationId={id} label="කේන්දරය මකන්න" />
+            </div>
           </div>
         </header>
 
