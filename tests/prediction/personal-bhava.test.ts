@@ -15,6 +15,9 @@ Deno.test("Personal Bhava V1 creates 12 deterministic readable cards",()=>{
   if(cards[9].rasi_name_si!=="මේෂ")throw Error("10th bhava sign mismatch");
   if(!cards[9].description_si.includes("වෘත්තිය"))throw Error("10th bhava should describe career theme");
   if(!cards[9].description_si.includes("විදේශ"))throw Error("Golden 10th-lord linkage should surface foreign/background theme");
+  if(!cards[9].description_si.includes("සන්නිවේදනය"))throw Error("Golden Mercury/Venus career synthesis should surface communication");
+  if(!cards[9].description_si.includes("design"))throw Error("Golden Mercury/Venus career synthesis should surface creative/design work");
+  if(!cards[9].description_si.includes("online"))throw Error("Golden 10th lord in 12th/Gemini should surface online/remote work");
   for(const card of cards){
     if(card.description_si.includes("ෂඩ්බල")||card.description_si.includes("rule code"))throw Error("technical evidence leaked into Personal copy");
     if(card.description_si.split(".").filter(Boolean).length<7)throw Error("Personal card detail is too short");
