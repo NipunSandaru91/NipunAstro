@@ -1,3 +1,4 @@
+import { PHILIPPINES_CITIES_BY_REGION, PHILIPPINES_REGIONS } from "@/lib/locations/philippines";
 import { NextRequest, NextResponse } from "next/server";
 
 const API = "https://countriesnow.space/api/v0.1";
@@ -168,12 +169,15 @@ export async function GET(request: NextRequest) {
 
       const states = await getStates(country);
 
+      const countryKey = country.toLocaleLowerCase();
       const normalizedStates =
-        country.toLocaleLowerCase() === "sri lanka"
+        countryKey === "sri lanka"
           ? SRI_LANKA_PROVINCES
-          : states
-              .map((item) => item.name?.trim())
-              .filter((name): name is string => Boolean(name));
+          : countryKey === "philippines"
+            ? PHILIPPINES_REGIONS
+            : states
+                .map((item) => item.name?.trim())
+                .filter((name): name is string => Boolean(name));
 
       return NextResponse.json({
         states: [...new Set(normalizedStates)].sort((a, b) =>
@@ -185,6 +189,17 @@ export async function GET(request: NextRequest) {
     if (level === "city") {
       if (!country || !state) {
         return NextResponse.json({ cities: [] }, { status: 400 });
+      }
+
+      if (
+        country.toLocaleLowerCase() === "philippines" &&
+        PHILIPPINES_CITIES_BY_REGION[state]
+      ) {
+        return NextResponse.json({
+          cities: [...PHILIPPINES_CITIES_BY_REGION[state]].sort((a, b) =>
+            a.localeCompare(b),
+          ),
+        });
       }
 
       if (
