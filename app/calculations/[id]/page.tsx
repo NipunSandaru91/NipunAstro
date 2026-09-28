@@ -4,6 +4,7 @@ import D1Chart from "@/app/components/d1-chart";
 import AppNav from "@/app/components/app-nav";
 import ChartNameEditor from "@/app/components/chart-name-editor";
 import DeleteChartButton from "@/app/components/delete-chart-button";
+import PersonalChartView from "@/app/components/personal-chart-view";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -95,7 +96,7 @@ export default async function CalculationPage({
     throw new Error(error.message);
   }
 
-  const [{ data: yogaData }, { data: runMeta }] = await Promise.all([
+  const [{ data: yogaData }, { data: runMeta }, { data: profile }] = await Promise.all([
     supabase.rpc(
       "get_user_calculation_yoga_v1",
       { p_calculation_id: id },
@@ -105,6 +106,7 @@ export default async function CalculationPage({
       .select("subject_name")
       .eq("id", id)
       .maybeSingle(),
+    supabase.from("profiles").select("account_type").single(),
   ]);
 
   const chart = {
@@ -116,6 +118,20 @@ export default async function CalculationPage({
   const grahas = Array.isArray(chart.grahas) ? chart.grahas : [];
   const shadbala = Array.isArray(chart.shadbala) ? chart.shadbala : [];
   const lagnaRasiId = Number(pick(lagna, "rasi_id"));
+
+  if (profile?.account_type === "PERSONAL") {
+    return (
+      <PersonalChartView
+        calculationId={id}
+        subjectName={runMeta?.subject_name ?? null}
+        lagnaRasiId={lagnaRasiId}
+        lagnaDegree={pick(lagna, "degree_in_rasi", "degree", "longitude_in_rasi")}
+        grahas={grahas}
+        shadbala={shadbala}
+        saved={saved}
+      />
+    );
+  }
 
   return (
     <>
