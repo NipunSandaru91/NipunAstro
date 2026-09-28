@@ -11,6 +11,8 @@ import {
   TOPIC_LABEL_SI,
 } from "@/lib/prediction/topics/generic-topic.ts";
 import { buildBhavaOverview } from "@/lib/prediction/ui/bhava-overview.ts";
+import { buildPersonalBhavaCards } from "@/lib/prediction/ui/personal-bhava.ts";
+import { evaluateBhavaLordPlacement } from "@/lib/prediction/rules/bhava-lord-placement.ts";
 import { buildTransitNatalAnalysis } from "@/lib/prediction/timing/transit-analysis.ts";
 import { activateThemesByDasha } from "@/lib/prediction/timing/generic-dasha.ts";
 import { activateThemesByTransit } from "@/lib/prediction/timing/generic-transit.ts";
@@ -725,7 +727,7 @@ export default async function PredictionsPage({
   const topicItems = selectedModel
     ? [...selectedModel.primary, ...selectedModel.contextual]
     : [];
-  const backedBhavas = [
+  const topicBackedBhavas = [
     ...new Set(
       topicItems.flatMap((item) => [
         item.source_bhava,
@@ -733,17 +735,50 @@ export default async function PredictionsPage({
       ]),
     ),
   ];
+
+  // Every Bhāva gets a deterministic natal evidence chain. Topic models remain
+  // separate, so a house is never mislabeled as a career/finance/etc. prediction
+  // merely because its foundational chart evidence is available.
+  const shadbalaComplete =
+    new Set(shad.map((row) => row.graha_id).filter((id) => id >= 1 && id <= 7))
+      .size === 7;
+  const baseBhavaEvidence = Array.from({ length: 12 }, (_, index) => {
+    const source_bhava = index + 1;
+    return {
+      source_bhava,
+      evidence: evaluateBhavaLordPlacement({
+        lagnaRasiId,
+        sourceBhava: source_bhava,
+        positions,
+        ...(shadbalaComplete ? { shadbala: shad } : {}),
+        topic: selectedTopic,
+        polarity: "SUPPORTING",
+      }),
+    };
+  });
+  const bhavaSummaries = buildPersonalBhavaCards({
+    lagnaRasiId,
+    positions,
+    ...(shadbalaComplete ? { shadbala: shad } : {}),
+  });
+
   const overview = buildBhavaOverview({
     lagnaRasiId,
     positions,
-    careerEvidenceBhavas: backedBhavas,
+    careerEvidenceBhavas: Array.from({ length: 12 }, (_, index) => index + 1),
   });
   const detail = overview[selectedBhava - 1];
-  const evidence = topicItems.filter(
+  const detailSummary = bhavaSummaries[selectedBhava - 1];
+  const topicEvidence = topicItems.filter(
     (item) =>
       item.source_bhava === selectedBhava ||
       item.evidence.placement.bhava === selectedBhava,
   );
+  const baseEvidence = baseBhavaEvidence.filter(
+    (item) => item.source_bhava === selectedBhava,
+  );
+  const evidence = topicEvidence.length ? topicEvidence : baseEvidence;
+  const hasTopicEvidence = topicEvidence.length > 0;
   const topicLabel = TOPIC_LABEL_SI[selectedTopic];
 
   return (
@@ -1087,12 +1122,12 @@ export default async function PredictionsPage({
                 </h2>
               </div>
               <p className="text-[10px] text-[#67717b]">
-                {selectedTopic} V1 evidence houses are marked
+                භාව 12ටම natal evidence · topic-specific evidence වෙනම
               </p>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
               {overview.map((row) => {
-                const backed = backedBhavas.includes(row.bhava);
+                const topicBacked = topicBackedBhavas.includes(row.bhava);
                 return (
                   <Link
                     key={row.bhava}
@@ -1113,9 +1148,9 @@ export default async function PredictionsPage({
                     <div className="flex items-center justify-between">
                       <span className="bhava-number">{row.bhava}</span>
                       <span
-                        className={backed ? "bhava-status ready" : "bhava-status"}
+                        className="bhava-status ready"
                       >
-                        {backed ? "Evidence" : "Foundation"}
+                        {topicBacked ? "Topic + Bhāva" : "Bhāva V1"}
                       </span>
                     </div>
                     <h3 className="serif mt-3 text-base text-[#eadcbf]">
@@ -1146,15 +1181,25 @@ export default async function PredictionsPage({
               </div>
               <span
                 className={
-                  backedBhavas.includes(detail.bhava)
-                    ? "strength-pill"
-                    : "bhava-status"
+                  hasTopicEvidence ? "strength-pill" : "bhava-status ready"
                 }
               >
-                {backedBhavas.includes(detail.bhava)
-                  ? `${selectedTopic} V1 EVIDENCE`
-                  : "FOUNDATION ONLY"}
+                {hasTopicEvidence
+                  ? `${selectedTopic} V1 + BHĀVA V1`
+                  : "BHĀVA V1 EVIDENCE"}
               </span>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-[#39434e] bg-[#081017] p-5">
+              <p className="text-[10px] uppercase tracking-[.14em] text-[#7f8992]">
+                භාව සාරාංශය
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[#c8c5bc]">
+                {detailSummary.description_si}
+              </p>
+              <p className="mt-3 text-[11px] text-[#cba85d]">
+                ප්‍රධාන තේමාව · {detailSummary.main_theme_si}
+              </p>
             </div>
 
             {evidence.length ? (
@@ -1214,15 +1259,7 @@ export default async function PredictionsPage({
                   </article>
                 ))}
               </div>
-            ) : (
-              <div className="mt-6 rounded-2xl border border-dashed border-[#39434e] p-5">
-                <p className="text-sm leading-7 text-[#9098a1]">
-                  මෙම භාවයට {topicLabel} V1 rule evidence තවම සම්බන්ධ වී නැත.
-                  UI එක අසත්‍ය prediction එකක් නිර්මාණය නොකර foundation data
-                  පමණක් පෙන්වයි.
-                </p>
-              </div>
-            )}
+            ) : null}
 
             <div className="mt-5 grid gap-3 md:grid-cols-2">
               <div className="timing-panel">
@@ -1304,15 +1341,15 @@ export default async function PredictionsPage({
                   අවසාන නිගමනය
                 </h3>
                 <p className="mt-2 text-xs leading-6 text-[#828b94]">
-                  {evidence.length
+                  {hasTopicEvidence
                     ? timingRows.some(
                         (row) =>
                           row.theme.evidence_houses.includes(selectedBhava) &&
                           row.timing.status === "ACTIVE_NOW",
                       )
-                      ? `${topicLabel} natal evidence සමඟ වත්මන් දශා සහ ගෝචර timing සාධක එකවර සක්‍රීය වන theme එකක් මෙම භාවයට සම්බන්ධ වේ.`
-                      : `${topicLabel} natal evidence ඇත. වත්මන් timing state එක evidence සමඟ වෙනම පෙන්වා ඇති අතර data නොමැති තැන නිගමනයක් නිර්මාණය නොකරයි.`
-                    : `මෙම භාවයට ${topicLabel} V1 සම්පූර්ණ prediction model evidence එක තවම නොමැත.`}
+                      ? `${topicLabel} topic evidence සමඟ වත්මන් දශා සහ ගෝචර timing සාධක එකවර සක්‍රීය වන theme එකක් මෙම භාවයට සම්බන්ධ වේ.`
+                      : `${topicLabel} topic evidence සහ භාවයේ natal evidence දෙකම ඇත. Timing state එක වෙනම පෙන්වා ඇත.`
+                    : `භාව ${selectedBhava} සඳහා natal Bhāva V1 evidence සහ සාරාංශය සම්පූර්ණයි. ${topicLabel} topic-specific timing model එක මෙම භාවය primary/contextual house එකක් ලෙස භාවිතා නොකරන බැවින්, topic timing claim එකක් මෙහි එකතු කර නැත.`}
                 </p>
               </div>
             </div>
