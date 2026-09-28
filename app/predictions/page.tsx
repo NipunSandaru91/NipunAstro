@@ -265,6 +265,8 @@ export default async function PredictionsPage({
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   if (!claims?.claims?.sub) redirect("/login");
+  const { data: profile } = await supabase.from("profiles").select("account_type").single();
+  if (profile?.account_type === "PERSONAL") redirect("/dashboard");
 
   const { data: rows } = await supabase
     .from("user_calculation_runs_v1")

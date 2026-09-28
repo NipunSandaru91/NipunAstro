@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppNav from "@/app/components/app-nav";
 
@@ -101,6 +101,8 @@ function stateFor(start: string, end: string, now: number) {
 export default async function DashaPage({ params }: Props) {
   const { id } = await params;
   const supabase = await createClient();
+  const { data: profile } = await supabase.from("profiles").select("account_type").single();
+  if (profile?.account_type === "PERSONAL") redirect("/dashboard");
 
   const { data: run } = await supabase
     .schema("jyotisha")

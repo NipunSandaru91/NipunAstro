@@ -327,3 +327,26 @@ body {
 .ref-account-type-select small{display:block;margin-top:.15rem;color:#707981;font-size:.55rem}
 .ref-account-type-select input:checked+span{border-color:#b58a43;background:#171208;box-shadow:inset 0 0 0 1px rgba(215,179,99,.12)}
 .ref-account-type-select input:checked+span b{color:#efc66f}
+
+
+/* Personal account reading */
+.personal-chart-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;padding:1.1rem 0 1.35rem;border-bottom:1px solid #28313a}
+.personal-lagna-badge{min-width:92px;border:1px solid #735c31;border-radius:18px;background:linear-gradient(145deg,#17130b,#0b1117);padding:.8rem;text-align:center;box-shadow:0 14px 35px rgba(0,0,0,.25)}
+.personal-lagna-badge small{display:block;color:#82745c;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase}
+.personal-lagna-badge b{display:block;margin-top:.25rem;color:#edc36d;font-family:Georgia,"Times New Roman",serif;font-size:1.15rem;font-weight:500}
+.personal-lagna-badge span{display:block;margin-top:.12rem;color:#7d8790;font-size:.6rem}
+.personal-d1-card{border:1px solid #34475b;border-radius:24px;background:linear-gradient(160deg,#0b1824,#071018 64%,#0b0f13);padding:1.1rem;box-shadow:0 18px 55px rgba(0,0,0,.28)}
+.personal-mode-chip{border:1px solid #6f5930;border-radius:999px;padding:.35rem .55rem;color:#d7b363;font-size:.52rem;letter-spacing:.12em}
+.personal-bhava-card{position:relative;overflow:hidden;border:1px solid #33424d;border-radius:22px;background:linear-gradient(155deg,#0b1720,#080f15 72%);padding:1.05rem;box-shadow:0 16px 40px rgba(0,0,0,.2)}
+.personal-bhava-card:before{content:"";position:absolute;inset:0 auto auto 0;width:100%;height:1px;background:linear-gradient(90deg,transparent,#a78342 45%,transparent);opacity:.55}
+.personal-bhava-head{display:flex;align-items:flex-start;gap:.8rem}
+.personal-bhava-number{display:grid;place-items:center;flex:0 0 42px;height:42px;border:1px solid #745d34;border-radius:50%;color:#e0b65b;font-family:Georgia,"Times New Roman",serif;font-size:.9rem}
+.personal-bhava-head p{margin:0;color:#727f8b;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase}
+.personal-bhava-head h3{margin:.22rem 0 0;color:#eee9de;font-family:Georgia,"Times New Roman",serif;font-size:1.05rem;line-height:1.35}
+.personal-keywords{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.9rem}
+.personal-keywords span{border:1px solid #30404c;border-radius:999px;background:#0c1720;padding:.28rem .5rem;color:#91a0ad;font-size:.58rem}
+.personal-bhava-copy{margin-top:1rem;color:#c2c3bd;font-size:.79rem;line-height:1.82;text-wrap:pretty}
+.personal-theme{margin-top:1rem;border-top:1px solid #26333d;padding-top:.8rem}
+.personal-theme small{display:block;color:#6e7a85;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase}
+.personal-theme b{display:block;margin-top:.3rem;color:#d8b66d;font-size:.72rem;font-weight:500}
+@media(max-width:520px){.personal-chart-hero{align-items:center}.personal-bhava-copy{font-size:.8rem;line-height:1.88}}

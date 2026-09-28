@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppNav from "@/app/components/app-nav";
 import { calculateTransit } from "@/app/calculations/actions";
@@ -128,6 +128,8 @@ export default async function TransitPage({ params, searchParams }: Props) {
   const { id } = await params;
   const paramsValue = await searchParams;
   const supabase = await createClient();
+  const { data: profile } = await supabase.from("profiles").select("account_type").single();
+  if (profile?.account_type === "PERSONAL") redirect("/dashboard");
 
   const [{ data: run }, { data: chartData, error: chartError }, { data: positionRows }] =
     await Promise.all([
