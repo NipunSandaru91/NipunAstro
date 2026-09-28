@@ -1,13 +1,12 @@
 import Link from "next/link";
 
-const COSMOLOGY_ART="https://upload.wikimedia.org/wikipedia/commons/b/bf/Earth_in_a_cosmology.jpg";
+const MILKY_WAY_ART="https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2009/01/STScI-01EVT5WGYG6MTE5FFYSWR91K54.tif?w=2000";
 
 export default function WelcomePage(){
   return <main className="ref-screen">
     <div className="ref-phone real-art-welcome">
-      <img className="real-art-welcome-image" src={COSMOLOGY_ART} alt="" aria-hidden="true"/>
+      <img className="real-art-welcome-image" src={MILKY_WAY_ART} alt="" aria-hidden="true"/>
       <div className="real-art-welcome-wash" aria-hidden="true"/>
-      <div className="welcome-orbit-glow" aria-hidden="true"><i/><i/><i/></div>
 
       <section className="real-art-welcome-copy">
         <p className="welcome-kicker">VEDIC COSMOLOGY · JYOTIṢA</p>
@@ -16,9 +15,8 @@ export default function WelcomePage(){
       </section>
 
       <div className="real-art-welcome-footer">
-        <div className="ref-pager"><i className="active"/><i/><i/><i/></div>
         <Link href="/login" className="ref-pill-button">ආරම්භ කරන්න <span>→</span></Link>
-        <small className="art-credit">Cosmology manuscript, 1468 · Public domain</small>
+        <small className="art-credit">Milky Way Galactic Center · NASA / ESA / Hubble / Spitzer</small>
       </div>
     </div>
   </main>;
