@@ -51,3 +51,25 @@ Deno.test("bhava lord rule rejects missing lord position", () => {
   }
   if (!failed) throw new Error("missing lord position must fail explicitly");
 });
+
+
+Deno.test("bhava lord evidence is available for all 12 houses", () => {
+  const seen = new Set<number>();
+  for (let sourceBhava = 1; sourceBhava <= 12; sourceBhava++) {
+    const evidence = evaluateBhavaLordPlacement({
+      lagnaRasiId: 4,
+      sourceBhava,
+      positions: GOLDEN_POSITIONS,
+      topic: "CAREER",
+      polarity: "SUPPORTING",
+    });
+    if (evidence.rule.code !== "BHAVA_LORD_PLACEMENT") {
+      throw new Error(`Bhava ${sourceBhava} missing BHAVA_LORD_PLACEMENT evidence`);
+    }
+    if (!evidence.rule.text_si) {
+      throw new Error(`Bhava ${sourceBhava} missing Sinhala evidence text`);
+    }
+    seen.add(sourceBhava);
+  }
+  if (seen.size !== 12) throw new Error("Expected evidence for all 12 bhavas");
+});
