@@ -55,3 +55,32 @@ Deno.test("Bhava V1 foundation evidence exists for every one of the 12 houses",(
   }
   if(seen.size!==12)throw Error("all 12 bhavas must have base evidence");
 });
+
+
+Deno.test("Personal career narrative covers alternate 10th-house evidence shapes",()=>{
+  const ariesLagna=[
+    {graha_id:1,rasi_id:1},{graha_id:2,rasi_id:4},{graha_id:3,rasi_id:5},
+    {graha_id:4,rasi_id:6},{graha_id:5,rasi_id:9},{graha_id:6,rasi_id:2},
+    {graha_id:7,rasi_id:12},{graha_id:8,rasi_id:11},{graha_id:9,rasi_id:8},
+  ];
+  const ariesCareer=buildPersonalBhavaCards({lagnaRasiId:1,positions:ariesLagna})[9].description_si;
+  if(!ariesCareer.includes("පසුබිම් කටයුතු"))throw Error("12th-house alternate lord path not covered");
+  if(!ariesCareer.includes("මීන"))throw Error("non-Gemini 12th-house lord path not covered");
+  if(!ariesCareer.includes("සෘජු ග්‍රහ පිහිටීමක් නැති"))throw Error("empty 10th-house path not covered");
+
+  const virgoLagna=[
+    {graha_id:1,rasi_id:5},{graha_id:2,rasi_id:4},{graha_id:3,rasi_id:1},
+    {graha_id:4,rasi_id:3},{graha_id:5,rasi_id:9},{graha_id:6,rasi_id:2},
+    {graha_id:7,rasi_id:10},{graha_id:8,rasi_id:11},{graha_id:9,rasi_id:8},
+  ];
+  const mercuryCareer=buildPersonalBhavaCards({lagnaRasiId:6,positions:virgoLagna})[9].description_si;
+  if(!mercuryCareer.includes("ගණනය"))throw Error("Mercury-only career path not covered");
+
+  const leoLagna=[
+    {graha_id:1,rasi_id:5},{graha_id:2,rasi_id:4},{graha_id:3,rasi_id:1},
+    {graha_id:4,rasi_id:3},{graha_id:5,rasi_id:9},{graha_id:6,rasi_id:2},
+    {graha_id:7,rasi_id:10},{graha_id:8,rasi_id:11},{graha_id:9,rasi_id:8},
+  ];
+  const venusCareer=buildPersonalBhavaCards({lagnaRasiId:5,positions:leoLagna})[9].description_si;
+  if(!venusCareer.includes("සෞන්දර්යය"))throw Error("Venus-only career path not covered");
+});
