@@ -6,6 +6,9 @@ import { signOut } from "@/app/auth/actions";
 export async function updateProfile(formData: FormData) {
   "use server";
   const supabase = await createClient();
+  const { data: claims } = await supabase.auth.getClaims();
+  const userId = typeof claims?.claims?.sub === "string" ? claims.claims.sub : null;
+  if (!userId) redirect("/login");
   const displayName = String(formData.get("display_name") ?? "").trim();
   const language = String(formData.get("preferred_language") ?? "si");
   const timezone = String(formData.get("timezone") ?? "").trim();
@@ -17,6 +20,7 @@ export async function updateProfile(formData: FormData) {
       preferred_language: language === "en" ? "en" : "si",
       timezone: timezone || null,
     })
+    .eq("id", userId)
     .select("id")
     .single();
 
