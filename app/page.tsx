@@ -7,11 +7,6 @@ export default function SplashPage(){
     <Link href="/welcome" className="ref-phone real-art-splash" aria-label="NipunAstro වෙත පිවිසෙන්න">
       <img className="real-art-splash-image exact-reference-sage" src={SAGE_ART} alt="" aria-hidden="true"/>
       <div className="real-art-cosmic-wash" aria-hidden="true"/>
-      <div className="real-art-zodiac" aria-hidden="true">
-        <i className="rz-ring r1"/><i className="rz-ring r2"/><i className="rz-ring r3"/>
-        <div className="rz-signs">♈ · ♉ · ♊ · ♋ · ♌ · ♍ · ♎ · ♏ · ♐ · ♑ · ♒ · ♓</div>
-        <div className="rz-axis"><b/><b/><b/><b/><b/><b/><b/></div>
-      </div>
       <section className="real-art-brand">
         <span className="ref-diamond">◇</span>
         <h1>NIPUN ASTRO</h1>

@@ -40,6 +40,7 @@ type Search = {
   date?: string;
   window_generated?: string;
   window_error?: string;
+  view?: string;
 };
 
 type Calculation = {
@@ -182,9 +183,11 @@ function predictionHref(input: {
   topic: PredictionTopic;
   window: PredictionWindowType;
   date: string;
+  view?: "predictions" | "forecast";
 }) {
+  const basePath = input.view === "forecast" ? "/forecast" : "/predictions";
   return (
-    "/predictions?calculation=" +
+    basePath + "?calculation=" +
     encodeURIComponent(input.calculation) +
     "&bhava=" +
     input.bhava +
@@ -275,11 +278,12 @@ export default async function PredictionsPage({
     : calculations[0]?.id;
   const selectedBhava = Math.min(12, Math.max(1, Number(params.bhava) || 1));
   const selectedTopic = parsePredictionTopic(params.topic?.toUpperCase());
+  const predictionView = params.view === "forecast" ? "forecast" : "predictions";
 
   if (!selectedId) {
     return (
       <>
-        <AppNav active="predictions" />
+        <AppNav active={predictionView === "forecast" ? "forecast" : "predictions"} />
         <main className="astro-shell min-h-screen px-4 py-6 sm:px-6">
           <div className="mx-auto max-w-5xl">
             <section className="cosmic-hero rounded-[28px] border border-[#725626] p-6 sm:p-9">
@@ -794,6 +798,7 @@ export default async function PredictionsPage({
                     topic,
                     window: windowType,
                     date: anchorDate,
+                    view: predictionView,
                   })}
                   className={
                     topic === selectedTopic
@@ -839,6 +844,7 @@ export default async function PredictionsPage({
                     topic: selectedTopic,
                     window: windowType,
                     date: anchorDate,
+                    view: predictionView,
                   })}
                   className={
                     calculation.id === selectedId
@@ -859,6 +865,7 @@ export default async function PredictionsPage({
             </div>
           </section>
 
+          {predictionView === "forecast" ? (
           <section className="astro-card mt-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
@@ -891,6 +898,7 @@ export default async function PredictionsPage({
                       topic: selectedTopic,
                       window: item,
                       date: anchorDate,
+                      view: predictionView,
                     })}
                     className={
                       item === windowType
@@ -1064,7 +1072,10 @@ export default async function PredictionsPage({
               පරීක්ෂා කළ කාල ලක්ෂ්‍ය පමණි.
             </p>
           </section>
+          ) : null}
 
+          {predictionView === "predictions" ? (
+          <>
           <section className="mt-5">
             <div className="flex items-end justify-between gap-3">
               <div>
@@ -1089,6 +1100,7 @@ export default async function PredictionsPage({
                       topic: selectedTopic,
                       window: windowType,
                       date: anchorDate,
+                      view: predictionView,
                     })}
                     className={
                       row.bhava === selectedBhava
@@ -1350,6 +1362,8 @@ export default async function PredictionsPage({
                 })}
               </div>
             </section>
+          ) : null}
+          </>
           ) : null}
 
           <p className="mt-6 text-center text-[10px] leading-5 text-[#66707a]">

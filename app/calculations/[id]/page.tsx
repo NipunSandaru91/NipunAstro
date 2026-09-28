@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import D1Chart from "@/app/components/d1-chart";
 import AppNav from "@/app/components/app-nav";
+import ChartNameEditor from "@/app/components/chart-name-editor";
+import DeleteChartButton from "@/app/components/delete-chart-button";
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; saved?: string }>;
 };
 
 type ChartData = {
@@ -77,7 +79,7 @@ export default async function CalculationPage({
   searchParams,
 }: PageProps) {
   const { id } = await params;
-  const { error: engineError } = await searchParams;
+  const { error: engineError, saved } = await searchParams;
   const supabase = await createClient();
 
   const { data, error } = await supabase.rpc(
@@ -128,18 +130,23 @@ export default async function CalculationPage({
               <h1 className="serif text-4xl tracking-tight text-[#eee9de]">
                 {runMeta?.subject_name ?? "උපන් කේන්දරය"}
               </h1>
+              <ChartNameEditor calculationId={id} initialName={runMeta?.subject_name ?? ""} />
+              {saved ? <p className="mt-2 text-xs text-[#9ec4a8]">නම යාවත්කාලීන කර ඇත.</p> : null}
               <p className="mt-3 text-sm text-[var(--muted)]">
                 Verified calculation output. Interpretation is deliberately
                 separated from the astronomical calculation layer.
               </p>
             </div>
 
-            <a
-              href="/"
-              className="rounded-lg border border-[#343a43] px-3 py-2 text-xs text-[#bdb8ad] transition hover:border-[#8f7740] hover:text-[#eee9de]"
-            >
-              නිරීක්ෂණාගාරය
-            </a>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href="/my-chart"
+                className="rounded-lg border border-[#343a43] px-3 py-2 text-xs text-[#bdb8ad] transition hover:border-[#8f7740] hover:text-[#eee9de]"
+              >
+                මගේ කේන්දර
+              </a>
+              <DeleteChartButton calculationId={id} label="කේන්දරය මකන්න" />
+            </div>
           </div>
         </header>
 
