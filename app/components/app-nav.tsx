@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import BackButton from "@/app/components/back-button";
+import { signOut } from "@/app/auth/actions";
 
 const items=[
   ["/dashboard","⌂","මුල් පිටුව","dashboard"],
   ["/my-chart","⌁","කේන්දර","chart"],
   ["/predictions","◉","පුරෝකථන","predictions"],
   ["/forecast","◌","කාල අනාවැකි","forecast"],
-  ["/profile","•••","තවත්","profile"],
 ] as const;
 
 export default async function AppNav({active}:{active?:string}){
@@ -23,11 +23,22 @@ export default async function AppNav({active}:{active?:string}){
         <div className="flex items-center gap-3">
           {active !== "dashboard" ? <BackButton /> : null}
           <Link href="/dashboard" className="ref-user-block">
-          <span className="ref-avatar">{name.slice(0,1).toUpperCase()}</span>
-          <span><b>{name}</b><small>සුභ දවසක් !</small></span>
+            <span className="ref-avatar">{name.slice(0,1).toUpperCase()}</span>
+            <span><b>{name}</b><small>සුභ දවසක් !</small></span>
           </Link>
         </div>
-        <Link href="/profile" className="ref-bell" aria-label="Profile">♢</Link>
+
+        <details className="ref-more-menu">
+          <summary aria-label="ගිණුම් මෙනුව" title="මෙනුව">•••</summary>
+          <div className="ref-more-panel">
+            <Link href="/profile"><span>♙</span><b>Profile</b></Link>
+            <Link href="/settings"><span>⚙</span><b>Settings</b></Link>
+            <button type="button" disabled className="disabled"><span>!</span><b>Report</b><small>COMING SOON</small></button>
+            <form action={signOut}>
+              <button type="submit" className="danger"><span>↪</span><b>Sign out</b></button>
+            </form>
+          </div>
+        </details>
       </div>
     </header>
     <nav className="ref-bottom-nav" aria-label="Primary navigation">
