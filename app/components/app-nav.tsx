@@ -6,7 +6,7 @@ const items=[
   ["/dashboard","⌂","මුල් පිටුව","dashboard"],
   ["/my-chart","⌁","කේන්දර","chart"],
   ["/predictions","◉","පුරෝකථන","predictions"],
-  ["/predictions?view=forecast","◌","කාල අනාවැකි","forecast"],
+  ["/forecast","◌","කාල අනාවැකි","forecast"],
   ["/profile","•••","තවත්","profile"],
 ] as const;
 
