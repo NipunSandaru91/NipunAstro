@@ -279,15 +279,12 @@ body {
 .art-credit{display:block;margin-top:.55rem;color:#555e65;font-size:.48rem;letter-spacing:.03em}
 
 .real-art-welcome{position:relative;display:flex;flex-direction:column;min-height:100svh;background:#02070b;overflow:hidden}
-.real-art-welcome-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;filter:saturate(.34) sepia(.28) hue-rotate(154deg) brightness(.36) contrast(1.16)}
-.real-art-welcome-wash{position:absolute;inset:0;background:
- radial-gradient(circle at 50% 20%,rgba(30,94,129,.26),transparent 32%),
- radial-gradient(circle at 50% 52%,rgba(224,155,54,.20),transparent 25%),
- linear-gradient(180deg,rgba(2,7,11,.08),rgba(2,7,11,.18) 38%,#02070b 78%,#02070b)}
+.real-art-welcome-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 24%;filter:saturate(.92) brightness(.58) contrast(1.12)}
+.real-art-welcome-wash{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,7,11,.03) 0%,rgba(2,7,11,.08) 34%,rgba(2,7,11,.62) 61%,#02070b 82%,#02070b 100%)}
 .welcome-orbit-glow{position:absolute;left:50%;top:27%;width:88%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(214,157,68,.35);box-shadow:0 0 80px rgba(15,77,110,.15)}
 .welcome-orbit-glow:before,.welcome-orbit-glow:after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(76,133,166,.26)}.welcome-orbit-glow:before{inset:15%}.welcome-orbit-glow:after{inset:31%;border-color:rgba(214,157,68,.24)}
 .welcome-orbit-glow i{position:absolute;width:10px;height:10px;border-radius:50%;background:#dda144;box-shadow:0 0 15px rgba(221,161,68,.75)}.welcome-orbit-glow i:nth-child(1){left:10%;top:49%}.welcome-orbit-glow i:nth-child(2){right:17%;top:17%;background:#6da1c0}.welcome-orbit-glow i:nth-child(3){right:9%;bottom:25%}
-.real-art-welcome-copy{position:relative;z-index:2;margin-top:auto;padding:47svh 1.55rem 1rem}
+.real-art-welcome-copy{position:relative;z-index:2;margin-top:auto;padding:45svh 1.55rem 1rem}
 .welcome-kicker{margin:0 0 .65rem;color:#b9863d;font-size:.58rem;letter-spacing:.18em}.real-art-welcome-copy h1{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2rem,9vw,2.75rem);line-height:1.28;color:#ecd19a;text-shadow:0 2px 20px rgba(0,0,0,.9)}.real-art-welcome-copy h1 span{color:#efb754}.real-art-welcome-copy>p:last-child{margin:1rem 0 0;color:#c4c2bd;font-size:.92rem;line-height:1.85}
 .real-art-welcome-footer{position:relative;z-index:3;margin-top:auto;padding:0 1.35rem calc(1.2rem + env(safe-area-inset-bottom))}
 @media (min-width:700px){.real-art-splash,.real-art-welcome{min-height:min(920px,94svh)}}
