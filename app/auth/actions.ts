@@ -16,10 +16,12 @@ export async function signInWithGoogle(formData?: FormData) {
   const supabase = await createClient();
   const origin = await getSiteOrigin();
   const safeNext = safeNextPath(String(formData?.get("next") ?? "/dashboard"));
+  const requestedType = String(formData?.get("account_type") ?? "PERSONAL").toUpperCase();
+  const accountType = requestedType === "PROFESSIONAL" ? "PROFESSIONAL" : "PERSONAL";
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(safeNext)}` },
+    options: { redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(safeNext)}&account_type=${accountType}` },
   });
 
   if (error || !data.url) {
