@@ -10,9 +10,14 @@ export async function updateAccountType(formData: FormData) {
   }
 
   const supabase = await createClient();
+  const { data: claims } = await supabase.auth.getClaims();
+  const userId = typeof claims?.claims?.sub === "string" ? claims.claims.sub : null;
+  if (!userId) redirect("/login");
+
   const { error } = await supabase
     .from("profiles")
     .update({ account_type: accountType, updated_at: new Date().toISOString() })
+    .eq("id", userId)
     .select("id")
     .single();
 
