@@ -269,8 +269,7 @@ export async function generatePredictionWindow(formData: FormData) {
     "&window=" +
     windowType +
     "&date=" +
-    encodeURIComponent(anchorDate) +
-    "&view=forecast";
+    encodeURIComponent(anchorDate);
 
   if (!plan || planError) {
     redirect(
