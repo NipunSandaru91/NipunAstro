@@ -59,7 +59,7 @@ Deno.test("bhava lord evidence is available for all 12 houses", () => {
     const evidence = evaluateBhavaLordPlacement({
       lagnaRasiId: 4,
       sourceBhava,
-      positions,
+      positions: GOLDEN_POSITIONS,
       topic: "CAREER",
       polarity: "SUPPORTING",
     });
