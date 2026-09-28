@@ -185,8 +185,9 @@ function predictionHref(input: {
   date: string;
   view?: "predictions" | "forecast";
 }) {
+  const basePath = input.view === "forecast" ? "/forecast" : "/predictions";
   return (
-    "/predictions?calculation=" +
+    basePath + "?calculation=" +
     encodeURIComponent(input.calculation) +
     "&bhava=" +
     input.bhava +
@@ -195,8 +196,7 @@ function predictionHref(input: {
     "&window=" +
     input.window +
     "&date=" +
-    encodeURIComponent(input.date) +
-    (input.view === "forecast" ? "&view=forecast" : "")
+    encodeURIComponent(input.date)
   );
 }
 
