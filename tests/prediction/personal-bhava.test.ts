@@ -30,7 +30,7 @@ Deno.test("Personal Bhava V1 covers strength tones and missing-lord guard",()=>{
   const low=[1,2,3,4,5,6,7].map(graha_id=>({graha_id,total_bala_rupa:0}));
   const strong=buildPersonalBhavaCards({lagnaRasiId:4,positions:golden,shadbala:high});
   const challenged=buildPersonalBhavaCards({lagnaRasiId:4,positions:golden,shadbala:low});
-  if(!strong.some(x=>x.description_si.includes("සහායක රටාවක්")))throw Error("supporting tone not covered");
+  if(!strong.some(x=>x.description_si.includes("සහායක සාධක")))throw Error("supporting tone not covered");
   if(!challenged.some(x=>x.description_si.includes("ඉවසීම")))throw Error("challenging tone not covered");
 
   let rejected=false;
