@@ -249,18 +249,18 @@ export default async function TransitPage({ params, searchParams }: Props) {
       <AppNav />
       <main className="min-h-screen px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-6xl">
-          <header className="border-b border-[#282d35] pb-6">
+          <header className="border-b border-[#d7e5da] pb-6">
             <a
               href={"/calculations/" + id}
-              className="text-xs text-[#b8954f]"
+              className="text-xs text-[#176b4a]"
             >
               ← Calculation report
             </a>
             <p className="eyebrow mt-6">Transit Analysis V2</p>
-            <h1 className="serif mt-2 text-4xl text-[#eee9de]">
+            <h1 className="serif mt-2 text-4xl text-[#18372a]">
               ගෝචර විශ්ලේෂණය
             </h1>
-            <p className="mt-3 text-sm text-[#8f9aa7]">
+            <p className="mt-3 text-sm text-[#566c5e]">
               {title} · Transit snapshot → natal bhāva → natal graha interaction
             </p>
           </header>
@@ -269,27 +269,27 @@ export default async function TransitPage({ params, searchParams }: Props) {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="eyebrow">Transit calculation</p>
-                <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+                <h2 className="serif mt-2 text-2xl text-[#18372a]">
                   දිනයක් සහ වේලාවක් සඳහා snapshot එකක් ගණනය කරන්න
                 </h2>
-                <p className="mt-3 text-sm leading-6 text-[#8f9aa7]">
+                <p className="mt-3 text-sm leading-6 text-[#566c5e]">
                   Lahiri sidereal Transit V1 astronomical output එක මත V2
                   natal interaction analysis එක ගොඩනගයි.
                 </p>
               </div>
-              <div className="text-xs text-[#676d76]">
+              <div className="text-xs text-[#566c5e]">
                 Timezone: {timezone || "—"}
               </div>
             </div>
 
             {paramsValue.transit_error ? (
-              <div className="mt-5 rounded-xl border border-[#5a3434] bg-[#211416] p-4 text-sm leading-6 text-[#d8aaaa]">
+              <div className="mt-5 rounded-xl border border-[#e9c5c0] bg-[#fff4f2] p-4 text-sm leading-6 text-[#8b3c35]">
                 {decodeURIComponent(paramsValue.transit_error)}
               </div>
             ) : null}
 
             {paramsValue.transit ? (
-              <div className="mt-5 rounded-xl border border-[#2f4938] bg-[#0d1b16] p-4 text-sm text-[#b5d0ba]">
+              <div className="mt-5 rounded-xl border border-[#b9d8c3] bg-[#e8f4ec] p-4 text-sm text-[#176b4a]">
                 Transit snapshot එක සාර්ථකව ගණනය කර සුරකින ලදී.
               </div>
             ) : null}
@@ -301,41 +301,41 @@ export default async function TransitPage({ params, searchParams }: Props) {
               <input type="hidden" name="calculation_id" value={id} />
               <input type="hidden" name="timezone" value={timezone} />
               <label className="block">
-                <span className="text-[10px] uppercase tracking-[0.14em] text-[#697787]">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-[#566c5e]">
                   Transit date
                 </span>
                 <input
                   name="transit_date"
                   type="date"
                   required
-                  className="mt-2 w-full rounded-xl border border-[#343a43] bg-[#0d1014] px-3 py-3 text-sm text-[#eee9de] outline-none focus:border-[#8f7740]"
+                  className="mt-2 w-full rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-3 text-sm text-[#18372a] outline-none focus:border-[#b9d8c3]"
                 />
               </label>
               <label className="block">
-                <span className="text-[10px] uppercase tracking-[0.14em] text-[#697787]">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-[#566c5e]">
                   Transit time
                 </span>
                 <input
                   name="transit_time"
                   type="time"
                   required
-                  className="mt-2 w-full rounded-xl border border-[#343a43] bg-[#0d1014] px-3 py-3 text-sm text-[#eee9de] outline-none focus:border-[#8f7740]"
+                  className="mt-2 w-full rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-3 text-sm text-[#18372a] outline-none focus:border-[#b9d8c3]"
                 />
               </label>
               <div className="flex items-end">
                 <button
                   type="submit"
-                  className="w-full rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-5 py-3 text-sm font-semibold text-[#15130e] hover:brightness-110"
+                  className="w-full rounded-xl border border-[var(--gold)] bg-[var(--gold)] px-5 py-3 text-sm font-semibold text-[#ffffff] hover:brightness-110"
                 >
                   Calculate Transit
                 </button>
               </div>
-              <label className="flex items-center gap-3 text-xs text-[#8d929b] md:col-span-3">
+              <label className="flex items-center gap-3 text-xs text-[#566c5e] md:col-span-3">
                 <span>Node method</span>
                 <select
                   name="node_method"
                   defaultValue="MEAN"
-                  className="rounded-lg border border-[#343a43] bg-[#0d1014] px-3 py-2 text-xs text-[#d4cfc4]"
+                  className="rounded-lg border border-[#d7e5da] bg-[#ffffff] px-3 py-2 text-xs text-[#18372a]"
                 >
                   <option value="MEAN">Mean Node</option>
                   <option value="TRUE">True Node</option>
@@ -349,11 +349,11 @@ export default async function TransitPage({ params, searchParams }: Props) {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <p className="eyebrow">Saved snapshots</p>
-                  <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+                  <h2 className="serif mt-2 text-2xl text-[#18372a]">
                     Snapshot තෝරන්න
                   </h2>
                 </div>
-                <p className="text-xs text-[#676d76]">
+                <p className="text-xs text-[#566c5e]">
                   {snapshots.length} saved snapshot{snapshots.length === 1 ? "" : "s"}
                 </p>
               </div>
@@ -380,7 +380,7 @@ export default async function TransitPage({ params, searchParams }: Props) {
 
           {selectedAt ? (
             <>
-              <section className="cosmic-hero mt-5 rounded-[28px] border border-[#725626] p-6 sm:p-8">
+              <section className="cosmic-hero mt-5 rounded-[28px] border border-[#d7e5da] p-6 sm:p-8">
                 <p className="eyebrow">Transit Snapshot</p>
                 <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   <Metric
@@ -398,13 +398,13 @@ export default async function TransitPage({ params, searchParams }: Props) {
                   />
                 </div>
                 {previousAt ? (
-                  <p className="mt-4 text-xs leading-6 text-[#8c939b]">
+                  <p className="mt-4 text-xs leading-6 text-[#566c5e]">
                     Trend සහ sign-change labels පෙර saved snapshot එක (
                     {formatSnapshot(previousAt, timezone)}) සමඟ සසඳා ගණනය කරයි.
                     මෙය exact ingress time එකක් ලෙස අර්ථ දක්වන්නේ නැහැ.
                   </p>
                 ) : (
-                  <p className="mt-4 text-xs leading-6 text-[#8c939b]">
+                  <p className="mt-4 text-xs leading-6 text-[#566c5e]">
                     පෙර snapshot එකක් නැති නිසා approaching / separating සහ
                     ingress comparison තවම ලබාගත නොහැක.
                   </p>
@@ -417,10 +417,10 @@ export default async function TransitPage({ params, searchParams }: Props) {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="eyebrow">Transit graha</p>
-                        <h2 className="serif mt-1 text-2xl text-[#f0e4c8]">
+                        <h2 className="serif mt-1 text-2xl text-[#176b4a]">
                           {GRAHA_SI[row.graha_id] ?? row.graha_id}
                         </h2>
-                        <p className="mt-1 text-xs text-[#79838d]">
+                        <p className="mt-1 text-xs text-[#566c5e]">
                           {RASI_SI[row.rasi_id - 1]} ·{" "}
                           {Number(row.degree_in_rasi ?? 0).toFixed(2)}°
                           {row.is_retrograde ? " · වක්‍ර" : ""}
@@ -453,7 +453,7 @@ export default async function TransitPage({ params, searchParams }: Props) {
                     </div>
 
                     {row.ingress_since_previous_snapshot ? (
-                      <div className="mt-3 rounded-xl border border-[#725626] bg-[#17140e] p-3 text-xs leading-6 text-[#d4bf91]">
+                      <div className="mt-3 rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3 text-xs leading-6 text-[#18372a]">
                         පෙර saved snapshot එකේ{" "}
                         {row.previous_rasi_id
                           ? RASI_SI[row.previous_rasi_id - 1]
@@ -465,11 +465,11 @@ export default async function TransitPage({ params, searchParams }: Props) {
 
                     <div className="mt-4">
                       <div className="flex items-center justify-between gap-3">
-                        <p className="text-[10px] uppercase tracking-[.14em] text-[#707984]">
+                        <p className="text-[10px] uppercase tracking-[.14em] text-[#566c5e]">
                           Natal interactions
                         </p>
                         {row.house_lord_contact ? (
-                          <span className="rounded-full border border-[#8f7740] px-2 py-1 text-[9px] text-[#d8b66b]">
+                          <span className="rounded-full border border-[#b9d8c3] px-2 py-1 text-[9px] text-[#176b4a]">
                             House-lord contact
                           </span>
                         ) : null}
@@ -484,26 +484,26 @@ export default async function TransitPage({ params, searchParams }: Props) {
                                 "-" +
                                 interaction.type
                               }
-                              className="rounded-xl border border-[#2c3640] bg-[#081017] p-3"
+                              className="rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3"
                             >
                               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                 <div>
-                                  <p className="text-sm text-[#d8d0c2]">
+                                  <p className="text-sm text-[#18372a]">
                                     {GRAHA_SI[row.graha_id] ?? row.graha_id} →{" "}
                                     {GRAHA_SI[interaction.target_graha_id] ??
                                       interaction.target_graha_id}
                                   </p>
-                                  <p className="mt-1 text-[11px] text-[#7d8791]">
+                                  <p className="mt-1 text-[11px] text-[#566c5e]">
                                     {interactionLabel(interaction.type)} · orb{" "}
                                     {interaction.orb_degrees.toFixed(2)}°
                                   </p>
                                 </div>
                                 <div className="text-left sm:text-right">
-                                  <span className="rounded-full border border-[#34475b] px-2 py-1 text-[9px] text-[#8fa3b5]">
+                                  <span className="rounded-full border border-[#d7e5da] px-2 py-1 text-[9px] text-[#566c5e]">
                                     {trendLabel(interaction.trend)}
                                   </span>
                                   {interaction.orb_degrees <= 1 ? (
-                                    <p className="mt-1 text-[9px] text-[#d8b66b]">
+                                    <p className="mt-1 text-[9px] text-[#176b4a]">
                                       near exact
                                     </p>
                                   ) : null}
@@ -513,7 +513,7 @@ export default async function TransitPage({ params, searchParams }: Props) {
                           ))}
                         </div>
                       ) : (
-                        <div className="mt-3 rounded-xl border border-dashed border-[#39434e] p-4 text-xs leading-6 text-[#78828c]">
+                        <div className="mt-3 rounded-xl border border-dashed border-[#d7e5da] p-4 text-xs leading-6 text-[#566c5e]">
                           මෙම snapshot එකේ conjunction හෝ classical graha-dṛṣṭi
                           contact එකක් හමු නොවීය.
                         </div>
@@ -525,12 +525,12 @@ export default async function TransitPage({ params, searchParams }: Props) {
 
               <section className="panel mt-5 rounded-2xl p-6 sm:p-7">
                 <p className="eyebrow">Verified astronomical output</p>
-                <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+                <h2 className="serif mt-2 text-2xl text-[#18372a]">
                   Raw transit positions
                 </h2>
                 <div className="mt-5 overflow-x-auto">
                   <table className="w-full min-w-[760px] text-left text-sm">
-                    <thead className="border-b border-[#343a43] text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
+                    <thead className="border-b border-[#d7e5da] text-[10px] uppercase tracking-[0.14em] text-[#566c5e]">
                       <tr>
                         <th className="px-3 py-3">ග්‍රහයා</th>
                         <th className="px-3 py-3">රාශිය</th>
@@ -548,24 +548,24 @@ export default async function TransitPage({ params, searchParams }: Props) {
                         return (
                           <tr
                             key={row.graha_id}
-                            className="border-b border-[#252a31] last:border-0"
+                            className="border-b border-[#d7e5da] last:border-0"
                           >
-                            <td className="px-3 py-4 text-[#eee9de]">
+                            <td className="px-3 py-4 text-[#18372a]">
                               {GRAHA_SI[row.graha_id] ?? row.graha_id}
                             </td>
-                            <td className="px-3 py-4 text-[#c9c4b9]">
+                            <td className="px-3 py-4 text-[#18372a]">
                               {RASI_SI[row.rasi_id - 1]}
                             </td>
-                            <td className="px-3 py-4 font-mono text-xs text-[#c9c4b9]">
+                            <td className="px-3 py-4 font-mono text-xs text-[#18372a]">
                               {Number(row.degree_in_rasi ?? 0).toFixed(4)}°
                             </td>
-                            <td className="px-3 py-4 text-[#c9c4b9]">
+                            <td className="px-3 py-4 text-[#18372a]">
                               {row.natal_bhava}
                             </td>
-                            <td className="px-3 py-4 text-[#c9c4b9]">
+                            <td className="px-3 py-4 text-[#18372a]">
                               {row.is_retrograde ? "ඔව්" : "නැහැ"}
                             </td>
-                            <td className="px-3 py-4 text-[#676d76]">
+                            <td className="px-3 py-4 text-[#566c5e]">
                               {source?.source_engine ?? "—"} ·{" "}
                               {source?.source_version ?? "—"}
                             </td>
@@ -578,12 +578,12 @@ export default async function TransitPage({ params, searchParams }: Props) {
               </section>
             </>
           ) : (
-            <section className="mt-5 rounded-xl border border-[#4a3d27] bg-[#15130e] p-5 text-sm text-[#c9c4b9]">
+            <section className="mt-5 rounded-xl border border-[#d7e5da] bg-[#ffffff] p-5 text-sm text-[#18372a]">
               තවම Transit snapshot එකක් calculate කර නැත.
             </section>
           )}
 
-          <footer className="mt-6 border-t border-[#282d35] pt-5 text-xs leading-6 text-[#676d76]">
+          <footer className="mt-6 border-t border-[#d7e5da] pt-5 text-xs leading-6 text-[#566c5e]">
             V2 interaction labels natal chart geometry සහ saved transit snapshots
             මත පදනම් වේ. Daily/Weekly/Monthly/Yearly forecast එක තවම මෙයින්
             generate නොකරයි.
@@ -596,22 +596,22 @@ export default async function TransitPage({ params, searchParams }: Props) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[#6d552b] bg-[#0c1116]/80 p-4">
-      <p className="text-[9px] uppercase tracking-[.14em] text-[#7c766b]">
+    <div className="rounded-xl border border-[#d7e5da] bg-[#ffffff]/80 p-4">
+      <p className="text-[9px] uppercase tracking-[.14em] text-[#566c5e]">
         {label}
       </p>
-      <p className="serif mt-1 text-lg text-[#ead9b4]">{value}</p>
+      <p className="serif mt-1 text-lg text-[#18372a]">{value}</p>
     </div>
   );
 }
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[#29323b] bg-[#091016] p-3">
-      <p className="text-[9px] uppercase tracking-[.12em] text-[#68717b]">
+    <div className="rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3">
+      <p className="text-[9px] uppercase tracking-[.12em] text-[#566c5e]">
         {label}
       </p>
-      <p className="mt-1 text-xs leading-5 text-[#c9c4b9]">{value}</p>
+      <p className="mt-1 text-xs leading-5 text-[#18372a]">{value}</p>
     </div>
   );
 }

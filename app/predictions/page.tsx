@@ -289,12 +289,12 @@ export default async function PredictionsPage({
         <AppNav active={predictionView === "forecast" ? "forecast" : "predictions"} />
         <main className="astro-shell min-h-screen px-4 py-6 sm:px-6">
           <div className="mx-auto max-w-5xl">
-            <section className="cosmic-hero rounded-[28px] border border-[#725626] p-6 sm:p-9">
+            <section className="cosmic-hero rounded-[28px] border border-[#d7e5da] p-6 sm:p-9">
               <p className="eyebrow">Prediction Observatory</p>
-              <h1 className="serif mt-3 text-4xl text-[#f3dfb1]">
+              <h1 className="serif mt-3 text-4xl text-[#176b4a]">
                 පුරෝකථන
               </h1>
-              <p className="mt-4 text-sm leading-7 text-[#b9b4a9]">
+              <p className="mt-4 text-sm leading-7 text-[#566c5e]">
                 පුරෝකථනයක් සඳහා මුලින් සත්‍යාපිත calculation එකක් අවශ්‍යයි.
               </p>
               <Link href="/chart/new" className="cosmic-primary mt-6">
@@ -776,34 +776,34 @@ export default async function PredictionsPage({
       <AppNav active="predictions" />
       <main className="astro-shell min-h-screen px-4 py-6 sm:px-6 sm:py-8">
         <div className="mx-auto max-w-6xl">
-          <section className="cosmic-hero rounded-[28px] border border-[#725626] p-6 sm:p-9">
+          <section className="cosmic-hero rounded-[28px] border border-[#d7e5da] p-6 sm:p-9">
             <p className="eyebrow">
               Prediction Observatory · {selectedTopic} V1
             </p>
             <div className="mt-3 grid gap-7 lg:grid-cols-[1fr_.55fr] lg:items-end">
               <div>
-                <h1 className="serif text-4xl text-[#f3dfb1] sm:text-5xl">
+                <h1 className="serif text-4xl text-[#176b4a] sm:text-5xl">
                   {topicLabel} · භාව 12 විශ්ලේෂණය
                 </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-[#b9b4a9]">
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-[#566c5e]">
                   Natal evidence, Vimśottarī Daśā සහ transit snapshots එකට
                   බැඳී timing state සහ Daily / Weekly / Monthly / Yearly
                   windows පෙන්වයි.
                 </p>
               </div>
-              <div className="rounded-2xl border border-[#755a2e] bg-[#0b1015]/80 p-4">
-                <p className="text-[10px] uppercase tracking-[.15em] text-[#8c8270]">
+              <div className="rounded-2xl border border-[#d7e5da] bg-[#ffffff]/80 p-4">
+                <p className="text-[10px] uppercase tracking-[.15em] text-[#566c5e]">
                   Prediction for
                 </p>
-                <p className="serif mt-1 text-xl text-[#efd69b]">
+                <p className="serif mt-1 text-xl text-[#18372a]">
                   {selectedCalc.subject_name ??
                     selectedCalc.input_place_name ??
                     "Natal chart"}
                 </p>
-                <p className="mt-1 text-xs text-[#8d969f]">
+                <p className="mt-1 text-xs text-[#566c5e]">
                   {selectedCalc.input_birth_date} · {selectedCalc.input_birth_time}
                 </p>
-                <p className="mt-1 text-[10px] text-[#8d969f]">
+                <p className="mt-1 text-[10px] text-[#566c5e]">
                   Topic · {topicLabel}
                 </p>
               </div>
@@ -812,7 +812,7 @@ export default async function PredictionsPage({
 
           <section className="astro-card mt-5">
             <p className="eyebrow">Prediction Topic</p>
-            <h2 className="serif mt-2 text-2xl text-[#f0e4c8]">
+            <h2 className="serif mt-2 text-2xl text-[#176b4a]">
               විශ්ලේෂණ අංශය තෝරන්න
             </h2>
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
@@ -829,8 +829,8 @@ export default async function PredictionsPage({
                   })}
                   className={
                     topic === selectedTopic
-                      ? "rounded-xl border border-[#b8954f] bg-[#17140e] px-3 py-3 text-center text-xs text-[#e5cc92]"
-                      : "rounded-xl border border-[#303944] bg-[#09121a] px-3 py-3 text-center text-xs text-[#89939d]"
+                      ? "rounded-xl border border-[#b9d8c3] bg-[#ffffff] px-3 py-3 text-center text-xs text-[#176b4a]"
+                      : "rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-3 text-center text-xs text-[#566c5e]"
                   }
                 >
                   {TOPIC_LABEL_SI[topic]}
@@ -838,7 +838,7 @@ export default async function PredictionsPage({
               ))}
             </div>
             {selectedTopic === "HEALTH" ? (
-              <p className="mt-4 rounded-xl border border-[#4a3d27] bg-[#15130e] p-3 text-[11px] leading-6 text-[#a8a091]">
+              <p className="mt-4 rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3 text-[11px] leading-6 text-[#566c5e]">
                 සුවතාව section එක සාම්ප්‍රදායික ජ්‍යොතිෂ wellbeing pattern
                 එකක් පමණයි. රෝග නිර්ණය, වෛද්‍ය අවදානම් අනාවැකි හෝ ප්‍රතිකාර
                 උපදෙස් ලෙස භාවිතා නොකරයි.
@@ -850,13 +850,13 @@ export default async function PredictionsPage({
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="eyebrow">Chart Selector</p>
-                <h2 className="serif mt-2 text-2xl text-[#f0e4c8]">
+                <h2 className="serif mt-2 text-2xl text-[#176b4a]">
                   පුරෝකථනය සඳහා කේන්දරය තෝරන්න
                 </h2>
               </div>
               <Link
                 href={`/calculations/${selectedId}`}
-                className="text-xs text-[#d8b66b]"
+                className="text-xs text-[#176b4a]"
               >
                 ගණනය බලන්න →
               </Link>
@@ -897,18 +897,18 @@ export default async function PredictionsPage({
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <p className="eyebrow">Forecast Window Engine V1</p>
-                <h2 className="serif mt-2 text-3xl text-[#f0e4c8]">
+                <h2 className="serif mt-2 text-3xl text-[#176b4a]">
                   Daily · Weekly · Monthly · Yearly
                 </h2>
-                <p className="mt-2 max-w-3xl text-xs leading-6 text-[#858f99]">
+                <p className="mt-2 max-w-3xl text-xs leading-6 text-[#566c5e]">
                   {WINDOW_DETAIL[windowType]}
                 </p>
               </div>
               <div className="text-left lg:text-right">
-                <p className="text-[10px] uppercase tracking-[.12em] text-[#67717b]">
+                <p className="text-[10px] uppercase tracking-[.12em] text-[#566c5e]">
                   Selected window
                 </p>
-                <p className="serif mt-1 text-lg text-[#ddc892]">
+                <p className="serif mt-1 text-lg text-[#18372a]">
                   {windowPlan.label}
                 </p>
               </div>
@@ -929,8 +929,8 @@ export default async function PredictionsPage({
                     })}
                     className={
                       item === windowType
-                        ? "rounded-xl border border-[#b8954f] bg-[#17140e] px-2 py-3 text-center text-xs text-[#e5cc92]"
-                        : "rounded-xl border border-[#303944] bg-[#09121a] px-2 py-3 text-center text-xs text-[#89939d]"
+                        ? "rounded-xl border border-[#b9d8c3] bg-[#ffffff] px-2 py-3 text-center text-xs text-[#176b4a]"
+                        : "rounded-xl border border-[#d7e5da] bg-[#ffffff] px-2 py-3 text-center text-xs text-[#566c5e]"
                     }
                   >
                     {WINDOW_LABEL[item]}
@@ -941,7 +941,7 @@ export default async function PredictionsPage({
 
             <form
               action={generatePredictionWindow}
-              className="mt-5 grid gap-3 rounded-2xl border border-[#303944] bg-[#081017] p-4 md:grid-cols-[1fr_auto]"
+              className="mt-5 grid gap-3 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4 md:grid-cols-[1fr_auto]"
             >
               <input type="hidden" name="calculation_id" value={selectedId} />
               <input type="hidden" name="topic" value={selectedTopic} />
@@ -960,7 +960,7 @@ export default async function PredictionsPage({
                 }
               />
               <label className="block">
-                <span className="text-[10px] uppercase tracking-[.14em] text-[#697787]">
+                <span className="text-[10px] uppercase tracking-[.14em] text-[#566c5e]">
                   Anchor date
                 </span>
                 <input
@@ -968,7 +968,7 @@ export default async function PredictionsPage({
                   name="anchor_date"
                   defaultValue={anchorDate}
                   required
-                  className="mt-2 w-full rounded-xl border border-[#34475b] bg-[#0d1014] px-3 py-3 text-sm text-[#eee9de]"
+                  className="mt-2 w-full rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-3 text-sm text-[#18372a]"
                 />
               </label>
               <div className="flex items-end">
@@ -979,13 +979,13 @@ export default async function PredictionsPage({
             </form>
 
             {params.window_error ? (
-              <div className="mt-4 rounded-xl border border-[#5a3434] bg-[#211416] p-4 text-xs leading-6 text-[#d8aaaa]">
+              <div className="mt-4 rounded-xl border border-[#e9c5c0] bg-[#fff4f2] p-4 text-xs leading-6 text-[#8b3c35]">
                 {decodeURIComponent(params.window_error)}
               </div>
             ) : null}
 
             {params.window_generated ? (
-              <div className="mt-4 rounded-xl border border-[#2f4938] bg-[#0d1b16] p-4 text-xs leading-6 text-[#b5d0ba]">
+              <div className="mt-4 rounded-xl border border-[#b9d8c3] bg-[#e8f4ec] p-4 text-xs leading-6 text-[#176b4a]">
                 {windowPlan.samples.length} planned transit snapshots generate
                 කර {topicLabel} window aggregation සඳහා සුරකින ලදී.
               </div>
@@ -996,18 +996,18 @@ export default async function PredictionsPage({
                 windowAggregations.map((result) => (
                   <article
                     key={result.theme_code}
-                    className="rounded-2xl border border-[#303944] bg-[#09121a] p-4"
+                    className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <WindowBadge state={result.window_state} />
-                      <span className="text-[9px] text-[#67717b]">
+                      <span className="text-[9px] text-[#566c5e]">
                         {result.observed_samples}/{result.expected_samples} samples
                       </span>
                     </div>
-                    <p className="mt-3 font-mono text-[9px] text-[#69727c]">
+                    <p className="mt-3 font-mono text-[9px] text-[#566c5e]">
                       {result.theme_code}
                     </p>
-                    <p className="mt-2 text-xs leading-6 text-[#a8b0b8]">
+                    <p className="mt-2 text-xs leading-6 text-[#566c5e]">
                       {windowStateSi(result.window_state)}
                     </p>
                     <div className="mt-3 grid grid-cols-3 gap-2 text-center">
@@ -1025,7 +1025,7 @@ export default async function PredictionsPage({
                       />
                     </div>
                     {result.first_active_at ? (
-                      <p className="mt-3 text-[10px] leading-5 text-[#8c969f]">
+                      <p className="mt-3 text-[10px] leading-5 text-[#566c5e]">
                         First convergence ·{" "}
                         {formatAt(
                           result.first_active_at,
@@ -1036,22 +1036,22 @@ export default async function PredictionsPage({
                   </article>
                 ))
               ) : (
-                <div className="rounded-xl border border-dashed border-[#39434e] p-4 text-xs leading-6 text-[#7e8892] md:col-span-3">
+                <div className="rounded-xl border border-dashed border-[#d7e5da] p-4 text-xs leading-6 text-[#566c5e] md:col-span-3">
                   {topicLabel} V1 theme data නොමැති නිසා window aggregation
                   result නිකුත් කරන්නේ නැහැ.
                 </div>
               )}
             </div>
 
-            <div className="mt-5 rounded-2xl border border-[#303944] bg-[#081017] p-4">
+            <div className="mt-5 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="eyebrow">Daśā changes inside window</p>
-                  <h3 className="serif mt-1 text-xl text-[#eadcbf]">
+                  <h3 className="serif mt-1 text-xl text-[#176b4a]">
                     Exact period boundaries
                   </h3>
                 </div>
-                <span className="text-xs text-[#68717a]">
+                <span className="text-xs text-[#566c5e]">
                   {dashaChanges.length}
                 </span>
               </div>
@@ -1065,18 +1065,18 @@ export default async function PredictionsPage({
                     return (
                       <div
                         key={change.kind + change.start_at + index}
-                        className="rounded-xl border border-[#29323b] bg-[#091016] p-3"
+                        className="rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3"
                       >
-                        <p className="text-[9px] uppercase tracking-[.12em] text-[#6d7680]">
+                        <p className="text-[9px] uppercase tracking-[.12em] text-[#566c5e]">
                           {change.kind}
                         </p>
-                        <p className="mt-1 text-sm text-[#d8cfbf]">
+                        <p className="mt-1 text-sm text-[#18372a]">
                           {parent
                             ? `${GRAHA[parent.graha_id] ?? parent.graha_id} / `
                             : ""}
                           {GRAHA[change.graha_id] ?? change.graha_id}
                         </p>
-                        <p className="mt-1 text-[10px] text-[#818a93]">
+                        <p className="mt-1 text-[10px] text-[#566c5e]">
                           {formatAt(
                             change.start_at,
                             selectedCalc.input_timezone,
@@ -1087,14 +1087,14 @@ export default async function PredictionsPage({
                   })}
                 </div>
               ) : (
-                <p className="mt-3 text-xs leading-6 text-[#737d86]">
+                <p className="mt-3 text-xs leading-6 text-[#566c5e]">
                   මෙම කාල කවුළුව තුළ Mahādaśā හෝ Antardaśā boundary change
                   එකක් නොමැත.
                 </p>
               )}
             </div>
 
-            <p className="mt-4 text-[10px] leading-5 text-[#68717a]">
+            <p className="mt-4 text-[10px] leading-5 text-[#566c5e]">
               Sample counts probability නොවේ. ඒවා window එක තුළ engine එක
               පරීක්ෂා කළ කාල ලක්ෂ්‍ය පමණි.
             </p>
@@ -1107,11 +1107,11 @@ export default async function PredictionsPage({
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="eyebrow">12 Bhāva Overview</p>
-                <h2 className="serif mt-2 text-3xl text-[#f0e4c8]">
+                <h2 className="serif mt-2 text-3xl text-[#176b4a]">
                   {topicLabel} · භාව 12
                 </h2>
               </div>
-              <p className="text-[10px] text-[#67717b]">
+              <p className="text-[10px] text-[#566c5e]">
                 භාව 12ටම natal evidence · topic evidence වෙනම
               </p>
             </div>
@@ -1143,10 +1143,10 @@ export default async function PredictionsPage({
                         {topicBacked ? "Topic + Bhāva" : "Bhāva V1"}
                       </span>
                     </div>
-                    <h3 className="serif mt-3 text-base text-[#eadcbf]">
+                    <h3 className="serif mt-3 text-base text-[#176b4a]">
                       {row.title_si}
                     </h3>
-                    <p className="mt-2 text-[11px] text-[#7f8992]">
+                    <p className="mt-2 text-[11px] text-[#566c5e]">
                       {RASI[row.rasi_id - 1]} ·{" "}
                       {row.graha_ids.length
                         ? row.graha_ids.map((id) => GRAHA[id]).join(" · ")
@@ -1162,10 +1162,10 @@ export default async function PredictionsPage({
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="eyebrow">Bhāva Detail · {selectedTopic} V1</p>
-                <h2 className="serif mt-2 text-3xl text-[#f0e4c8]">
+                <h2 className="serif mt-2 text-3xl text-[#176b4a]">
                   භාව {detail.bhava} · {detail.title_si}
                 </h2>
-                <p className="mt-3 text-sm text-[#9199a2]">
+                <p className="mt-3 text-sm text-[#566c5e]">
                   {detail.keywords_si.join(" · ")}
                 </p>
               </div>
@@ -1209,14 +1209,14 @@ export default async function PredictionsPage({
                         )}
                       />
                     </div>
-                    <div className="mt-4 rounded-xl border border-[#2b3540] bg-[#081017] p-4">
-                      <p className="text-[10px] uppercase tracking-[.14em] text-[#727b84]">
+                    <div className="mt-4 rounded-xl border border-[#d7e5da] bg-[#ffffff] p-4">
+                      <p className="text-[10px] uppercase tracking-[.14em] text-[#566c5e]">
                         යෙදුණු ජ්‍යොතිෂ නීතිය
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-[#d7cdbb]">
+                      <p className="mt-2 text-sm leading-6 text-[#18372a]">
                         {item.evidence.rule.text_si}
                       </p>
-                      <p className="mt-2 font-mono text-[10px] text-[#6d7680]">
+                      <p className="mt-2 font-mono text-[10px] text-[#566c5e]">
                         {item.evidence.rule.code}
                       </p>
                     </div>
@@ -1242,18 +1242,18 @@ export default async function PredictionsPage({
             <div className="mt-5 grid gap-3 md:grid-cols-2">
               <div className="timing-panel">
                 <p className="eyebrow">Current Timing Engine V1</p>
-                <h3 className="serif mt-2 text-xl text-[#eadcbf]">
+                <h3 className="serif mt-2 text-xl text-[#176b4a]">
                   දශා + ගෝචර
                 </h3>
-                <div className="mt-3 space-y-2 text-xs leading-6 text-[#828b94]">
+                <div className="mt-3 space-y-2 text-xs leading-6 text-[#566c5e]">
                   <p>
-                    <span className="text-[#b9a77f]">වත්මන් දශාව:</span>{" "}
+                    <span className="text-[#566c5e]">වත්මන් දශාව:</span>{" "}
                     {currentMd && currentAd
                       ? `${GRAHA[currentMd.graha_id] ?? currentMd.graha_id} / ${GRAHA[currentAd.graha_id] ?? currentAd.graha_id}`
                       : "Timing data incomplete"}
                   </p>
                   <p>
-                    <span className="text-[#b9a77f]">
+                    <span className="text-[#566c5e]">
                       Latest past transit snapshot:
                     </span>{" "}
                     {latestTransitAt
@@ -1272,19 +1272,19 @@ export default async function PredictionsPage({
                       .map((row) => (
                         <div
                           key={row.theme.code}
-                          className="rounded-xl border border-[#2c3640] bg-[#081017] p-3"
+                          className="rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3"
                         >
                           <div className="flex items-center justify-between gap-3">
-                            <span className="font-mono text-[9px] text-[#68717a]">
+                            <span className="font-mono text-[9px] text-[#566c5e]">
                               {row.theme.code}
                             </span>
                             <TimingBadge status={row.timing.status} />
                           </div>
-                          <p className="mt-2 text-[11px] leading-5 text-[#9da5ad]">
+                          <p className="mt-2 text-[11px] leading-5 text-[#566c5e]">
                             {timingStatusSi(row.timing.status)}
                           </p>
                           {row.transit?.triggers.length ? (
-                            <p className="mt-1 text-[10px] text-[#6f7983]">
+                            <p className="mt-1 text-[10px] text-[#566c5e]">
                               Transit evidence · {row.transit.triggers.length}{" "}
                               trigger(s)
                             </p>
@@ -1292,7 +1292,7 @@ export default async function PredictionsPage({
                         </div>
                       ))
                   ) : (
-                    <p className="text-[11px] text-[#68717a]">
+                    <p className="text-[11px] text-[#566c5e]">
                       මෙම භාවයට timing-bound {topicLabel} theme එකක් නොමැත.
                     </p>
                   )}
@@ -1315,10 +1315,10 @@ export default async function PredictionsPage({
 
               <div className="timing-panel">
                 <p className="eyebrow">Sinhala Conclusion</p>
-                <h3 className="serif mt-2 text-xl text-[#eadcbf]">
+                <h3 className="serif mt-2 text-xl text-[#176b4a]">
                   අවසාන නිගමනය
                 </h3>
-                <p className="mt-2 text-xs leading-6 text-[#828b94]">
+                <p className="mt-2 text-xs leading-6 text-[#566c5e]">
                   {hasTopicEvidence
                     ? timingRows.some(
                         (row) =>
@@ -1338,7 +1338,7 @@ export default async function PredictionsPage({
               <p className="eyebrow">
                 {selectedTopic} V1 Themes · Generic Timing Adapter
               </p>
-              <h2 className="serif mt-2 text-2xl text-[#f0e4c8]">
+              <h2 className="serif mt-2 text-2xl text-[#176b4a]">
                 {topicLabel} තේමා සහ timing state
               </h2>
               <div className="mt-4 grid gap-3 md:grid-cols-3">
@@ -1352,7 +1352,7 @@ export default async function PredictionsPage({
                   return (
                     <div
                       key={theme.code}
-                      className="rounded-2xl border border-[#303944] bg-[#081017] p-4"
+                      className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="strength-pill">{theme.level}</span>
@@ -1363,15 +1363,15 @@ export default async function PredictionsPage({
                           ) : null}
                         </div>
                       </div>
-                      <p className="mt-3 text-sm leading-6 text-[#d2c8b6]">
+                      <p className="mt-3 text-sm leading-6 text-[#18372a]">
                         {theme.text_si}
                       </p>
                       {row ? (
-                        <p className="mt-2 text-[11px] leading-5 text-[#89939d]">
+                        <p className="mt-2 text-[11px] leading-5 text-[#566c5e]">
                           {timingStatusSi(row.timing.status)}
                         </p>
                       ) : null}
-                      <p className="mt-2 font-mono text-[9px] text-[#66707a]">
+                      <p className="mt-2 font-mono text-[9px] text-[#566c5e]">
                         {theme.code}
                       </p>
                     </div>
@@ -1383,7 +1383,7 @@ export default async function PredictionsPage({
           </>
           ) : null}
 
-          <p className="mt-6 text-center text-[10px] leading-5 text-[#66707a]">
+          <p className="mt-6 text-center text-[10px] leading-5 text-[#566c5e]">
             Prediction strength සහ sample counts සැබෑ ජීවිත probability
             ප්‍රතිශත නොවේ. ඒවා rule-system evidence සහ sampled timing states
             පමණි.
@@ -1404,29 +1404,29 @@ function EvidenceBlock({
   sub: string;
 }) {
   return (
-    <div className="rounded-xl border border-[#2c3640] bg-[#081017] p-4">
-      <p className="text-[9px] uppercase tracking-[.14em] text-[#6d7680]">
+    <div className="rounded-xl border border-[#d7e5da] bg-[#ffffff] p-4">
+      <p className="text-[9px] uppercase tracking-[.14em] text-[#566c5e]">
         {label}
       </p>
-      <p className="serif mt-1 text-lg text-[#e8d8b7]">{value}</p>
-      <p className="mt-2 text-[11px] leading-5 text-[#818a93]">{sub}</p>
+      <p className="serif mt-1 text-lg text-[#18372a]">{value}</p>
+      <p className="mt-2 text-[11px] leading-5 text-[#566c5e]">{sub}</p>
     </div>
   );
 }
 
 function Factor({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="rounded-xl border border-[#2c3640] bg-[#081017] p-4">
-      <p className="text-[10px] text-[#cba85d]">{title}</p>
+    <div className="rounded-xl border border-[#d7e5da] bg-[#ffffff] p-4">
+      <p className="text-[10px] text-[#566c5e]">{title}</p>
       <div className="mt-2 space-y-1">
         {items.length ? (
           items.map((item, index) => (
-            <p key={index} className="text-[11px] leading-5 text-[#929aa3]">
+            <p key={index} className="text-[11px] leading-5 text-[#566c5e]">
               • {item}
             </p>
           ))
         ) : (
-          <p className="text-[11px] text-[#68717a]">වාර්තා වී නැත</p>
+          <p className="text-[11px] text-[#566c5e]">වාර්තා වී නැත</p>
         )}
       </div>
     </div>
@@ -1435,11 +1435,11 @@ function Factor({ title, items }: { title: string; items: string[] }) {
 
 function MiniMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-[#29323b] bg-[#081017] p-2">
-      <p className="text-[8px] uppercase tracking-[.1em] text-[#65707a]">
+    <div className="rounded-lg border border-[#d7e5da] bg-[#ffffff] p-2">
+      <p className="text-[8px] uppercase tracking-[.1em] text-[#566c5e]">
         {label}
       </p>
-      <p className="mt-1 text-sm text-[#d5c8ad]">{value}</p>
+      <p className="mt-1 text-sm text-[#18372a]">{value}</p>
     </div>
   );
 }
@@ -1466,10 +1466,10 @@ function TimingBadge({
             : "INCOMPLETE";
   const cls =
     status === "ACTIVE_NOW"
-      ? "border-[#8f7740] text-[#d8b66b]"
+      ? "border-[#b9d8c3] text-[#176b4a]"
       : status === "TIMING_INCOMPLETE"
-        ? "border-[#5a3434] text-[#c98f8f]"
-        : "border-[#34475b] text-[#8fa3b5]";
+        ? "border-[#e9c5c0] text-[#8b3c35]"
+        : "border-[#d7e5da] text-[#566c5e]";
   return (
     <span className={"rounded-full border px-2 py-1 text-[9px] " + cls}>
       {label}
@@ -1487,10 +1487,10 @@ function WindowBadge({ state }: { state: PredictionWindowState }) {
   };
   const cls =
     state === "ACTIVE_WINDOW"
-      ? "border-[#8f7740] text-[#d8b66b]"
+      ? "border-[#b9d8c3] text-[#176b4a]"
       : state === "INCOMPLETE_WINDOW"
-        ? "border-[#5a3434] text-[#c98f8f]"
-        : "border-[#34475b] text-[#8fa3b5]";
+        ? "border-[#e9c5c0] text-[#8b3c35]"
+        : "border-[#d7e5da] text-[#566c5e]";
   return (
     <span className={"rounded-full border px-2 py-1 text-[9px] " + cls}>
       {label[state]}

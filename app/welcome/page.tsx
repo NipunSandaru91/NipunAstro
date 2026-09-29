@@ -1,23 +1,27 @@
 import Link from "next/link";
+import BrandLogo from "@/app/components/brand-logo";
 
-const MILKY_WAY_ART="https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2009/01/STScI-01EVT5WGYG6MTE5FFYSWR91K54.tif?w=2000";
+const steps = [
+  ["01", "උපන් තොරතුරු", "දිනය, වේලාව සහ ස්ථානය ඇතුළත් කරන්න."],
+  ["02", "ජන්ම ගණනය", "D1 සහ ග්‍රහ පිහිටීම් පරීක්ෂා කරන්න."],
+  ["03", "සිංහල කියවීම", "භාව 12 සඳහා පැහැදිලි අර්ථකථන බලන්න."],
+] as const;
 
-export default function WelcomePage(){
-  return <main className="ref-screen">
-    <div className="ref-phone real-art-welcome">
-      <img className="real-art-welcome-image" src={MILKY_WAY_ART} alt="" aria-hidden="true"/>
-      <div className="real-art-welcome-wash" aria-hidden="true"/>
-
-      <section className="real-art-welcome-copy">
-        <p className="welcome-kicker">VEDIC COSMOLOGY · JYOTIṢA</p>
-        <h1>වේද නක්ෂත්‍ර විද්‍යාවේ<br/>පුරාණ දැනුම<br/><span>ඔබේ ජීවිතයට</span></h1>
-        <p>ජන්ම ගණනය, දශා, ගෝචර සහ evidence-driven පුරෝකථන එකම පැහැදිලි නිරීක්ෂණයකින්.</p>
+export default function WelcomePage() {
+  return <main className="na-public">
+    <div className="na-public-inner">
+      <header className="na-public-header"><Link href="/" className="na-brand"><BrandLogo /></Link></header>
+      <section className="na-welcome-layout">
+        <div className="na-welcome-copy">
+          <p className="na-overline">ජන්ම කේන්දරය · සිංහල කියවීම</p>
+          <h1>දත්තෙන් පටන්ගෙන,<br/>අර්ථය වෙත යන්න.</h1>
+          <p>ගණනය සහ අර්ථකථනය පැහැදිලි පියවරවලින් බලන්න. ඔබේ කේන්දර සුරකින්න; පසුව නැවත විවෘත කරන්න.</p>
+          <Link href="/login" className="na-button">ආරම්භ කරන්න <span aria-hidden="true">→</span></Link>
+        </div>
+        <ol className="na-step-list">{steps.map(([number,title,description])=>
+          <li key={number}><span>{number}</span><div><h2>{title}</h2><p>{description}</p></div></li>
+        )}</ol>
       </section>
-
-      <div className="real-art-welcome-footer">
-        <Link href="/login" className="ref-pill-button">ආරම්භ කරන්න <span>→</span></Link>
-        <small className="art-credit">Milky Way Galactic Center · NASA / ESA / Hubble / Spitzer</small>
-      </div>
     </div>
   </main>;
 }

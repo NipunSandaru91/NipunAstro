@@ -44,7 +44,7 @@ export async function createCalculation(formData: FormData) {
     resolvedPlace = await resolveBirthPlace(resolvedQuery || placeName);
   } catch (error) {
     redirect(
-      "/dashboard?error=" +
+      "/chart/new?error=" +
         encodeURIComponent(
           error instanceof Error
             ? error.message
@@ -67,7 +67,7 @@ export async function createCalculation(formData: FormData) {
   });
 
   if (!validation.ok) {
-    redirect("/dashboard?error=" + validation.error);
+    redirect("/chart/new?error=" + encodeURIComponent(validation.error));
   }
 
   const { data: calculationId, error: createError } =
@@ -84,7 +84,7 @@ export async function createCalculation(formData: FormData) {
 
   const createFailure = rpcCreateError(createError, calculationId);
   if (createFailure) {
-    redirect("/dashboard?error=" + encodeURIComponent(createFailure));
+    redirect("/chart/new?error=" + encodeURIComponent(createFailure));
   }
 
   const { data: sessionData } = await supabase.auth.getSession();

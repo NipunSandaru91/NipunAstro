@@ -44,17 +44,17 @@ export default function D1Chart({
   ];
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-[#34475b] bg-[#081522] p-3 sm:p-5">
+    <div className="overflow-hidden rounded-3xl border border-[#d7e5da] bg-[#ffffff] p-3 sm:p-5">
       <div className="flex items-center justify-between px-2 pb-3">
         <div>
-          <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#b8954f]">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#176b4a]">
             D1 · Rāśi Chart
           </p>
-          <p className="mt-1 text-xs text-[#7f8a98]">
+          <p className="mt-1 text-xs text-[#566c5e]">
             Whole Sign · Lahiri Sidereal
           </p>
         </div>
-        <span className="rounded-full border border-[#405163] px-2.5 py-1 text-[9px] text-[#9ba6b2]">
+        <span className="rounded-full border border-[#d7e5da] px-2.5 py-1 text-[9px] text-[#566c5e]">
           Calculation layer
         </span>
       </div>
@@ -120,10 +120,10 @@ export default function D1Chart({
 
       <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {houses.slice(0, 4).map(({ house, rashiId, planets }) => (
-          <div key={house} className="rounded-xl border border-[#24384b] bg-[#091522] px-3 py-2">
-            <p className="text-[9px] uppercase tracking-[0.12em] text-[#697787]">Bhāva {house}</p>
-            <p className="mt-1 text-xs text-[#d4cfc4]">{rashiNames[rashiId - 1]}</p>
-            <p className="mt-1 text-[10px] text-[#8e9aa8]">
+          <div key={house} className="rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-2">
+            <p className="text-[9px] uppercase tracking-[0.12em] text-[#566c5e]">Bhāva {house}</p>
+            <p className="mt-1 text-xs text-[#18372a]">{rashiNames[rashiId - 1]}</p>
+            <p className="mt-1 text-[10px] text-[#566c5e]">
               {planets.map((p) => grahaName(p, grahaNames)).join(" · ") || "Empty"}
             </p>
           </div>
