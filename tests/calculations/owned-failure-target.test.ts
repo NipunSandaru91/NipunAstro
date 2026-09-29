@@ -51,3 +51,15 @@ Deno.test("failure records preserve original calculation audit metadata", () => 
     throw new Error("failure metadata was lost or source metadata was mutated");
   }
 });
+
+Deno.test("failure target and record handle missing prior metadata", () => {
+  const target = ownedFailureTarget({
+    id: "calculation-2", owner_user_id: "owner-1", status: "FAILED",
+  }, "owner-1");
+  if (target.calculation_metadata !== null) throw new Error("missing metadata should be null");
+  const failure = calculationFailureRecord("validate_stored_input", errorInfo(new Error("invalid")));
+  if (failure.calculation_metadata.last_failed_stage !== "validate_stored_input" ||
+      failure.calculation_metadata.last_error.message !== "invalid") {
+    throw new Error("failure details missing without original metadata");
+  }
+});
