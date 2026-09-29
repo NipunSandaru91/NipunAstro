@@ -21,6 +21,7 @@ body { font-family: "Noto Sans Sinhala", "Iskoola Pota", system-ui, sans-serif; 
 :focus-visible { outline: 2px solid var(--na-green); outline-offset: 3px; }
 
 .na-brand { display: inline-flex; align-items: center; gap: .7rem; color: var(--text); text-decoration: none; font-size: 1.25rem; font-weight: 750; letter-spacing: -.03em; }
+.na-entry-brand { width: fit-content; border: 1px solid #b9d8c3; border-radius: 22px; padding: 4px; }
 .na-brand img, .na-app-brand img { display: block; flex: none; }
 .na-overline { color: var(--na-green); font-size: .76rem; font-weight: 700; letter-spacing: .04em; }
 .na-button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 1rem; border: 1px solid var(--na-green); border-radius: 12px; background: var(--na-green); padding: .8rem 1.2rem; color: #fff; font-size: .94rem; font-weight: 700; text-decoration: none; cursor: pointer; }
@@ -63,6 +64,7 @@ body { font-family: "Noto Sans Sinhala", "Iskoola Pota", system-ui, sans-serif; 
 
 /* Shared authenticated shell */
 .astro-shell, .ref-app-shell { background: var(--background); color: var(--text); }
+.ref-app-shell.na-dashboard-shell { min-height: calc(100svh - 58px); background: var(--background); color: var(--text); }
 .ref-app-shell { padding-bottom: calc(6.8rem + env(safe-area-inset-bottom)); }
 .ref-app-main { width: min(100%, 1100px); }
 .ref-app-header { border-color: var(--border); background: rgba(255,255,255,.96); }

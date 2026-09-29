@@ -14,7 +14,7 @@ export default function WelcomePage() {
       <section className="na-welcome-layout">
         <div className="na-welcome-copy">
           <p className="na-overline">ජන්ම කේන්දරය · සිංහල කියවීම</p>
-          <h1>දත්තෙන් පටන්ගෙන,<br/>අර්ථය වෙත යන්න.</h1>
+          <h1>නිවැරදි දත්ත වලින් පටන්ගෙන,<br/>අර්ථය වෙත යන්න.</h1>
           <p>ගණනය සහ අර්ථකථනය පැහැදිලි පියවරවලින් බලන්න. ඔබේ කේන්දර සුරකින්න; පසුව නැවත විවෘත කරන්න.</p>
           <Link href="/login" className="na-button">ආරම්භ කරන්න <span aria-hidden="true">→</span></Link>
         </div>

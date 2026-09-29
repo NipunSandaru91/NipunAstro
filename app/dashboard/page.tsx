@@ -41,7 +41,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
 
   return <>
     <AppNav active="dashboard" />
-    <main className="ref-app-shell">
+    <main className="ref-app-shell na-dashboard-shell">
       <div className="ref-app-main ref-dashboard">
         <div className="ref-dashboard-intro">
           <div>

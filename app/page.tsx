@@ -4,7 +4,7 @@ import BrandLogo from "@/app/components/brand-logo";
 export default function HomePage() {
   return <main className="na-entry">
     <div className="na-entry-inner">
-      <div className="na-brand"><BrandLogo /></div>
+      <div className="na-brand na-entry-brand"><BrandLogo /></div>
       <div className="na-entry-content">
         <p className="na-overline">ජ්‍යොතිෂ නිරීක්ෂණය</p>
         <h1>ඔබේ කේන්දරය,<br/>පැහැදිලිව කියවන්න.</h1>
