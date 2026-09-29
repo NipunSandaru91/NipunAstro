@@ -16,6 +16,7 @@ server.stdout.on('data', async chunk => {
       const html = await response.text();
       assert.ok(html.includes('n-astro-logo.png'), `${path}: approved logo`);
       assert.ok(html.includes('lang="si"'), `${path}: Sinhala document`);
+      if (path === '/welcome') assert.ok(html.includes('නිවැරදි දත්ත වලින් පටන්ගෙන'));
       if (next) assert.ok(html.includes(`href="${next}"`), `${path}: next step`);
       if (path === '/login') {
         assert.ok(html.includes('value="PERSONAL"'));
@@ -31,6 +32,14 @@ server.stdout.on('data', async chunk => {
       assert.equal(location.searchParams.get('next'), path);
       console.log(`PASS ${path}: unauthenticated redirect preserves destination`);
     }
+    const homeResponse = await fetch(base + '/');
+    const homeHtml = await homeResponse.text();
+    assert.ok(homeHtml.includes('na-entry-brand'));
+    const stylesheetPaths = [...homeHtml.matchAll(/href="([^"]+\.css[^"]*)"/g)].map(match => match[1]);
+    let styleText = '';
+    for (const path of stylesheetPaths) styleText += await (await fetch(new URL(path, base))).text();
+    assert.match(styleText, /\.na-entry-brand[^}]*border:1px solid #b9d8c3/);
+    assert.match(styleText, /\.ref-app-shell\.na-dashboard-shell[^}]*background:var\(--background\)/);
     const errorResponse = await fetch(base + '/login?error=oauth_failed&next=%2Fchart%2Fnew');
     const errorHtml = await errorResponse.text();
     assert.ok(errorHtml.includes('role="alert"'));
