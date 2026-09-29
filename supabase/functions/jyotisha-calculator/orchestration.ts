@@ -47,6 +47,9 @@ export function calculationFailureRecord(
       ...(existingMetadata ?? {}),
       last_failed_stage: stage,
       last_error: error,
+    } as Record<string, unknown> & {
+      last_failed_stage: string;
+      last_error: ErrorInfo;
     },
   };
 }
