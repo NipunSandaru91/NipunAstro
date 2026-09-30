@@ -24,4 +24,7 @@ Deno.test("chart relationship parser rejects values outside the allowed set", ()
   if (subjectRelationshipLabel("MOTHER") !== "මව") {
     throw new Error("relationship label is not available in Sinhala");
   }
+  if (subjectRelationshipLabel("CHILD") !== null) {
+    throw new Error("unknown relationship must not display a guessed label");
+  }
 });

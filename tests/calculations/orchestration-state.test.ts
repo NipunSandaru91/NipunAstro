@@ -47,6 +47,13 @@ Deno.test("failure target requires the current owner and a retryable run", () =>
   if (target.calculation_metadata?.creation_contract !== "USER_CALCULATION_V2") {
     throw new Error("failure target did not preserve calculation metadata");
   }
+  const targetWithoutMetadata = ownedFailureTarget(
+    { ...run, status: "PENDING", calculation_metadata: null },
+    "user-1",
+  );
+  if (targetWithoutMetadata.calculation_metadata !== null) {
+    throw new Error("missing calculation metadata must remain explicitly null");
+  }
 
   for (const [candidate, userId] of [
     [{ ...run, owner_user_id: "user-2" }, "user-1"],
