@@ -73,6 +73,17 @@ Deno.test("dasha reading names the real D1 links and qualifies each activation l
       }
     }
   }
+
+  const legacyRoleReading = buildPersonalDashaReading({
+    maha: "රවි",
+    antar: "බුධ",
+    anchors: [{ ...anchor, matchedRoles: undefined }],
+    topic: "CAREER",
+    activation: "MODERATE",
+  });
+  if (!legacyRoleReading.includes("10 වන භාවයේ බුධ")) {
+    throw new Error("D1 anchor rendering failed without optional role labels");
+  }
 });
 
 Deno.test("a dasha pair without a matching topic indicator is disclosed as background", () => {
