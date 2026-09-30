@@ -94,7 +94,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
               <Link href={personal ? chartPath : "/predictions"}>විවෘත කරන්න <span aria-hidden="true">→</span></Link>
             </section>
             <div className="ref-shortcuts">
-              <Link href="/settings">කියවීමේ ආකාරය <span aria-hidden="true">→</span></Link>
+              <Link href="/settings">ගිණුම් සැකසුම් <span aria-hidden="true">→</span></Link>
               <Link href="/profile">පැතිකඩ <span aria-hidden="true">→</span></Link>
               {roleRow?.role === "ADMIN" ? <Link href="/admin">පරිපාලන පුවරුව <span aria-hidden="true">→</span></Link> : null}
             </div>

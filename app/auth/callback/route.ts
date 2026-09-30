@@ -6,8 +6,6 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const next = safeNextPath(requestUrl.searchParams.get("next"));
-  const requestedType = requestUrl.searchParams.get("account_type")?.toUpperCase();
-  const accountType = requestedType === "PROFESSIONAL" ? "PROFESSIONAL" : "PERSONAL";
 
   if (!code) {
     const error = requestUrl.searchParams.get("error_description") ??
@@ -25,23 +23,6 @@ export async function GET(request: Request) {
   if (error) {
     return NextResponse.redirect(
       new URL("/login?error=" + encodeURIComponent(error.message), request.url),
-    );
-  }
-
-  const { data: claims } = await supabase.auth.getClaims();
-  const userId = typeof claims?.claims?.sub === "string" ? claims.claims.sub : null;
-  const { error: profileError } = userId
-    ? await supabase
-      .from("profiles")
-      .update({ account_type: accountType, updated_at: new Date().toISOString() })
-      .eq("id", userId)
-      .select("id")
-      .single()
-    : { error: new Error("AUTH_USER_MISSING") };
-
-  if (profileError) {
-    return NextResponse.redirect(
-      new URL("/settings?error=" + encodeURIComponent(profileError.message), request.url),
     );
   }
 
