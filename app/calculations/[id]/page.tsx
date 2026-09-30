@@ -138,16 +138,16 @@ export default async function CalculationPage({
       <AppNav />
       <main className="min-h-screen px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-6xl">
-        <header className="border-b border-[#282d35] pb-7">
-          <p className="eyebrow">NipunAstro · ගණනය කිරීමේ වාර්තාව</p>
+        <header className="border-b border-[#d7e5da] pb-7">
+          <p className="eyebrow">N Astro · ගණනය කිරීමේ වාර්තාව</p>
 
           <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="serif text-4xl tracking-tight text-[#eee9de]">
+              <h1 className="serif text-4xl tracking-tight text-[#18372a]">
                 {runMeta?.subject_name ?? "උපන් කේන්දරය"}
               </h1>
               <ChartNameEditor calculationId={id} initialName={runMeta?.subject_name ?? ""} />
-              {saved ? <p className="mt-2 text-xs text-[#9ec4a8]">නම යාවත්කාලීන කර ඇත.</p> : null}
+              {saved ? <p className="mt-2 text-xs text-[#176b4a]">නම යාවත්කාලීන කර ඇත.</p> : null}
               <p className="mt-3 text-sm text-[var(--muted)]">
                 Verified calculation output. Interpretation is deliberately
                 separated from the astronomical calculation layer.
@@ -157,7 +157,7 @@ export default async function CalculationPage({
             <div className="flex flex-wrap gap-2">
               <a
                 href="/my-chart"
-                className="rounded-lg border border-[#343a43] px-3 py-2 text-xs text-[#bdb8ad] transition hover:border-[#8f7740] hover:text-[#eee9de]"
+                className="rounded-lg border border-[#d7e5da] px-3 py-2 text-xs text-[#566c5e] transition hover:border-[#b9d8c3] hover:text-[#18372a]"
               >
                 මගේ කේන්දර
               </a>
@@ -167,29 +167,29 @@ export default async function CalculationPage({
         </header>
 
         {engineError ? (
-          <section className="mt-7 rounded-2xl border border-[#5a3434] bg-[#211416] p-6">
+          <section className="mt-7 rounded-2xl border border-[#e9c5c0] bg-[#fff4f2] p-6">
             <p className="eyebrow">එන්ජින් තත්ත්වය</p>
-            <p className="mt-2 text-sm leading-7 text-[#d8aaaa]">
+            <p className="mt-2 text-sm leading-7 text-[#8b3c35]">
               {decodeURIComponent(engineError)}
             </p>
           </section>
         ) : null}
 
         {!engineError ? (
-        <section className="mt-7 rounded-3xl border border-[#2f4938] bg-[#0d1b16] p-5 shadow-2xl sm:p-7">
+        <section className="mt-7 rounded-3xl border border-[#b9d8c3] bg-[#e8f4ec] p-5 shadow-2xl sm:p-7">
           <div className="flex items-start gap-4">
-            <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-[#b8954f] bg-[#15130e]">
-              <span className="text-2xl text-[#e0b65b]">✓</span>
+            <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-[#b9d8c3] bg-[#ffffff]">
+              <span className="text-2xl text-[#176b4a]">✓</span>
             </div>
 
             <div className="min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8eb596]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#566c5e]">
                 8 / 8 · Chart Ready
               </p>
-              <h2 className="serif mt-1 text-2xl text-[#eee9de]">
+              <h2 className="serif mt-1 text-2xl text-[#18372a]">
                 Chart calculated successfully
               </h2>
-              <p className="mt-1 text-xs leading-5 text-[#8f9aa7]">
+              <p className="mt-1 text-xs leading-5 text-[#566c5e]">
                 Your verified calculation is ready to explore. The values below
                 come directly from the calculation layer.
               </p>
@@ -197,32 +197,32 @@ export default async function CalculationPage({
           </div>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#778392]">
+            <div className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#566c5e]">
                 Lagna · D1
               </p>
-              <p className="serif mt-1 text-2xl text-[#e0b65b]">
+              <p className="serif mt-1 text-2xl text-[#176b4a]">
                 {textValue(
                   rashiSinhala(pick(lagna, "rasi_id")) ??
                     pick(lagna, "rashi", "sign", "name", "code"),
                 )}
               </p>
-              <p className="mt-1 text-xs text-[#9ca7b3]">
+              <p className="mt-1 text-xs text-[#566c5e]">
                 {textValue(pick(lagna, "degree_in_rasi", "degree", "longitude_in_rasi"))}°
               </p>
             </div>
 
-            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#778392]">
+            <div className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#566c5e]">
                 Nakṣatra
               </p>
-              <p className="serif mt-1 text-2xl text-[#eee9de]">
+              <p className="serif mt-1 text-2xl text-[#18372a]">
                 {textValue(
                   nakshatraSinhala(pick(lagna, "longitude_sidereal", "longitude")) ??
                     pick(lagna, "nakshatra", "nakshatra_name"),
                 )}
               </p>
-              <p className="mt-1 text-xs text-[#9ca7b3]">
+              <p className="mt-1 text-xs text-[#566c5e]">
                 Pada {textValue(pick(lagna, "pada"))}
               </p>
             </div>
@@ -230,7 +230,7 @@ export default async function CalculationPage({
 
           <a
             href="#chart-details"
-            className="mt-4 block w-full rounded-2xl border border-[#e0b65b] bg-[#e0b65b] px-4 py-3.5 text-center text-sm font-semibold text-[#15130e] transition hover:brightness-110"
+            className="mt-4 block w-full rounded-2xl border border-[#b9d8c3] bg-[#176b4a] px-4 py-3.5 text-center text-sm font-semibold text-[#ffffff] transition hover:brightness-110"
           >
             View Chart
           </a>
@@ -241,7 +241,7 @@ export default async function CalculationPage({
         <section className="mt-7 grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
           <div className="panel rounded-2xl p-7">
             <p className="eyebrow">ගණනය කිරීම</p>
-            <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+            <h2 className="serif mt-2 text-2xl text-[#18372a]">
               ආදානය සහ සම්මතය
             </h2>
 
@@ -265,22 +265,22 @@ export default async function CalculationPage({
           <div className="panel rounded-2xl p-7">
             <p className="eyebrow">ලග්නය · D1 Ascendant</p>
 
-            <div className="mt-4 rounded-2xl border border-[#3c3527] bg-[#0d1014] p-5">
+            <div className="mt-4 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-5">
               <div className="flex items-center gap-5">
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-[var(--gold)] bg-[#15130e]">
+                <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border border-[var(--gold)] bg-[#ffffff]">
                   <span className="serif text-2xl text-[var(--gold)]">
                     {textValue(rashiSinhala(pick(lagna, "rasi_id")) ?? pick(lagna, "rashi", "sign", "name", "code"))}
                   </span>
                 </div>
 
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.16em] text-[#676d76]">
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-[#566c5e]">
                     Sidereal Lagna
                   </p>
-                  <h2 className="serif mt-1 text-3xl text-[#eee9de]">
+                  <h2 className="serif mt-1 text-3xl text-[#18372a]">
                     {textValue(rashiSinhala(pick(lagna, "rasi_id")) ?? pick(lagna, "rashi", "sign", "name", "code"))}
                   </h2>
-                  <p className="mt-1 text-xs text-[#8d929b]">
+                  <p className="mt-1 text-xs text-[#566c5e]">
                     {textValue(pick(lagna, "degree_in_rasi", "degree", "longitude_in_rasi"))}°
                   </p>
                 </div>
@@ -302,14 +302,14 @@ export default async function CalculationPage({
               </div>
             </div>
 
-            <div className="mt-4 rounded-xl border border-[#252a31] bg-[#0d1014] p-4">
-              <p className="text-[10px] uppercase tracking-[0.16em] text-[#676d76]">
+            <div className="mt-4 rounded-xl border border-[#d7e5da] bg-[#ffffff] p-4">
+              <p className="text-[10px] uppercase tracking-[0.16em] text-[#566c5e]">
                 Sidereal longitude
               </p>
-              <p className="mt-2 font-mono text-sm text-[#c9c4b9]">
+              <p className="mt-2 font-mono text-sm text-[#18372a]">
                 {textValue(pick(lagna, "longitude_sidereal", "longitude"))}°
               </p>
-              <p className="mt-2 text-xs leading-5 text-[#676d76]">
+              <p className="mt-2 text-xs leading-5 text-[#566c5e]">
                 Lahiri ayanāṃśa · Whole Sign · Calculation layer only
               </p>
             </div>
@@ -320,18 +320,18 @@ export default async function CalculationPage({
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="eyebrow">Chart Overview</p>
-              <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+              <h2 className="serif mt-2 text-2xl text-[#18372a]">
                 D1 · Rāśi
               </h2>
             </div>
-            <span className="text-[10px] text-[#687586]">Screen 10 · Bhāva</span>
+            <span className="text-[10px] text-[#566c5e]">Screen 10 · Bhāva</span>
           </div>
 
-          <nav className="mt-5 grid grid-cols-4 overflow-hidden rounded-xl border border-[#34475b] bg-[#091522]" aria-label="Chart sections">
-            <a href="#d1-chart" className="border-b-2 border-[#e0b65b] bg-[#182a3b] px-2 py-3 text-center text-[10px] font-semibold text-[#eee9de]">D1</a>
-            <a href="#bhava" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">භාව</a>
-            <a href="#drishti" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">Dṛṣṭi</a>
-            <a href="#shadbala" className="px-2 py-3 text-center text-[10px] text-[#8f9aa7]">Ṣaḍbala</a>
+          <nav className="mt-5 grid grid-cols-4 overflow-hidden rounded-xl border border-[#d7e5da] bg-[#ffffff]" aria-label="Chart sections">
+            <a href="#d1-chart" className="border-b-2 border-[#b9d8c3] bg-[#ffffff] px-2 py-3 text-center text-[10px] font-semibold text-[#18372a]">D1</a>
+            <a href="#bhava" className="px-2 py-3 text-center text-[10px] text-[#566c5e]">භාව</a>
+            <a href="#drishti" className="px-2 py-3 text-center text-[10px] text-[#566c5e]">Dṛṣṭi</a>
+            <a href="#shadbala" className="px-2 py-3 text-center text-[10px] text-[#566c5e]">Ṣaḍbala</a>
           </nav>
 
           <div id="d1-chart" className="mt-5">
@@ -344,17 +344,17 @@ export default async function CalculationPage({
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
-              <p className="text-[9px] uppercase tracking-[0.14em] text-[#778392]">Lagna</p>
-              <p className="serif mt-1 text-lg text-[#e0b65b]">{textValue(rashiSinhala(lagnaRasiId))}</p>
+            <div className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
+              <p className="text-[9px] uppercase tracking-[0.14em] text-[#566c5e]">Lagna</p>
+              <p className="serif mt-1 text-lg text-[#176b4a]">{textValue(rashiSinhala(lagnaRasiId))}</p>
             </div>
-            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
-              <p className="text-[9px] uppercase tracking-[0.14em] text-[#778392]">Grahas</p>
-              <p className="serif mt-1 text-lg text-[#eee9de]">{grahas.length}</p>
+            <div className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
+              <p className="text-[9px] uppercase tracking-[0.14em] text-[#566c5e]">Grahas</p>
+              <p className="serif mt-1 text-lg text-[#18372a]">{grahas.length}</p>
             </div>
-            <div className="rounded-2xl border border-[#34475b] bg-[#091522] p-4">
-              <p className="text-[9px] uppercase tracking-[0.14em] text-[#778392]">System</p>
-              <p className="mt-1 text-xs text-[#c9c4b9]">Lahiri · Whole Sign</p>
+            <div className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
+              <p className="text-[9px] uppercase tracking-[0.14em] text-[#566c5e]">System</p>
+              <p className="mt-1 text-xs text-[#18372a]">Lahiri · Whole Sign</p>
             </div>
           </div>
         </section>
@@ -364,9 +364,9 @@ export default async function CalculationPage({
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">D1 · භාව</p>
-              <h2 className="serif mt-2 text-2xl text-[#eee9de]">භාව 12</h2>
+              <h2 className="serif mt-2 text-2xl text-[#18372a]">භාව 12</h2>
             </div>
-            <p className="text-xs text-[#676d76]">Whole Sign · Lagna-based</p>
+            <p className="text-xs text-[#566c5e]">Whole Sign · Lagna-based</p>
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -380,29 +380,29 @@ export default async function CalculationPage({
               return (
                 <article
                   key={house}
-                  className={house === 1 ? "rounded-2xl border border-[#b8954f] bg-[#17140e] p-4" : "rounded-2xl border border-[#34475b] bg-[#091522] p-4"}
+                  className={house === 1 ? "rounded-2xl border border-[#b9d8c3] bg-[#ffffff] p-4" : "rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4"}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#8a949f]">
+                      <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#566c5e]">
                         භාව {house}
                       </p>
-                      <h3 className="serif mt-1 text-lg text-[#eee9de]">
+                      <h3 className="serif mt-1 text-lg text-[#18372a]">
                         {house === 1 ? "ලග්න භාවය" : "භාව " + house}
                       </h3>
                     </div>
                     {house === 1 ? (
-                      <span className="rounded-full border border-[#8f7740] px-2 py-1 text-[9px] text-[#e0b65b]">
+                      <span className="rounded-full border border-[#b9d8c3] px-2 py-1 text-[9px] text-[#176b4a]">
                         ලග්නය
                       </span>
                     ) : null}
                   </div>
 
-                  <div className="mt-4 border-t border-[#252a31] pt-3">
-                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#697787]">රාශිය</p>
-                    <p className="mt-1 text-sm text-[#d4cfc4]">{rashiSinhala(rashiId) ?? "—"}</p>
-                    <p className="mt-3 text-[9px] uppercase tracking-[0.12em] text-[#697787]">ග්‍රහයන්</p>
-                    <p className="mt-1 text-sm leading-6 text-[#c9c4b9]">
+                  <div className="mt-4 border-t border-[#d7e5da] pt-3">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#566c5e]">රාශිය</p>
+                    <p className="mt-1 text-sm text-[#18372a]">{rashiSinhala(rashiId) ?? "—"}</p>
+                    <p className="mt-3 text-[9px] uppercase tracking-[0.12em] text-[#566c5e]">ග්‍රහයන්</p>
+                    <p className="mt-1 text-sm leading-6 text-[#18372a]">
                       {planets.length ? planets.map((planet) => String(grahaSinhala(planet))).join(" · ") : "ග්‍රහයන් නොමැත"}
                     </p>
                   </div>
@@ -411,7 +411,7 @@ export default async function CalculationPage({
             })}
           </div>
 
-          <p className="mt-5 text-xs leading-6 text-[#676d76]">
+          <p className="mt-5 text-xs leading-6 text-[#566c5e]">
             භාව mapping එක Lagna Rāśi මත පදනම් වූ Whole Sign calculation එකෙන් ලබා ගනී.
             භාවාධිපති වැනි interpretation-layer data මෙහි නොගොඩනගයි.
           </p>
@@ -422,13 +422,13 @@ export default async function CalculationPage({
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">D1 · දෘෂ්ටි</p>
-              <h2 className="serif mt-2 text-2xl text-[#eee9de]">ග්‍රහ දෘෂ්ටි</h2>
+              <h2 className="serif mt-2 text-2xl text-[#18372a]">ග්‍රහ දෘෂ්ටි</h2>
             </div>
-            <p className="text-xs text-[#676d76]">Graha Dṛṣṭi · Calculation view</p>
+            <p className="text-xs text-[#566c5e]">Graha Dṛṣṭi · Calculation view</p>
           </div>
 
-          <div className="mt-5 rounded-2xl border border-[#34475b] bg-[#091522] p-4">
-            <p className="text-xs leading-6 text-[#9ca7b3]">
+          <div className="mt-5 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
+            <p className="text-xs leading-6 text-[#566c5e]">
               මෙහි පෙන්වන්නේ D1 රාශි පිහිටීම් මත ගණනය කළ සාම්ප්‍රදායික Graha Dṛṣṭi mapping එකයි.
               සියලුම ග්‍රහයන්ට 7 වන දෘෂ්ටියද, කුජට 4/8, ගුරුට 5/9, ශනිට 3/10 අමතර දෘෂ්ටිද ගණනය කරයි.
               රාහු/කේතු සඳහා විකල්ප දෘෂ්ටි පද්ධති මෙහි ඇතුළත් නොකරයි.
@@ -458,25 +458,25 @@ export default async function CalculationPage({
               return (
                 <article
                   key={textValue(pick(graha, "code", "graha_code", "name"), String(index))}
-                  className="rounded-2xl border border-[#34475b] bg-[#091522] p-4"
+                  className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-[9px] uppercase tracking-[0.14em] text-[#697787]">ග්‍රහයා</p>
-                      <h3 className="serif mt-1 text-lg text-[#eee9de]">{textValue(grahaSinhala(graha))}</h3>
+                      <p className="text-[9px] uppercase tracking-[0.14em] text-[#566c5e]">ග්‍රහයා</p>
+                      <h3 className="serif mt-1 text-lg text-[#18372a]">{textValue(grahaSinhala(graha))}</h3>
                     </div>
-                    <span className="rounded-full border border-[#405163] px-2 py-1 text-[9px] text-[#9ba6b2]">
+                    <span className="rounded-full border border-[#d7e5da] px-2 py-1 text-[9px] text-[#566c5e]">
                       {rashiSinhala(rashiId) ?? "—"}
                     </span>
                   </div>
 
-                  <div className="mt-4 border-t border-[#252a31] pt-3">
-                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#697787]">දෘෂ්ටි කරන ස්ථාන</p>
+                  <div className="mt-4 border-t border-[#d7e5da] pt-3">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#566c5e]">දෘෂ්ටි කරන ස්ථාන</p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {targets.map(({ offset, targetRasiId, targetBhava }) => (
                         <span
                           key={offset}
-                          className="rounded-xl border border-[#3b4652] bg-[#0d1b2b] px-3 py-2 text-xs text-[#d4cfc4]"
+                          className="rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-2 text-xs text-[#18372a]"
                         >
                           {offset} වන දෘෂ්ටිය · {rashiSinhala(targetRasiId) ?? "—"}
                           {targetBhava ? " · භාව " + targetBhava : ""}
@@ -494,16 +494,16 @@ export default async function CalculationPage({
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">D1 · ග්‍රහ පිහිටීම්</p>
-              <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+              <h2 className="serif mt-2 text-2xl text-[#18372a]">
                 නිරයණ ග්‍රහ පිහිටීම්
               </h2>
             </div>
-            <p className="text-xs text-[#676d76]">{grahas.length} ග්‍රහ වාර්තා</p>
+            <p className="text-xs text-[#566c5e]">{grahas.length} ග්‍රහ වාර්තා</p>
           </div>
 
           <div className="mt-6 overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
-              <thead className="border-b border-[#343a43] text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
+              <thead className="border-b border-[#d7e5da] text-[10px] uppercase tracking-[0.14em] text-[#566c5e]">
                 <tr>
                   <th className="px-3 py-3 font-medium">භාවය</th>
                   <th className="px-3 py-3 font-medium">ග්‍රහයා</th>
@@ -528,36 +528,36 @@ export default async function CalculationPage({
                         pick(graha, "code", "graha_code", "name"),
                         String(index),
                       )}
-                      className="border-b border-[#252a31] last:border-0"
+                      className="border-b border-[#d7e5da] last:border-0"
                     >
-                      <td className="px-3 py-4 text-[#c9c4b9]">
+                      <td className="px-3 py-4 text-[#18372a]">
                         {textValue(bhava)}
                       </td>
-                      <td className="px-3 py-4 text-[#eee9de]">
+                      <td className="px-3 py-4 text-[#18372a]">
                         {textValue(grahaSinhala(graha))}
                       </td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">
+                      <td className="px-3 py-4 text-[#18372a]">
                         {textValue(
                           rashiSinhala(pick(graha, "rasi_id")) ??
                             pick(graha, "rashi", "sign", "sign_name"),
                         )}
                       </td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">
+                      <td className="px-3 py-4 text-[#18372a]">
                         {textValue(
                           pick(graha, "degree_in_rasi", "degree", "longitude_in_rasi"),
                         )}
                       </td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">
+                      <td className="px-3 py-4 text-[#18372a]">
                         {textValue(
                           nakshatraSinhala(
                             pick(graha, "longitude_sidereal", "longitude"),
                           ) ?? pick(graha, "nakshatra", "nakshatra_name"),
                         )}
                       </td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">
+                      <td className="px-3 py-4 text-[#18372a]">
                         {textValue(pick(graha, "pada"))}
                       </td>
-                      <td className="px-3 py-4 text-[#c9c4b9]">
+                      <td className="px-3 py-4 text-[#18372a]">
                         {textValue(pick(graha, "is_retrograde", "retrograde"), "false")}
                       </td>
                     </tr>
@@ -572,13 +572,13 @@ export default async function CalculationPage({
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">Screen 12 · Ṣaḍbala</p>
-              <h2 className="serif mt-2 text-2xl text-[#eee9de]">ෂඩ්බලය · ග්‍රහ බල</h2>
+              <h2 className="serif mt-2 text-2xl text-[#18372a]">ෂඩ්බලය · ග්‍රහ බල</h2>
             </div>
-            <p className="text-xs text-[#676d76]">Actual calculation output · Virupa</p>
+            <p className="text-xs text-[#566c5e]">Actual calculation output · Virupa</p>
           </div>
 
-          <div className="mt-5 rounded-2xl border border-[#34475b] bg-[#091522] p-4">
-            <p className="text-xs leading-6 text-[#9ca7b3]">
+          <div className="mt-5 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
+            <p className="text-xs leading-6 text-[#566c5e]">
               මෙහි අගයන් දැනට පවතින Ṣaḍbala / Kala Bala calculation output එකෙන්
               සෘජුව ලබා ගනී. UI එක interpretation හෝ strength ranking එකක් නොකරයි.
             </p>
@@ -606,25 +606,25 @@ export default async function CalculationPage({
                 return (
                   <article
                     key={String(pick(row, "graha_id") ?? index)}
-                    className="rounded-2xl border border-[#34475b] bg-[#091522] p-4"
+                    className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-[9px] uppercase tracking-[0.14em] text-[#697787]">
+                        <p className="text-[9px] uppercase tracking-[0.14em] text-[#566c5e]">
                           ග්‍රහයා
                         </p>
-                        <h3 className="serif mt-1 text-xl text-[#eee9de]">{name}</h3>
+                        <h3 className="serif mt-1 text-xl text-[#18372a]">{name}</h3>
                       </div>
 
-                      <div className="rounded-xl border border-[#8f7740] bg-[#15130e] px-3 py-2 text-right">
-                        <p className="text-[9px] uppercase tracking-[0.12em] text-[#8c826c]">
+                      <div className="rounded-xl border border-[#b9d8c3] bg-[#ffffff] px-3 py-2 text-right">
+                        <p className="text-[9px] uppercase tracking-[0.12em] text-[#566c5e]">
                           මුළු බල
                         </p>
-                        <p className="font-mono text-sm text-[#e0b65b]">
+                        <p className="font-mono text-sm text-[#176b4a]">
                           {textValue(pick(row, "total_bala"))}
                         </p>
                         {rupa !== undefined ? (
-                          <p className="mt-0.5 text-[9px] text-[#8d929b]">
+                          <p className="mt-0.5 text-[9px] text-[#566c5e]">
                             {rupa.toFixed(2)} Rupa
                           </p>
                         ) : null}
@@ -635,10 +635,10 @@ export default async function CalculationPage({
                       {items.map(([label, key]) => (
                         <div
                           key={key}
-                          className="rounded-xl border border-[#252f3a] bg-[#0d141d] p-3"
+                          className="rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3"
                         >
-                          <p className="text-[9px] leading-4 text-[#697787]">{label}</p>
-                          <p className="mt-1 font-mono text-xs text-[#c9c4b9]">
+                          <p className="text-[9px] leading-4 text-[#566c5e]">{label}</p>
+                          <p className="mt-1 font-mono text-xs text-[#18372a]">
                             {textValue(pick(row, key))}
                           </p>
                         </div>
@@ -649,13 +649,13 @@ export default async function CalculationPage({
               })}
             </div>
           ) : (
-            <div className="mt-5 rounded-2xl border border-[#4a3d27] bg-[#15130e] p-5">
-              <p className="text-sm text-[#c9c4b9]">ෂඩ්බල දත්ත මෙම calculation record එකේ නොමැත.</p>
+            <div className="mt-5 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-5">
+              <p className="text-sm text-[#18372a]">ෂඩ්බල දත්ත මෙම calculation record එකේ නොමැත.</p>
             </div>
           )}
 
-          <div className="mt-5 rounded-xl border border-[#252a31] bg-[#0d1014] p-4">
-            <p className="text-xs leading-6 text-[#676d76]">
+          <div className="mt-5 rounded-xl border border-[#d7e5da] bg-[#ffffff] p-4">
+            <p className="text-xs leading-6 text-[#566c5e]">
               ගණනය කිරීමේ මූලික ඒකකය Virupa වේ. 60 Virupa = 1 Rupa.
               දෘක් බලයට සෘණ අගයක් ලැබිය හැක. මෙහි Rupa අගය total_bala / 60 ලෙස
               presentation සඳහා පමණක් පෙන්වයි.
@@ -668,13 +668,13 @@ export default async function CalculationPage({
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="eyebrow">Screen 13 · Yoga</p>
-              <h2 className="serif mt-2 text-2xl text-[#eee9de]">යෝග · Yoga</h2>
+              <h2 className="serif mt-2 text-2xl text-[#18372a]">යෝග · Yoga</h2>
             </div>
-            <p className="text-xs text-[#676d76]">Yoga Engine V1 · Calculation layer</p>
+            <p className="text-xs text-[#566c5e]">Yoga Engine V1 · Calculation layer</p>
           </div>
 
-          <div className="mt-5 rounded-2xl border border-[#34475b] bg-[#091522] p-4">
-            <p className="text-xs leading-6 text-[#9ca7b3]">
+          <div className="mt-5 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
+            <p className="text-xs leading-6 text-[#566c5e]">
               මෙහි Yoga formation status එක calculation engine එකෙන් ලැබෙන rule evaluation
               මත පෙන්වයි. “Formed” යන්න rule conditions සපුරා ඇති බව පමණක් දක්වන අතර
               එයින් फलादेशයක් හෝ පුද්ගල ජීවිත ප්‍රතිඵලයක් අදහස් නොකරයි.
@@ -704,31 +704,31 @@ export default async function CalculationPage({
                 <article
                   key={code}
                   className={formed
-                    ? "rounded-2xl border border-[#8f7740] bg-[#17140e] p-4"
-                    : "rounded-2xl border border-[#34475b] bg-[#091522] p-4"}
+                    ? "rounded-2xl border border-[#b9d8c3] bg-[#ffffff] p-4"
+                    : "rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4"}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-[9px] uppercase tracking-[0.14em] text-[#697787]">{code}</p>
-                      <h3 className="serif mt-1 text-lg text-[#eee9de]">{name}</h3>
+                      <p className="text-[9px] uppercase tracking-[0.14em] text-[#566c5e]">{code}</p>
+                      <h3 className="serif mt-1 text-lg text-[#18372a]">{name}</h3>
                     </div>
                     <span className={formed
-                      ? "rounded-full border border-[#8f7740] px-2 py-1 text-[9px] text-[#e0b65b]"
-                      : "rounded-full border border-[#405163] px-2 py-1 text-[9px] text-[#9ba6b2]"}
+                      ? "rounded-full border border-[#b9d8c3] px-2 py-1 text-[9px] text-[#176b4a]"
+                      : "rounded-full border border-[#d7e5da] px-2 py-1 text-[9px] text-[#566c5e]"}
                     >
                       {formed ? "Formed" : "Not formed"}
                     </span>
                   </div>
 
-                  <div className="mt-4 border-t border-[#252a31] pt-3">
-                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#697787]">Rule status</p>
-                    <p className="mt-1 text-xs leading-5 text-[#c9c4b9]">
+                  <div className="mt-4 border-t border-[#d7e5da] pt-3">
+                    <p className="text-[9px] uppercase tracking-[0.12em] text-[#566c5e]">Rule status</p>
+                    <p className="mt-1 text-xs leading-5 text-[#18372a]">
                       {evaluation
                         ? textValue(pick(evaluation, "qualification"), formed ? "ALL_FORMATION_CONDITIONS_MET" : "FORMATION_CONDITIONS_NOT_MET")
                         : "No persisted evaluation in this chart record"}
                     </p>
                     {evaluation ? (
-                      <p className="mt-2 text-[10px] text-[#676d76]">
+                      <p className="mt-2 text-[10px] text-[#566c5e]">
                         Engine: {textValue(pick(evaluation, "engine_version"), "YOGA_ENGINE_V1")}
                       </p>
                     ) : null}
@@ -738,8 +738,8 @@ export default async function CalculationPage({
             })}
           </div>
 
-          <div className="mt-5 rounded-xl border border-[#252a31] bg-[#0d1014] p-4">
-            <p className="text-xs leading-6 text-[#676d76]">
+          <div className="mt-5 rounded-xl border border-[#d7e5da] bg-[#ffffff] p-4">
+            <p className="text-xs leading-6 text-[#566c5e]">
               Yoga rules currently exposed by the calculation layer are shown as
               factual formation checks only. No strength ranking, cancellation
               interpretation, or prediction is added in this screen.
@@ -747,21 +747,21 @@ export default async function CalculationPage({
           </div>
         </section>
         <section className="mt-5 grid gap-5 md:grid-cols-2">
-          <a href={"/calculations/" + id + "/dasha"} className="panel rounded-2xl p-6 transition hover:border-[#8f7740]">
+          <a href={"/calculations/" + id + "/dasha"} className="panel rounded-2xl p-6 transition hover:border-[#b9d8c3]">
             <p className="eyebrow">Screen 14</p>
-            <h2 className="serif mt-2 text-2xl text-[#eee9de]">විංශෝත්තරී දශා · Vimśottarī Daśā</h2>
-            <p className="mt-3 text-sm leading-6 text-[#8f9aa7]">Open the persisted Vimśottarī calculation output and Mahādaśā sequence.</p>
-            <span className="mt-5 inline-block text-xs text-[#e0b65b]">Open Face 14 →</span>
+            <h2 className="serif mt-2 text-2xl text-[#18372a]">විංශෝත්තරී දශා · Vimśottarī Daśā</h2>
+            <p className="mt-3 text-sm leading-6 text-[#566c5e]">Open the persisted Vimśottarī calculation output and Mahādaśā sequence.</p>
+            <span className="mt-5 inline-block text-xs text-[#176b4a]">Open Face 14 →</span>
           </a>
-          <a href={"/calculations/" + id + "/transit"} className="panel rounded-2xl p-6 transition hover:border-[#8f7740]">
+          <a href={"/calculations/" + id + "/transit"} className="panel rounded-2xl p-6 transition hover:border-[#b9d8c3]">
             <p className="eyebrow">Screen 15</p>
-            <h2 className="serif mt-2 text-2xl text-[#eee9de]">ගෝචර · Transit</h2>
-            <p className="mt-3 text-sm leading-6 text-[#8f9aa7]">Calculate and inspect the persisted Transit V1 planetary positions.</p>
-            <span className="mt-5 inline-block text-xs text-[#e0b65b]">Open Face 15 →</span>
+            <h2 className="serif mt-2 text-2xl text-[#18372a]">ගෝචර · Transit</h2>
+            <p className="mt-3 text-sm leading-6 text-[#566c5e]">Calculate and inspect the persisted Transit V1 planetary positions.</p>
+            <span className="mt-5 inline-block text-xs text-[#176b4a]">Open Face 15 →</span>
           </a>
         </section>
 
-        <footer className="mt-6 border-t border-[#282d35] pt-5 text-xs leading-6 text-[#676d76]">
+        <footer className="mt-6 border-t border-[#d7e5da] pt-5 text-xs leading-6 text-[#566c5e]">
           Calculation layer only. Classical interpretation, evidence
           synthesis, modifiers, and prediction output remain downstream
           layers and are not silently mixed into this record.
@@ -774,9 +774,9 @@ export default async function CalculationPage({
 
 function DataItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-[#252a31] p-3">
-      <p className="text-[10px] tracking-[0.14em] text-[#676d76]">{label}</p>
-      <p className="mt-1 break-words text-xs text-[#c9c4b9]">{value}</p>
+    <div className="rounded-lg border border-[#d7e5da] p-3">
+      <p className="text-[10px] tracking-[0.14em] text-[#566c5e]">{label}</p>
+      <p className="mt-1 break-words text-xs text-[#18372a]">{value}</p>
     </div>
   );
 }

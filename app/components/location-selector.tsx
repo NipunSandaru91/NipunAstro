@@ -124,14 +124,14 @@ export default function LocationSelector({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-[#e0b65b] text-[10px] font-bold text-[#15130e]">
+        <span className="grid h-6 w-6 place-items-center rounded-full bg-[#176b4a] text-[10px] font-bold text-[#ffffff]">
           1
         </span>
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#b8954f]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#176b4a]">
             Birthplace
           </p>
-          <p className="text-[11px] text-[#778392]">
+          <p className="text-[11px] text-[#566c5e]">
             Country → Province / State → City / Town
           </p>
         </div>
@@ -185,22 +185,22 @@ export default function LocationSelector({
       <input type="hidden" name="birth_state" value={state} />
 
       {country && state && city ? (
-        <div className="rounded-xl border border-[#405645] bg-[#0e1d17] px-3 py-3">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#7fa98a]">
+        <div className="rounded-xl border border-[#b9d8c3] bg-[#ffffff] px-3 py-3">
+          <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#566c5e]">
             Selected birthplace
           </p>
-          <p className="mt-1 text-xs leading-5 text-[#d4cfc4]">
+          <p className="mt-1 text-xs leading-5 text-[#18372a]">
             {city}, {state}, {country}
           </p>
         </div>
       ) : (
-        <p className="text-[10px] leading-5 text-[#687586]">
+        <p className="text-[10px] leading-5 text-[#566c5e]">
           Search and select each level from the list. Exact spelling is not required.
         </p>
       )}
 
       {error ? (
-        <p className="text-xs leading-5 text-[#d8aaaa]">
+        <p className="text-xs leading-5 text-[#8b3c35]">
           Location list could not be loaded: {error}
         </p>
       ) : null}
@@ -309,7 +309,7 @@ function SearchableSelect({
 
   return (
     <div ref={rootRef} className="relative">
-      <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[#676d76]">
+      <span className="mb-2 block text-[10px] uppercase tracking-[0.14em] text-[#566c5e]">
         {label}
       </span>
 
@@ -324,18 +324,18 @@ function SearchableSelect({
           onFocus={() => setOpen(true)}
           onChange={(event) => handleInputChange(event.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full rounded-xl border border-[#34475b] bg-[#0a1724] px-3 py-3.5 pr-10 text-sm text-[#d4cfc4] outline-none transition focus:border-[#b8954f] disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-3.5 pr-10 text-sm text-[#18372a] outline-none transition focus:border-[#b9d8c3] disabled:cursor-not-allowed disabled:opacity-50"
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#676d76]"
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#566c5e]"
         >
           {open ? "⌃" : "⌄"}
         </span>
       </div>
 
       {open && !disabled && (
-        <div className="absolute left-0 right-0 top-full z-[100] mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-[#34475b] bg-[#0a1724] py-1 shadow-2xl">
+        <div className="absolute left-0 right-0 top-full z-[100] mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-[#d7e5da] bg-[#ffffff] py-1 shadow-2xl">
           {filteredOptions.length > 0 ? (
             filteredOptions.map((option) => (
               <button
@@ -345,13 +345,13 @@ function SearchableSelect({
                   event.preventDefault();
                   selectOption(option);
                 }}
-                className="block w-full px-3 py-2.5 text-left text-sm text-[#d4cfc4] transition hover:bg-[#181d24] focus:bg-[#181d24] focus:outline-none"
+                className="block w-full px-3 py-2.5 text-left text-sm text-[#18372a] transition hover:bg-[#ffffff] focus:bg-[#ffffff] focus:outline-none"
               >
                 {option}
               </button>
             ))
           ) : (
-            <p className="px-3 py-3 text-sm text-[#676d76]">
+            <p className="px-3 py-3 text-sm text-[#566c5e]">
               No matching locations found.
             </p>
           )}

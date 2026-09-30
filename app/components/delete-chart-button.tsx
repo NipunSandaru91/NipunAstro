@@ -21,7 +21,7 @@ export default function DeleteChartButton({
       <input type="hidden" name="calculation_id" value={calculationId} />
       <button
         type="submit"
-        className="rounded-xl border border-[#6a3b3b] bg-[#1b1113] px-3 py-2 text-xs font-semibold text-[#d8aaaa]"
+        className="rounded-xl border border-[#e9c5c0] bg-[#ffffff] px-3 py-2 text-xs font-semibold text-[#8b3c35]"
       >
         {label}
       </button>

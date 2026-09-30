@@ -1,31 +1,34 @@
 import Link from "next/link";
+import BrandLogo from "@/app/components/brand-logo";
 import { signInWithGoogle } from "@/app/auth/actions";
-import { SacredMarkArt } from "@/app/components/reference-art";
+import { safeNextPath } from "@/lib/auth/routes";
 
-export default async function LoginPage({searchParams}:{searchParams:Promise<{error?:string}>}){
-  const params=await searchParams;
-  return <main className="ref-screen">
-    <div className="ref-phone ref-login">
-      <div className="ref-login-mark"><SacredMarkArt/></div>
-      <section className="ref-login-copy">
-        <h1>NIPUN ASTRO</h1>
-        <p>ජීවිතයේ නක්ෂත්‍ර මඟ</p>
-      </section>
-      {params.error?<div className="ref-error">{params.error}</div>:null}
-      <div className="ref-login-actions">
-        <form action={signInWithGoogle} className="space-y-3">
-          <input type="hidden" name="next" value="/dashboard"/>
-          <fieldset className="ref-account-type-select">
-            <legend>Account type</legend>
-            <label><input type="radio" name="account_type" value="PERSONAL" defaultChecked/><span><b>Personal</b><small>Simple reading</small></span></label>
-            <label><input type="radio" name="account_type" value="PROFESSIONAL"/><span><b>Professional</b><small>Full analysis</small></span></label>
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; next?: string }>;
+}) {
+  const params = await searchParams;
+  return <main className="na-public">
+    <div className="na-login-wrap">
+      <Link href="/welcome" className="na-back">← ආපසු</Link>
+      <section className="na-login-card">
+        <div className="na-brand"><BrandLogo /></div>
+        <p className="na-overline">ඔබේ ගිණුම</p>
+        <h1>ඉදිරියට පිවිසෙන්න</h1>
+        <p className="na-login-lead">ඔබට ගැළපෙන කියවීමේ ආකාරය තෝරන්න. පසුව සැකසුම් තුළින් එය වෙනස් කළ හැකියි.</p>
+        {params.error ? <div role="alert" className="na-error">පිවිසීම සම්පූර්ණ කළ නොහැකි විය. නැවත උත්සාහ කරන්න.</div> : null}
+        <form action={signInWithGoogle}>
+          <input type="hidden" name="next" value={safeNextPath(params.next)}/>
+          <fieldset className="na-mode-select">
+            <legend>කියවීමේ ආකාරය</legend>
+            <label><input type="radio" name="account_type" value="PERSONAL" defaultChecked/><span><b>Personal</b><small>D1 සහ භාව 12 · සරල සිංහල කියවීම</small></span></label>
+            <label><input type="radio" name="account_type" value="PROFESSIONAL"/><span><b>Professional</b><small>ගණනය, සාක්ෂි, දශා සහ ගෝචර</small></span></label>
           </fieldset>
-          <button className="ref-auth-button" type="submit"><span className="google">G</span><b>Continue with Google</b><em/></button>
+          <button type="submit" className="na-button na-google-button">Google සමඟ පිවිසෙන්න <span aria-hidden="true">→</span></button>
         </form>
-        <button className="ref-auth-button disabled" type="button" disabled><span>●</span><b>Continue with Apple</b><em>BETA</em></button>
-        <button className="ref-auth-button disabled" type="button" disabled><span>✉</span><b>Continue with Email</b><em>BETA</em></button>
-      </div>
-      <Link href="/welcome" className="ref-login-back">← ආපසු</Link>
+        <p className="na-login-note">දැනට Google පිවිසුම ලබා ගත හැකියි.</p>
+      </section>
     </div>
   </main>;
 }

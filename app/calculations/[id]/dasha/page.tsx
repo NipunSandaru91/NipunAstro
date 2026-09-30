@@ -159,44 +159,44 @@ export default async function DashaPage({ params }: Props) {
       <AppNav />
       <main className="min-h-screen px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-6xl">
-          <a href={"/calculations/" + id} className="text-xs text-[#b8954f]">
+          <a href={"/calculations/" + id} className="text-xs text-[#176b4a]">
             ← Calculation report
           </a>
 
-          <header className="mt-6 border-b border-[#282d35] pb-6">
+          <header className="mt-6 border-b border-[#d7e5da] pb-6">
             <p className="eyebrow">Daśā Analysis V2 · Vimśottarī</p>
-            <h1 className="serif mt-2 text-4xl text-[#eee9de]">
+            <h1 className="serif mt-2 text-4xl text-[#18372a]">
               විංශෝත්තරී දශා
             </h1>
-            <p className="mt-3 text-sm text-[#8f9aa7]">
+            <p className="mt-3 text-sm text-[#566c5e]">
               {title} · මහාදශා සහ අන්තර්දශා කාල සීමා · {timezone}
             </p>
           </header>
 
           {currentMd ? (
-            <section className="cosmic-hero mt-6 rounded-[28px] border border-[#725626] p-6 sm:p-8">
+            <section className="cosmic-hero mt-6 rounded-[28px] border border-[#d7e5da] p-6 sm:p-8">
               <p className="eyebrow">Current Daśā</p>
               <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_.8fr]">
                 <div>
-                  <h2 className="serif text-3xl text-[#f3dfb1] sm:text-4xl">
+                  <h2 className="serif text-3xl text-[#176b4a] sm:text-4xl">
                     {GRAHA_SI[currentMd.graha_id] ?? currentMd.graha_id} මහාදශාව
                     {currentAd
                       ? ` · ${GRAHA_SI[currentAd.graha_id] ?? currentAd.graha_id} අන්තර්දශාව`
                       : ""}
                   </h2>
-                  <p className="mt-3 text-sm leading-7 text-[#aeb5bd]">
+                  <p className="mt-3 text-sm leading-7 text-[#566c5e]">
                     {formatDateTime(currentMd.start_at, timezone)} →{" "}
                     {formatDateTime(currentMd.end_at, timezone)}
                   </p>
 
                   <div className="mt-5">
-                    <div className="flex items-center justify-between text-[10px] uppercase tracking-[.12em] text-[#7d8791]">
+                    <div className="flex items-center justify-between text-[10px] uppercase tracking-[.12em] text-[#566c5e]">
                       <span>Mahādaśā progress</span>
                       <span>{progressPercent(currentMd.start_at, currentMd.end_at, now).toFixed(1)}%</span>
                     </div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#242a30]">
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2f8f3]">
                       <div
-                        className="h-full rounded-full bg-[#d6ad55]"
+                        className="h-full rounded-full bg-[#f2f8f3]"
                         style={{
                           width:
                             progressPercent(currentMd.start_at, currentMd.end_at, now) +
@@ -208,13 +208,13 @@ export default async function DashaPage({ params }: Props) {
 
                   {currentAd ? (
                     <div className="mt-5">
-                      <div className="flex items-center justify-between text-[10px] uppercase tracking-[.12em] text-[#7d8791]">
+                      <div className="flex items-center justify-between text-[10px] uppercase tracking-[.12em] text-[#566c5e]">
                         <span>Antardaśā progress</span>
                         <span>{progressPercent(currentAd.start_at, currentAd.end_at, now).toFixed(1)}%</span>
                       </div>
-                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#242a30]">
+                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2f8f3]">
                         <div
-                          className="h-full rounded-full bg-[#b8954f]"
+                          className="h-full rounded-full bg-[#176b4a]"
                           style={{
                             width:
                               progressPercent(currentAd.start_at, currentAd.end_at, now) +
@@ -273,11 +273,11 @@ export default async function DashaPage({ params }: Props) {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="eyebrow">Mahādaśā + Antardaśā Timeline</p>
-                <h2 className="serif mt-2 text-2xl text-[#eee9de]">
+                <h2 className="serif mt-2 text-2xl text-[#18372a]">
                   දශා කාල සටහන
                 </h2>
               </div>
-              <p className="text-xs text-[#676d76]">
+              <p className="text-xs text-[#566c5e]">
                 {periods.length} Mahādaśā · {antardasas.length} Antardaśā
               </p>
             </div>
@@ -296,41 +296,41 @@ export default async function DashaPage({ params }: Props) {
                       open={state === "CURRENT"}
                       className={
                         state === "CURRENT"
-                          ? "rounded-2xl border border-[#8f7740] bg-[#15130e] p-4"
-                          : "rounded-2xl border border-[#303943] bg-[#09121a] p-4"
+                          ? "rounded-2xl border border-[#b9d8c3] bg-[#ffffff] p-4"
+                          : "rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4"
                       }
                     >
                       <summary className="cursor-pointer list-none">
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="text-[10px] uppercase tracking-[.14em] text-[#6f7881]">
+                              <span className="text-[10px] uppercase tracking-[.14em] text-[#566c5e]">
                                 {period.sequence_order ??
                                   period.sequence_id ??
                                   index + 1}
                               </span>
                               <StateBadge state={state} />
                             </div>
-                            <h3 className="serif mt-1 text-xl text-[#eee9de]">
+                            <h3 className="serif mt-1 text-xl text-[#18372a]">
                               {GRAHA_SI[period.graha_id] ?? period.graha_id} මහාදශාව
                             </h3>
-                            <p className="mt-1 text-xs text-[#838d97]">
+                            <p className="mt-1 text-xs text-[#566c5e]">
                               {formatDateTime(period.start_at, timezone)} →{" "}
                               {formatDateTime(period.end_at, timezone)}
                             </p>
                           </div>
                           <div className="text-left sm:text-right">
-                            <p className="text-xs text-[#c9c4b9]">
+                            <p className="text-xs text-[#18372a]">
                               {durationLabel(period.start_at, period.end_at)}
                             </p>
-                            <p className="mt-1 text-[10px] text-[#68717a]">
+                            <p className="mt-1 text-[10px] text-[#566c5e]">
                               {ads.length} අන්තර්දශා
                             </p>
                           </div>
                         </div>
                       </summary>
 
-                      <div className="mt-4 border-t border-[#303943] pt-4">
+                      <div className="mt-4 border-t border-[#d7e5da] pt-4">
                         <div className="grid gap-2">
                           {ads.map((ad, adIndex) => {
                             const adState = stateFor(ad.start_at, ad.end_at, now);
@@ -339,31 +339,31 @@ export default async function DashaPage({ params }: Props) {
                                 key={ad.id}
                                 className={
                                   adState === "CURRENT"
-                                    ? "rounded-xl border border-[#725626] bg-[#17140e] p-3"
-                                    : "rounded-xl border border-[#29323b] bg-[#081017] p-3"
+                                    ? "rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3"
+                                    : "rounded-xl border border-[#d7e5da] bg-[#ffffff] p-3"
                                 }
                               >
                                 <div className="grid gap-2 sm:grid-cols-[1.1fr_1fr_auto] sm:items-center">
                                   <div>
                                     <div className="flex items-center gap-2">
-                                      <span className="text-[9px] text-[#69727c]">
+                                      <span className="text-[9px] text-[#566c5e]">
                                         {ad.ad_sequence_order ??
                                           ad.sequence_id ??
                                           adIndex + 1}
                                       </span>
                                       <StateBadge state={adState} />
                                     </div>
-                                    <p className="mt-1 text-sm text-[#e0d7c8]">
+                                    <p className="mt-1 text-sm text-[#18372a]">
                                       {GRAHA_SI[period.graha_id] ?? period.graha_id} /{" "}
                                       {GRAHA_SI[ad.graha_id] ?? ad.graha_id}
                                     </p>
                                   </div>
-                                  <p className="font-mono text-[11px] leading-5 text-[#8d969f]">
+                                  <p className="font-mono text-[11px] leading-5 text-[#566c5e]">
                                     {formatDateTime(ad.start_at, timezone)}
                                     <br />
                                     {formatDateTime(ad.end_at, timezone)}
                                   </p>
-                                  <p className="text-xs text-[#a9a294]">
+                                  <p className="text-xs text-[#566c5e]">
                                     {durationLabel(ad.start_at, ad.end_at)}
                                   </p>
                                 </div>
@@ -381,7 +381,7 @@ export default async function DashaPage({ params }: Props) {
             )}
           </section>
 
-          <p className="mt-5 text-xs leading-6 text-[#676d76]">
+          <p className="mt-5 text-xs leading-6 text-[#566c5e]">
             මෙහි පෙන්වන්නේ backend Vimśottarī engine එකෙන් ගණනය කර සුරකින ලද
             Mahādaśā සහ Antardaśā time boundaries ය. Prediction meaning එක
             timing-evidence layer එකේ වෙනම aggregate කරයි.
@@ -401,10 +401,10 @@ function StateBadge({ state }: { state: "CURRENT" | "UPCOMING" | "COMPLETED" }) 
         : "අවසන්";
   const classes =
     state === "CURRENT"
-      ? "border-[#8f7740] text-[#d8b66b]"
+      ? "border-[#b9d8c3] text-[#176b4a]"
       : state === "UPCOMING"
-        ? "border-[#34475b] text-[#8fa3b5]"
-        : "border-[#2b3239] text-[#65707a]";
+        ? "border-[#d7e5da] text-[#566c5e]"
+        : "border-[#d7e5da] text-[#566c5e]";
 
   return (
     <span className={"rounded-full border px-2 py-0.5 text-[9px] " + classes}>
@@ -415,18 +415,18 @@ function StateBadge({ state }: { state: "CURRENT" | "UPCOMING" | "COMPLETED" }) 
 
 function Item({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-[#34475b] bg-[#091522] p-4">
-      <p className="text-[9px] uppercase tracking-[0.14em] text-[#697787]">
+    <div className="rounded-xl border border-[#d7e5da] bg-[#ffffff] p-4">
+      <p className="text-[9px] uppercase tracking-[0.14em] text-[#566c5e]">
         {label}
       </p>
-      <p className="mt-2 text-sm text-[#c9c4b9]">{value}</p>
+      <p className="mt-2 text-sm text-[#18372a]">{value}</p>
     </div>
   );
 }
 
 function Empty({ text }: { text: string }) {
   return (
-    <div className="mt-5 rounded-xl border border-[#4a3d27] bg-[#15130e] p-5 text-sm text-[#c9c4b9]">
+    <div className="mt-5 rounded-xl border border-[#d7e5da] bg-[#ffffff] p-5 text-sm text-[#18372a]">
       {text}
     </div>
   );

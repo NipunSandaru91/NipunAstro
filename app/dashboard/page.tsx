@@ -1,94 +1,106 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import AppNav from "@/app/components/app-nav";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 
-type Calculation={
-  id:string;
-  subject_name:string|null;
-  input_birth_date:string;
-  input_birth_time:string;
-  input_timezone:string;
-  input_place_name:string|null;
-  input_country:string|null;
-  calculation_timestamp:string;
-  status:string;
+type Calculation = {
+  id: string;
+  subject_name: string | null;
+  input_birth_date: string;
+  input_birth_time: string;
+  input_place_name: string | null;
+  calculation_timestamp: string;
+  status: string;
 };
 
-export default async function Dashboard(){
-  const supabase=await createClient();
-  const {data:claims}=await supabase.auth.getClaims();
-  if(!claims?.claims?.sub)redirect("/login");
-  const [{data:calculations},{data:profile},{data:roleRow}]=await Promise.all([
-    supabase.from("user_calculation_runs_v1").select("*").order("calculation_timestamp",{ascending:false}),
+export default async function Dashboard({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const { error: actionError } = await searchParams;
+  const supabase = await createClient();
+  const { data: claims } = await supabase.auth.getClaims();
+  if (!claims?.claims?.sub) redirect("/login");
+  const [{ data: calculations, error: listError }, { data: profile }, { data: roleRow }] = await Promise.all([
+    supabase.from("user_calculation_runs_v1").select("*").order("calculation_timestamp", { ascending: false }),
     supabase.from("profiles").select("account_type").single(),
     supabase.from("user_roles").select("role").single(),
   ]);
-  const isAdmin=roleRow?.role==="ADMIN";
-  const owned=(calculations??[]) as Calculation[];
-  const latest=owned[0];
+  const owned = (calculations ?? []) as Calculation[];
+  const latest = owned[0];
+  const personal = profile?.account_type === "PERSONAL";
+  const chartPath = latest ? `/calculations/${latest.id}` : "/chart/new";
+  const title = latest?.subject_name || latest?.input_place_name || "ඔබේ පළමු කේන්දරය";
+  const explorations = personal
+    ? [
+      { href: chartPath, icon: "✧", label: "D1 සහ භාව 12", detail: "සරල සිංහල කියවීම" },
+      { href: "/my-chart", icon: "▤", label: "මගේ කේන්දර", detail: "සුරැකි ගණනයන්" },
+    ]
+    : [
+      { href: chartPath, icon: "✧", label: "ජන්ම කේන්දරය", detail: "D1 සහ ග්‍රහ පිහිටීම්" },
+      { href: latest ? chartPath + "/dasha" : "/chart/new", icon: "◌", label: "දශා විශ්ලේෂණය", detail: "කාල පරිච්ඡේද" },
+      { href: latest ? chartPath + "/transit" : "/chart/new", icon: "▥", label: "ගෝචර", detail: "ග්‍රහ ගමන" },
+    ];
 
-  const features=[
-    {href:latest?"/calculations/"+latest.id:"/chart/new",icon:"✧",label:"ජන්ම කේන්දරය"},
-    {href:latest?"/calculations/"+latest.id+"/dasha":"/chart/new",icon:"◌",label:"දශා විශ්ලේෂණය"},
-    {href:latest?"/calculations/"+latest.id+"/transit":"/chart/new",icon:"▥",label:"ගෝචර"},
-    {href:"/my-chart",icon:"▤",label:"කේන්දර ඉතිහාසය"},
-    {href:"/predictions",icon:"◇",label:"පුරෝකථන"},
-    {href:"/profile",icon:"✣",label:"පැතිකඩ"},
-    ...(isAdmin?[{href:"/admin",icon:"◆",label:"Admin Dashboard"}]:[]),
-  ];
-
-  const latestTitle=latest?.subject_name??latest?.input_place_name??"Natal chart";
-
-  if(profile?.account_type==="PERSONAL"){
-    return <><AppNav active="dashboard"/><main className="ref-app-shell"><div className="ref-app-main">
-      <section className="ref-feature-hero">
-        <div className="ref-feature-copy">
-          <p>PERSONAL · D1</p>
-          <h1>{latest?latestTitle:"ඔබේ පළමු කේන්දරය"}</h1>
-          <span>{latest?(latest.input_place_name?latest.input_place_name+" · ":"")+latest.input_birth_date:"උපන් තොරතුරු ඇතුළත් කර සරල D1 කියවීමක් සාදන්න"}</span>
+  return <>
+    <AppNav active="dashboard" />
+    <main className="ref-app-shell na-dashboard-shell">
+      <div className="ref-app-main ref-dashboard">
+        <div className="ref-dashboard-intro">
+          <div>
+            <p className="ref-kicker">N ASTRO · {personal ? "PERSONAL" : "PROFESSIONAL"}</p>
+            <h1>ඔබේ නක්ෂත්‍ර නිරීක්ෂණය</h1>
+            <p>කේන්දරය තෝරාගෙන එහි ගණනය සහ කියවීම එකම තැනකින් බලන්න.</p>
+          </div>
+          <Link href="/chart/new" className="ref-create-button">＋ <span>නව කේන්දරය</span></Link>
         </div>
-        <Link href={latest?"/calculations/"+latest.id:"/chart/new"} className="ref-round-arrow">→</Link>
-        <div className="ref-hero-orbit" aria-hidden="true"><i/><b/><span>✦</span></div>
-      </section>
 
-      <section className="mt-5 grid grid-cols-2 gap-3">
-        <Link href={latest?"/calculations/"+latest.id:"/chart/new"} className="ref-feature-tile"><span className="ref-feature-icon">✧</span><b>මගේ D1 කියවීම</b></Link>
-        <Link href="/chart/new" className="ref-feature-tile"><span className="ref-feature-icon">＋</span><b>නව කේන්දරය</b></Link>
-        <Link href="/my-chart" className="ref-feature-tile"><span className="ref-feature-icon">▤</span><b>මගේ කේන්දර</b></Link>
-        <Link href="/settings" className="ref-feature-tile"><span className="ref-feature-icon">⚙</span><b>Account type</b></Link>
-        {isAdmin?<Link href="/admin" className="ref-feature-tile"><span className="ref-feature-icon">◆</span><b>Admin Dashboard</b></Link>:null}
-      </section>
+        {actionError ? <div className="ref-action-error" role="alert">
+          උපන් තොරතුරු සුරැකීමට නොහැකි විය. ස්ථානය සහ උපන් වේලාව පරීක්ෂා කර නැවත උත්සාහ කරන්න.
+          <Link href="/chart/new">නැවත උත්සාහ කරන්න →</Link>
+        </div> : null}
+        {listError ? <div className="ref-action-error" role="alert">කේන්දර ලැයිස්තුව ලබාගත නොහැක. පිටුව නැවත විවෘත කරන්න.</div> : null}
 
-      <section className="ref-insight-card">
-        <div><p>භාව 12</p><h2>ජීවිත ක්ෂේත්‍ර 12 සඳහා සරල, එකට ගැළපූ සිංහල විග්‍රහය</h2></div>
-        <Link href={latest?"/calculations/"+latest.id:"/chart/new"} className="ref-round-arrow">→</Link>
-      </section>
-
-      {latest?<section className="ref-latest-card"><div><small>දැනට තෝරාගත් chart එක</small><h3>{latestTitle}</h3><p>{latest.input_place_name?latest.input_place_name+" · ":""}{latest.input_birth_date} · {latest.input_birth_time}</p></div><Link href={"/calculations/"+latest.id} className="ref-small-gold">කියවීම →</Link></section>:null}
-    </div></main></>;
-  }
-
-  return <><AppNav active="dashboard"/><main className="ref-app-shell"><div className="ref-app-main">
-    <section className="ref-feature-hero">
-      <div className="ref-feature-copy">
-        <p>ඔබේ ජන්ම කේන්දරය</p>
-        <h1>{latest?latestTitle:"පළමු කේන්දරය සාදන්න"}</h1>
-        <span>{latest?(latest.input_place_name?latest.input_place_name+" · ":"")+latest.input_birth_date:"නිවැරදි උපන් තොරතුරු ඇතුළත් කරන්න"}</span>
+        <div className="ref-dashboard-layout">
+          <div className="ref-dashboard-primary">
+            <section className="ref-feature-hero" aria-labelledby="current-chart-title">
+              <div className="ref-feature-copy">
+                <p>{latest ? "දැනට තෝරාගත් කේන්දරය" : "මෙතැනින් ආරම්භ කරන්න"}</p>
+                <h2 id="current-chart-title">{title}</h2>
+                <span>{latest
+                  ? `${latest.input_place_name ? latest.input_place_name + " · " : ""}${latest.input_birth_date} · ${latest.input_birth_time}`
+                  : "උපන් දිනය, වේලාව සහ ස්ථානය ඇතුළත් කර පළමු ගණනය සාදන්න."}</span>
+              </div>
+              <Link href={chartPath} className="ref-hero-action">
+                {latest ? "කේන්දරය විවෘත කරන්න" : "කේන්දරය සාදන්න"} <span aria-hidden="true">→</span>
+              </Link>
+            </section>
+            {latest ? <section className="ref-current-summary" aria-label="කේන්දර තත්ත්වය">
+              <div><small>ගණනයේ තත්ත්වය</small><strong>{latest.status === "CALCULATED" ? "සූදානම්" : latest.status === "FAILED" ? "නැවත පරීක්ෂා කළ යුතුයි" : "ගණනය වෙමින්"}</strong></div>
+              <div><small>සුරකින ලද කේන්දර</small><strong>{owned.length}</strong></div>
+              <Link href="/my-chart">සියල්ල බලන්න <span aria-hidden="true">→</span></Link>
+            </section> : null}
+            <section className="ref-dashboard-section" aria-labelledby="explore-title">
+              <div className="ref-section-heading"><p className="ref-kicker">EXPLORE</p><h2 id="explore-title">{personal ? "ඔබේ කියවීම" : "ගණනය විමසන්න"}</h2></div>
+              <div className="ref-dashboard-cards">
+                {explorations.map(item => <Link key={item.label} href={item.href} className="ref-explore-card">
+                  <span className="ref-explore-icon" aria-hidden="true">{item.icon}</span><b>{item.label}</b><small>{item.detail}</small><em aria-hidden="true">→</em>
+                </Link>)}
+              </div>
+            </section>
+          </div>
+          <aside className="ref-dashboard-aside">
+            <section className="ref-path-card">
+              <p className="ref-kicker">{personal ? "PERSONAL READING" : "EVIDENCE & TIMING"}</p>
+              <h2>{personal ? "ජීවිත ක්ෂේත්‍ර 12" : "පුරෝකථන සහ කාලය"}</h2>
+              <p>{personal ? "භාව 12 සඳහා කේන්දරයට ගැළපූ සිංහල අර්ථකථන කියවන්න." : "භාවය, සාක්ෂි සහ කාලය පියවරෙන් පියවර විමසන්න."}</p>
+              <Link href={personal ? chartPath : "/predictions"}>විවෘත කරන්න <span aria-hidden="true">→</span></Link>
+            </section>
+            <div className="ref-shortcuts">
+              <Link href="/settings">කියවීමේ ආකාරය <span aria-hidden="true">→</span></Link>
+              <Link href="/profile">පැතිකඩ <span aria-hidden="true">→</span></Link>
+              {roleRow?.role === "ADMIN" ? <Link href="/admin">පරිපාලන පුවරුව <span aria-hidden="true">→</span></Link> : null}
+            </div>
+          </aside>
+        </div>
       </div>
-      <Link href={latest?"/calculations/"+latest.id:"/chart/new"} className="ref-round-arrow">→</Link>
-      <div className="ref-hero-orbit" aria-hidden="true"><i/><b/><span>✦</span></div>
-    </section>
-
-    <section className="ref-feature-grid">
-      {features.map(x=><Link href={x.href} key={x.label} className="ref-feature-tile"><span className="ref-feature-icon">{x.icon}</span><b>{x.label}</b></Link>)}
-    </section>
-
-    <section className="ref-insight-card">
-      <div><p>දෛනික තේමාව</p><h2>ඔබේ chart එකෙන් evidence-backed විග්‍රහයක් බලන්න</h2></div>
-      <Link href="/predictions" className="ref-round-arrow">→</Link>
-    </section>
-
-    {latest?<section className="ref-latest-card"><div><small>දැනට තෝරාගත් chart එක</small><h3>{latestTitle}</h3><p>{latest.input_place_name?latest.input_place_name+" · ":""}{latest.input_birth_date} · {latest.input_birth_time}</p></div><Link href={"/predictions?calculation="+latest.id} className="ref-small-gold">පුරෝකථන →</Link></section>:null}
-  </div></main></>;
+    </main>
+  </>;
 }

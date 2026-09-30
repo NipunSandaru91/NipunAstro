@@ -43,9 +43,9 @@ export default function PersonalChartView(props:Props){
         <header className="personal-chart-hero">
           <div>
             <p className="eyebrow">Personal · D1 Reading</p>
-            <h1 className="serif mt-2 text-4xl text-[#f1e8d7]">{props.subjectName||"උපන් කේන්දරය"}</h1>
+            <h1 className="serif mt-2 text-4xl text-[#176b4a]">{props.subjectName||"උපන් කේන්දරය"}</h1>
             <ChartNameEditor calculationId={props.calculationId} initialName={props.subjectName??""}/>
-            {props.saved?<p className="mt-2 text-xs text-[#9ec4a8]">නම යාවත්කාලීන කර ඇත.</p>:null}
+            {props.saved?<p className="mt-2 text-xs text-[#176b4a]">නම යාවත්කාලීන කර ඇත.</p>:null}
           </div>
           <div className="personal-lagna-badge">
             <small>ලග්නය</small>
@@ -56,20 +56,20 @@ export default function PersonalChartView(props:Props){
 
         <section className="personal-d1-card mt-5">
           <div className="flex items-end justify-between gap-4">
-            <div><p className="eyebrow">Simple D1</p><h2 className="serif mt-1 text-2xl text-[#eee9de]">රාශි සටහන</h2></div>
+            <div><p className="eyebrow">Simple D1</p><h2 className="serif mt-1 text-2xl text-[#18372a]">රාශි සටහන</h2></div>
             <span className="personal-mode-chip">PERSONAL</span>
           </div>
           <div className="mt-5">
             <D1Chart lagnaRasiId={props.lagnaRasiId} grahas={props.grahas} rashiNames={RASHI_SI} grahaNames={GRAHA_SI}/>
           </div>
-          <p className="mt-4 text-xs leading-6 text-[#7f8b96]">මෙහි පෙන්වන්නේ ඔබේ D1 රාශි සටහන සහ කියවීමට අවශ්‍ය මූලික තොරතුරු පමණි. Technical evidence පසුබිමේ ගණනය කරයි.</p>
+          <p className="mt-4 text-xs leading-6 text-[#566c5e]">මෙහි පෙන්වන්නේ ඔබේ D1 රාශි සටහන සහ කියවීමට අවශ්‍ය මූලික තොරතුරු පමණි. Technical evidence පසුබිමේ ගණනය කරයි.</p>
         </section>
 
         <section className="mt-8">
           <div className="px-1">
             <p className="eyebrow">Life Areas · භාව 12</p>
-            <h2 className="serif mt-2 text-3xl text-[#eee9de]">ඔබේ ජීවිත ක්ෂේත්‍ර 12</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-[#89939c]">එක් එක් භාවයට අදාළ රාශිය, ග්‍රහ පිහිටීම්, භාව අධිපති සම්බන්ධතා සහ strength factors එකට ගෙන සරල කියවීමක් ලෙස මෙහි සාරාංශ කර ඇත.</p>
+            <h2 className="serif mt-2 text-3xl text-[#18372a]">ඔබේ ජීවිත ක්ෂේත්‍ර 12</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-[#566c5e]">එක් එක් භාවයට අදාළ රාශිය, ග්‍රහ පිහිටීම්, භාව අධිපති සම්බන්ධතා සහ strength factors එකට ගෙන සරල කියවීමක් ලෙස මෙහි සාරාංශ කර ඇත.</p>
           </div>
 
           <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -99,7 +99,7 @@ export default function PersonalChartView(props:Props){
           <DeleteChartButton calculationId={props.calculationId} label="කේන්දරය මකන්න"/>
         </section>
 
-        <p className="mt-6 text-[10px] leading-5 text-[#5f6972]">මෙම විස්තර සාම්ප්‍රදායික ජ්‍යෝතිෂ අර්ථකථන සඳහා වන අතර නියත අනාගත ප්‍රකාශයක් ලෙස නොසලකන්න.</p>
+        <p className="mt-6 text-[10px] leading-5 text-[#566c5e]">මෙම විස්තර සාම්ප්‍රදායික ජ්‍යෝතිෂ අර්ථකථන සඳහා වන අතර නියත අනාගත ප්‍රකාශයක් ලෙස නොසලකන්න.</p>
       </div>
     </main>
   </>;
