@@ -35,3 +35,14 @@ Deno.test("personal nature reading refuses charts missing a Lagna lord", () => {
   assert(thrown instanceof Error);
   assertStringIncludes(thrown.message, "LAGNA_LORD_POSITION_MISSING");
 });
+
+Deno.test("personal nature reading refuses charts missing the Moon", () => {
+  let thrown: unknown;
+  try {
+    buildPersonalNatureReading({ lagnaRasiId: 4, positions: [{ graha_id: 5, rasi_id: 4 }] });
+  } catch (error) {
+    thrown = error;
+  }
+  assert(thrown instanceof Error);
+  assertStringIncludes(thrown.message, "MOON_POSITION_MISSING");
+});
