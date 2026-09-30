@@ -139,6 +139,38 @@ export async function createCalculation(formData: FormData) {
   redirect("/calculations/" + calculationId);
 }
 
+export async function updateChartSubjectRelationship(formData: FormData) {
+  const supabase = await createClient();
+  const calculationId = String(formData.get("calculation_id") ?? "").trim();
+  const subjectRelationship = parseSubjectRelationship(
+    formData.get("subject_relationship"),
+  );
+
+  if (!calculationId || !subjectRelationship) {
+    redirect(
+      `/calculations/${encodeURIComponent(calculationId)}?relationship_error=INVALID_SUBJECT_RELATIONSHIP`,
+    );
+  }
+
+  const { error } = await supabase.rpc(
+    "update_user_calculation_subject_relationship_v1",
+    {
+      p_calculation_id: calculationId,
+      p_subject_relationship: subjectRelationship,
+    },
+  );
+
+  if (error) {
+    redirect(
+      `/calculations/${encodeURIComponent(calculationId)}?relationship_error=${encodeURIComponent(error.message)}`,
+    );
+  }
+
+  redirect(
+    `/calculations/${encodeURIComponent(calculationId)}?relationship_saved=1`,
+  );
+}
+
 
 export async function calculateTransit(formData: FormData) {
   const supabase = await createClient();
