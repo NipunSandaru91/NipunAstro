@@ -20,11 +20,13 @@ import {
   parsePredictionWindowType,
 } from "@/lib/prediction/timing/prediction-window";
 import { parsePredictionTopic } from "@/lib/prediction/topics/generic-topic";
+import { parseSubjectRelationship } from "@/lib/calculations/subject-relationship";
 
 export async function createCalculation(formData: FormData) {
   const supabase = await createClient();
 
   const subjectName = String(formData.get("subject_name") ?? "").trim();
+  const subjectRelationship = parseSubjectRelationship(formData.get("subject_relationship"));
   const birthDate = String(formData.get("birth_date") ?? "");
   const birthTime = String(formData.get("birth_time") ?? "");
   const placeName = String(formData.get("place_name") ?? "").trim();
@@ -33,6 +35,9 @@ export async function createCalculation(formData: FormData) {
 
   if (!subjectName || subjectName.length > 120) {
     redirect("/chart/new?error=invalid_subject_name");
+  }
+  if (!subjectRelationship) {
+    redirect("/chart/new?error=invalid_subject_relationship");
   }
 
   const resolvedQuery = [placeName, birthState, birthCountry]
@@ -71,7 +76,7 @@ export async function createCalculation(formData: FormData) {
   }
 
   const { data: calculationId, error: createError } =
-    await supabase.rpc("create_user_calculation_v2", {
+    await supabase.rpc("create_user_calculation_v3", {
       p_birth_date: birthDate,
       p_birth_time: birthTime,
       p_timezone: timezone,
@@ -80,6 +85,7 @@ export async function createCalculation(formData: FormData) {
       p_place_name: resolvedPlace.name || placeName || null,
       p_country: country || null,
       p_subject_name: subjectName,
+      p_subject_relationship: subjectRelationship,
     });
 
   const createFailure = rpcCreateError(createError, calculationId);

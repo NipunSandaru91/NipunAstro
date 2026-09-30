@@ -1,7 +1,9 @@
 import {
+  assertTransitReady,
   assertOwnedCalculation,
   assertCalculableState,
   calculatedRunRecord,
+  ownedFailureTarget,
 } from "../../supabase/functions/jyotisha-calculator/orchestration.ts";
 
 Deno.test("owned calculation guard returns the run", () => {
@@ -28,6 +30,55 @@ Deno.test("calculable state accepts PENDING and FAILED only", () => {
         error.message === "calculation is not in a calculable state";
     }
     if (!failed) throw new Error(state + " must not be calculable");
+  }
+});
+
+Deno.test("failure target requires the current owner and a retryable run", () => {
+  const run = {
+    id: "calc-1",
+    status: "FAILED",
+    owner_user_id: "user-1",
+    calculation_metadata: { creation_contract: "USER_CALCULATION_V2" },
+  };
+  const target = ownedFailureTarget(run, "user-1");
+  if (target.id !== run.id || target.owner_user_id !== "user-1") {
+    throw new Error("authorized failure target changed");
+  }
+  if (target.calculation_metadata?.creation_contract !== "USER_CALCULATION_V2") {
+    throw new Error("failure target did not preserve calculation metadata");
+  }
+  const targetWithoutMetadata = ownedFailureTarget(
+    { ...run, status: "PENDING", calculation_metadata: null },
+    "user-1",
+  );
+  if (targetWithoutMetadata.calculation_metadata !== null) {
+    throw new Error("missing calculation metadata must remain explicitly null");
+  }
+
+  for (const [candidate, userId] of [
+    [{ ...run, owner_user_id: "user-2" }, "user-1"],
+    [{ ...run, status: "CALCULATED" }, "user-1"],
+  ] as const) {
+    let failed = false;
+    try {
+      ownedFailureTarget(candidate, userId);
+    } catch {
+      failed = true;
+    }
+    if (!failed) throw new Error("failure target accepted an unauthorized or non-retryable run");
+  }
+});
+
+Deno.test("transit requires a completed natal calculation", () => {
+  assertTransitReady({ id: "calc-1", status: "CALCULATED" });
+  for (const status of ["PENDING", "FAILED", "PROCESSING"]) {
+    let failed = false;
+    try {
+      assertTransitReady({ id: "calc-1", status });
+    } catch {
+      failed = true;
+    }
+    if (!failed) throw new Error(`${status} calculation must not accept transit`);
   }
 });
 

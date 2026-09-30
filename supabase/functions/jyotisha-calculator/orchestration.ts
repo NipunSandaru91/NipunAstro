@@ -35,13 +35,21 @@ export function errorInfo(error: unknown): ErrorInfo {
   };
 }
 
-export function calculationFailureRecord(stage: string, error: ErrorInfo) {
+export function calculationFailureRecord(
+  stage: string,
+  error: ErrorInfo,
+  existingMetadata: Record<string, unknown> | null = null,
+) {
   return {
     status: "FAILED" as const,
     error_message: JSON.stringify({ stage, error }),
     calculation_metadata: {
+      ...(existingMetadata ?? {}),
       last_failed_stage: stage,
       last_error: error,
+    } as Record<string, unknown> & {
+      last_failed_stage: string;
+      last_error: ErrorInfo;
     },
   };
 }
@@ -65,6 +73,26 @@ export function assertCalculableState(status: string): void {
   }
 }
 
+export function ownedFailureTarget(run: OwnedCalculation | null, userId: string) {
+  const owned = assertOwnedCalculation(run);
+  if (owned.owner_user_id !== userId) {
+    throw new Error("calculation_id not found or not owned by current user");
+  }
+  assertCalculableState(owned.status);
+  return {
+    id: owned.id,
+    owner_user_id: userId,
+    calculation_metadata: owned.calculation_metadata ?? null,
+  };
+}
+
+export function assertTransitReady(run: OwnedCalculation | null): void {
+  const owned = assertOwnedCalculation(run);
+  if (owned.status !== "CALCULATED") {
+    throw new Error("calculation is not ready for transit");
+  }
+}
+
 export function calculatedRunRecord(input: {
   existingMetadata?: Record<string, unknown> | null;
   ayanamsaValue: number;
@@ -77,7 +105,7 @@ export function calculatedRunRecord(input: {
     ephemeris_version: "2.10.03",
     ayanamsa_value: input.ayanamsaValue,
     calculation_timestamp: input.calculationTimestamp,
-    engine_version: "jyotisha-calculator/44; swisseph-wasm/0.1.5 browser-inline",
+    engine_version: "jyotisha-calculator/45; swisseph-wasm/0.1.5 browser-inline",
     status: "CALCULATED" as const,
     error_message: null,
     utc_timestamp: input.utcTimestamp,
@@ -91,7 +119,7 @@ export function calculatedRunRecord(input: {
       ...(input.existingMetadata ?? {}),
       calculation_state: "CALCULATED",
       calculation_contract: "USER_CALCULATION_V1",
-      engine_handoff: "jyotisha-calculator/44",
+      engine_handoff: "jyotisha-calculator/45",
     } as Record<string, unknown> & {
       calculation_state: string;
       calculation_contract: string;
@@ -124,7 +152,11 @@ export function isPersistenceStage(stage: string): stage is PersistenceStage {
   return (PERSISTENCE_STAGES as readonly string[]).includes(stage);
 }
 
-export function persistenceFailureRecord(stage: string, error: unknown) {
+export function persistenceFailureRecord(
+  stage: string,
+  error: unknown,
+  existingMetadata: Record<string, unknown> | null = null,
+) {
   if (!isPersistenceStage(stage)) throw new Error("UNKNOWN_PERSISTENCE_STAGE");
-  return calculationFailureRecord(stage, errorInfo(error));
+  return calculationFailureRecord(stage, errorInfo(error), existingMetadata);
 }

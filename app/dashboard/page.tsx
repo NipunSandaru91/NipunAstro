@@ -30,7 +30,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const title = latest?.subject_name || latest?.input_place_name || "ඔබේ පළමු කේන්දරය";
   const explorations = personal
     ? [
-      { href: chartPath, icon: "✧", label: "D1 සහ භාව 12", detail: "සරල සිංහල කියවීම" },
+      { href: chartPath, icon: "✧", label: "පුරෝකථන මාතෘකා", detail: "D1 සහ තත්කාලීන කියවීම" },
       { href: "/my-chart", icon: "▤", label: "මගේ කේන්දර", detail: "සුරැකි ගණනයන්" },
     ]
     : [
@@ -89,8 +89,8 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
           <aside className="ref-dashboard-aside">
             <section className="ref-path-card">
               <p className="ref-kicker">{personal ? "PERSONAL READING" : "EVIDENCE & TIMING"}</p>
-              <h2>{personal ? "ජීවිත ක්ෂේත්‍ර 12" : "පුරෝකථන සහ කාලය"}</h2>
-              <p>{personal ? "භාව 12 සඳහා කේන්දරයට ගැළපූ සිංහල අර්ථකථන කියවන්න." : "භාවය, සාක්ෂි සහ කාලය පියවරෙන් පියවර විමසන්න."}</p>
+              <h2>{personal ? "ඔබේ පුරෝකථන" : "පුරෝකථන සහ කාලය"}</h2>
+              <p>{personal ? "ජීවිතයේ ප්‍රධාන මාතෘකා සඳහා D1 සහ දශා කාල කියවන්න." : "භාවය, සාක්ෂි සහ කාලය පියවරෙන් පියවර විමසන්න."}</p>
               <Link href={personal ? chartPath : "/predictions"}>විවෘත කරන්න <span aria-hidden="true">→</span></Link>
             </section>
             <div className="ref-shortcuts">
