@@ -1,32 +1,7 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppNav from "@/app/components/app-nav";
 import { signOut } from "@/app/auth/actions";
-
-export async function updateProfile(formData: FormData) {
-  "use server";
-  const supabase = await createClient();
-  const { data: claims } = await supabase.auth.getClaims();
-  const userId = typeof claims?.claims?.sub === "string" ? claims.claims.sub : null;
-  if (!userId) redirect("/login");
-  const displayName = String(formData.get("display_name") ?? "").trim();
-  const language = String(formData.get("preferred_language") ?? "si");
-  const timezone = String(formData.get("timezone") ?? "").trim();
-
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      display_name: displayName || null,
-      preferred_language: language === "en" ? "en" : "si",
-      timezone: timezone || null,
-    })
-    .eq("id", userId)
-    .select("id")
-    .single();
-
-  if (error) redirect("/profile?error=" + encodeURIComponent(error.message));
-  redirect("/profile?saved=1");
-}
+import { updateProfile } from "@/app/profile/actions";
 
 export default async function ProfilePage({
   searchParams,
@@ -130,7 +105,7 @@ export default async function ProfilePage({
           <section className="mt-5 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-5">
             <p className="eyebrow">Privacy boundary</p>
             <p className="mt-2 text-xs leading-6 text-[#566c5e]">
-              Profile updates are limited to the authenticated user's own profile by RLS. No other user's account data is exposed here.
+              Profile updates are limited to the authenticated user&apos;s own profile by RLS. No other user&apos;s account data is exposed here.
             </p>
           </section>
         </div>

@@ -2,6 +2,7 @@ import { createCalculation } from "@/app/calculations/actions";
 import LocationSelector from "@/app/components/location-selector";
 import CalculationSubmit from "@/app/components/calculation-submit";
 import AppNav from "@/app/components/app-nav";
+import { SUBJECT_RELATIONSHIPS } from "@/lib/calculations/subject-relationship";
 
 export default async function NewChartPage({
   searchParams,
@@ -13,7 +14,10 @@ export default async function NewChartPage({
     params.error === "invalid_subject_name"
       ? "කේන්දර හිමියාගේ නම ඇතුළත් කරන්න. නම අක්ෂර 120 ට අඩු විය යුතුයි."
       : null;
-  const actionError = params.error && !subjectError
+  const relationshipError = params.error === "invalid_subject_relationship"
+    ? "කේන්දර හිමියා සමඟ ඇති සම්බන්ධය තෝරන්න."
+    : null;
+  const actionError = params.error && !subjectError && !relationshipError
     ? "තොරතුරු තහවුරු කිරීමට නොහැකි විය. උපන් දිනය, වේලාව සහ ස්ථානය පරීක්ෂා කර නැවත උත්සාහ කරන්න."
     : null;
 
@@ -45,9 +49,9 @@ export default async function NewChartPage({
               මෙම නම chart එක හඳුනාගැනීමට භාවිතා වේ. ස්ථානය chart title එකක් ලෙස භාවිතා නොකරයි.
             </p>
 
-            {subjectError || actionError ? (
+            {subjectError || relationshipError || actionError ? (
               <div role="alert" className="mt-4 rounded-xl border border-[#e9c5c0] bg-[#fff4f2] px-4 py-3 text-sm leading-6 text-[#8b3c35]">
-                {subjectError || actionError}
+                {subjectError || relationshipError || actionError}
               </div>
             ) : null}
 
@@ -57,6 +61,7 @@ export default async function NewChartPage({
                 name="subject_name"
                 placeholder="උදා: නිපුන්"
               />
+              <RelationshipField />
               <Field label="උපන් දිනය" name="birth_date" type="date" />
               <Field label="උපන් වේලාව" name="birth_time" type="time" />
               <div className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
@@ -148,6 +153,26 @@ function Field({
         type={type}
         className="w-full rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-3.5 text-sm text-[#18372a] outline-none transition focus:border-[#b9d8c3]"
       />
+    </label>
+  );
+}
+
+function RelationshipField() {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[.14em] text-[#566c5e]">
+        කේන්දර හිමියා සමඟ සම්බන්ධය
+      </span>
+      <select
+        required
+        name="subject_relationship"
+        defaultValue="SELF"
+        className="w-full rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-3.5 text-sm text-[#18372a] outline-none focus:border-[#b9d8c3]"
+      >
+        {SUBJECT_RELATIONSHIPS.map((item) => (
+          <option key={item.value} value={item.value}>{item.label}</option>
+        ))}
+      </select>
     </label>
   );
 }

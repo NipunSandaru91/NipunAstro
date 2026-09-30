@@ -44,6 +44,19 @@ Deno.test("calculationFailureRecord preserves stage and error evidence", () => {
   }
 });
 
+Deno.test("calculation failure preserves creation and engine metadata", () => {
+  const record = calculationFailureRecord(
+    "insert_graha_positions",
+    errorInfo(new Error("insert failed")),
+    { creation_contract: "USER_CALCULATION_V2", standard_code: "V1" },
+  );
+  if (record.calculation_metadata.creation_contract !== "USER_CALCULATION_V2" ||
+      record.calculation_metadata.standard_code !== "V1" ||
+      record.calculation_metadata.last_failed_stage !== "insert_graha_positions") {
+    throw new Error("failure recording must preserve existing audit metadata");
+  }
+});
+
 
 Deno.test("errorInfo covers primitive and partial error values", () => {
   const primitive = errorInfo("plain failure");

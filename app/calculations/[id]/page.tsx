@@ -5,6 +5,10 @@ import AppNav from "@/app/components/app-nav";
 import ChartNameEditor from "@/app/components/chart-name-editor";
 import DeleteChartButton from "@/app/components/delete-chart-button";
 import PersonalChartView from "@/app/components/personal-chart-view";
+import { buildCareerNatalModel } from "@/lib/prediction/topics/career.ts";
+import { buildGenericTopicNatalModel, TOPIC_LABEL_SI } from "@/lib/prediction/topics/generic-topic.ts";
+import type { PredictionTopic } from "@/lib/prediction/evidence.ts";
+import { SUBJECT_RELATIONSHIPS } from "@/lib/calculations/subject-relationship";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -103,7 +107,7 @@ export default async function CalculationPage({
     ),
     supabase
       .from("user_calculation_runs_v1")
-      .select("subject_name")
+      .select("subject_name,subject_relationship,input_timezone")
       .eq("id", id)
       .maybeSingle(),
     supabase.from("profiles").select("account_type").single(),
@@ -120,14 +124,56 @@ export default async function CalculationPage({
   const lagnaRasiId = Number(pick(lagna, "rasi_id"));
 
   if (profile?.account_type === "PERSONAL") {
+    const positions = grahas
+      .map((graha) => ({ graha_id: Number(pick(graha, "graha_id")), rasi_id: Number(pick(graha, "rasi_id")) }))
+      .filter((row): row is { graha_id: number; rasi_id: number } => Boolean(row.graha_id && row.rasi_id));
+    const shad = shadbala.map((row) => {
+      const graha_id = Number(pick(row, "graha_id"));
+      const direct = Number(pick(row, "total_bala_rupa"));
+      const total = Number(pick(row, "total_bala"));
+      return graha_id ? { graha_id, total_bala_rupa: Number.isFinite(direct) ? direct : Number.isFinite(total) ? total / 60 : 0 } : null;
+    }).filter((row): row is { graha_id: number; total_bala_rupa: number } => row !== null);
+
+    const topicIds: PredictionTopic[] = ["CAREER", "EDUCATION", "RELATIONSHIP", "FINANCE", "HEALTH", "SPIRITUALITY"];
+    const natalModels = topicIds.map((topic) => topic === "CAREER"
+      ? buildCareerNatalModel({ lagnaRasiId, positions, shadbala: shad })
+      : buildGenericTopicNatalModel(topic, { lagnaRasiId, positions, shadbala: shad }));
+    const { data: mdRows } = await supabase
+      .schema("jyotisha").from("mahadasa_periods").select("id,graha_id,start_at,end_at")
+      .eq("calculation_id", id).order("start_at", { ascending: true });
+    const md = mdRows ?? [];
+    const { data: adRows } = md.length
+      ? await supabase.schema("jyotisha").from("antardasa_periods").select("id,mahadasa_id,graha_id,start_at,end_at").in("mahadasa_id", md.map((row) => row.id)).order("start_at", { ascending: true })
+      : { data: [] as Array<{ id: string; mahadasa_id: string; graha_id: number; start_at: string; end_at: string }> };
+    // This is a server rendered, time-sensitive reading; the active period must use request time.
+    // eslint-disable-next-line react-hooks/purity
+    const now = Date.now();
+    const pairs = (adRows ?? []).map((ad) => {
+      const maha = md.find((row) => row.id === ad.mahadasa_id);
+      return maha ? { maha: Number(maha.graha_id), antar: Number(ad.graha_id), start: String(ad.start_at), end: String(ad.end_at) } : null;
+    }).filter((row): row is { maha: number; antar: number; start: string; end: string } => row !== null).sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
+    const activePair = pairs.find((pair) => Date.parse(pair.start) <= now && Date.parse(pair.end) > now) ?? null;
+    const upcomingPair = pairs.find((pair) => Date.parse(pair.start) > now) ?? null;
+    const grahaLabels: Record<number, string> = { 1: "රවි", 2: "චන්ද්‍ර", 3: "කුජ", 4: "බුධ", 5: "ගුරු", 6: "ශුක්‍ර", 7: "ශනි", 8: "රාහු", 9: "කේතු" };
+    const topics = natalModels.map((model) => {
+      const themes = model.themes;
+      const level = themes.some((theme) => theme.level === "STRONG") ? "STRONG" : themes.some((theme) => theme.level === "MODERATE") ? "MODERATE" : "WEAK";
+      const activation = (pair: typeof activePair) => {
+        if (!pair) return null;
+        const matches = new Set(themes.flatMap((theme) => theme.evidence_grahas).filter((id) => id === pair.maha || id === pair.antar));
+        return { maha: grahaLabels[pair.maha] ?? "ග්‍රහයා", antar: grahaLabels[pair.antar] ?? "ග්‍රහයා", start: pair.start, end: pair.end, activation: matches.size >= 2 ? "STRONG" as const : matches.size === 1 ? "MODERATE" as const : "NONE" as const };
+      };
+      const displayLabel = TOPIC_LABEL_SI[model.topic];
+      return { id: model.topic, label: displayLabel, natalLevel: level, current: activation(activePair), next: activation(upcomingPair) };
+    });
+    // Use the narrative catalog in the personal view, while keeping all chart evidence server-side.
     return (
       <PersonalChartView
         calculationId={id}
         subjectName={runMeta?.subject_name ?? null}
-        lagnaRasiId={lagnaRasiId}
-        lagnaDegree={pick(lagna, "degree_in_rasi", "degree", "longitude_in_rasi")}
-        grahas={grahas}
-        shadbala={shadbala}
+        relationshipLabel={SUBJECT_RELATIONSHIPS.find((item) => item.value === runMeta?.subject_relationship)?.label ?? null}
+        topics={topics as Parameters<typeof PersonalChartView>[0]["topics"]}
+        timezone={runMeta?.input_timezone ?? "UTC"}
         saved={saved}
       />
     );
