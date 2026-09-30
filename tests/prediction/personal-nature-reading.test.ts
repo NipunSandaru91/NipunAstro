@@ -28,7 +28,7 @@ Deno.test("personal nature reading binds Lagna lord and Moon to each chart", () 
 Deno.test("personal nature reading refuses charts missing a Lagna lord", () => {
   let thrown: unknown;
   try {
-    buildPersonalNatureReading({ lagnaRasiId: 4, positions: [{ graha_id: 2, rasi_id: 9 }] });
+    buildPersonalNatureReading({ lagnaRasiId: 1, positions: [{ graha_id: 2, rasi_id: 9 }] });
   } catch (error) {
     thrown = error;
   }
@@ -38,7 +38,7 @@ Deno.test("personal nature reading refuses charts missing a Lagna lord", () => {
 Deno.test("personal nature reading refuses charts missing the Moon", () => {
   let thrown: unknown;
   try {
-    buildPersonalNatureReading({ lagnaRasiId: 1, positions: [{ graha_id: 1, rasi_id: 1 }] });
+    buildPersonalNatureReading({ lagnaRasiId: 1, positions: [{ graha_id: 3, rasi_id: 1 }] });
   } catch (error) {
     thrown = error;
   }
