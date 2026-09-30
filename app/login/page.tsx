@@ -16,15 +16,10 @@ export default async function LoginPage({
         <div className="na-brand"><BrandLogo /></div>
         <p className="na-overline">ඔබේ ගිණුම</p>
         <h1>ඉදිරියට පිවිසෙන්න</h1>
-        <p className="na-login-lead">ඔබට ගැළපෙන කියවීමේ ආකාරය තෝරන්න. පසුව සැකසුම් තුළින් එය වෙනස් කළ හැකියි.</p>
+        <p className="na-login-lead">නව ගිණුම් Personal ලෙස ආරම්භ වේ. Professional ප්‍රවේශය පරිපාලකයෙකුට සක්‍රිය කළ හැකියි.</p>
         {params.error ? <div role="alert" className="na-error">පිවිසීම සම්පූර්ණ කළ නොහැකි විය. නැවත උත්සාහ කරන්න.</div> : null}
         <form action={signInWithGoogle}>
           <input type="hidden" name="next" value={safeNextPath(params.next)}/>
-          <fieldset className="na-mode-select">
-            <legend>කියවීමේ ආකාරය</legend>
-            <label><input type="radio" name="account_type" value="PERSONAL" defaultChecked/><span><b>Personal</b><small>D1 සහ භාව 12 · සරල සිංහල කියවීම</small></span></label>
-            <label><input type="radio" name="account_type" value="PROFESSIONAL"/><span><b>Professional</b><small>ගණනය, සාක්ෂි, දශා සහ ගෝචර</small></span></label>
-          </fieldset>
           <button type="submit" className="na-button na-google-button">Google සමඟ පිවිසෙන්න <span aria-hidden="true">→</span></button>
         </form>
         <p className="na-login-note">දැනට Google පිවිසුම ලබා ගත හැකියි.</p>

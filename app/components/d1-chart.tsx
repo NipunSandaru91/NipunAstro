@@ -19,7 +19,12 @@ function pick(obj: Graha | null | undefined, ...keys: string[]) {
 
 function grahaName(graha: Graha, names: Record<string, string>) {
   const code = String(pick(graha, "code", "graha_code") ?? "").toUpperCase();
-  return names[code] ?? String(pick(graha, "name", "english_name", "code") ?? "—");
+  const id = Number(pick(graha, "graha_id"));
+  const codeById: Record<number, string> = {
+    1: "SURYA", 2: "CHANDRA", 3: "MANGALA", 4: "BUDHA", 5: "GURU",
+    6: "SHUKRA", 7: "SHANI", 8: "RAHU", 9: "KETU",
+  };
+  return names[code] ?? names[codeById[id]] ?? String(pick(graha, "sinhala_name", "name", "english_name", "code") ?? "—");
 }
 
 export default function D1Chart({
@@ -36,12 +41,6 @@ export default function D1Chart({
     );
     return { house, rashiId, planets };
   });
-
-  const positions = [
-    [250, 94], [374, 38], [500, 94], [626, 38],
-    [752, 94], [878, 38], [878, 250], [878, 406],
-    [752, 562], [626, 618], [500, 562], [374, 618],
-  ];
 
   return (
     <div className="overflow-hidden rounded-3xl border border-[#d7e5da] bg-[#ffffff] p-3 sm:p-5">
@@ -61,7 +60,7 @@ export default function D1Chart({
 
       <div className="mx-auto aspect-square w-full max-w-[620px]">
         <svg viewBox="0 0 400 400" className="h-full w-full" role="img" aria-label="D1 Rashi chart">
-          <rect x="6" y="6" width="388" height="388" rx="10" fill="#091522" stroke="#405163" strokeWidth="2" />
+          <rect x="6" y="6" width="388" height="388" rx="10" fill="#ffffff" stroke="#b9d8c3" strokeWidth="2" />
 
           {[
             "200,6 294,100 200,200 106,100",
@@ -80,8 +79,8 @@ export default function D1Chart({
             <polygon
               key={index}
               points={points}
-              fill={index === 0 ? "#211b0e" : "#0d1b2b"}
-              stroke={index === 0 ? "#d2aa58" : "#405163"}
+              fill={index === 0 ? "#e8f4ec" : "#ffffff"}
+              stroke={index === 0 ? "#176b4a" : "#d7e5da"}
               strokeWidth="1.5"
             />
           ))}
@@ -96,23 +95,23 @@ export default function D1Chart({
             const isLagna = house === 1;
             return (
               <g key={house}>
-                <text x={x} y={y - 17} textAnchor="middle" fill="#b8954f" fontSize="9" fontWeight="700">
+                <text x={x} y={y - 17} textAnchor="middle" fill="#176b4a" fontSize="9" fontWeight="700">
                   {house}
                 </text>
-                <text x={x} y={y - 2} textAnchor="middle" fill="#eee9de" fontSize="13" fontWeight="600">
+                <text x={x} y={y - 2} textAnchor="middle" fill="#18372a" fontSize="13" fontWeight="600">
                   {rashiNames[rashiId - 1] ?? "—"}
                 </text>
-                <text x={x} y={y + 13} textAnchor="middle" fill={isLagna ? "#e0b65b" : "#9aa6b4"} fontSize="9">
+                <text x={x} y={y + 13} textAnchor="middle" fill={isLagna ? "#176b4a" : "#5d7165"} fontSize="9">
                   {planets.map((p) => grahaName(p, grahaNames)).join(" · ") || "—"}
                 </text>
               </g>
             );
           })}
 
-          <text x="200" y="194" textAnchor="middle" fill="#d4cfc4" fontSize="11" fontWeight="600">
+          <text x="200" y="194" textAnchor="middle" fill="#176b4a" fontSize="11" fontWeight="600">
             D1
           </text>
-          <text x="200" y="211" textAnchor="middle" fill="#778392" fontSize="8">
+          <text x="200" y="211" textAnchor="middle" fill="#5d7165" fontSize="8">
             RĀŚI
           </text>
         </svg>

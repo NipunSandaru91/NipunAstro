@@ -35,6 +35,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     ]
     : [
       { href: chartPath, icon: "✧", label: "ජන්ම කේන්දරය", detail: "D1 සහ ග්‍රහ පිහිටීම්" },
+      { href: `${chartPath}#personal-predictions`, icon: "✦", label: "පුද්ගලික පුරෝකථන", detail: "D1 සහ දශා කියවීම" },
       { href: latest ? chartPath + "/dasha" : "/chart/new", icon: "◌", label: "දශා විශ්ලේෂණය", detail: "කාල පරිච්ඡේද" },
       { href: latest ? chartPath + "/transit" : "/chart/new", icon: "▥", label: "ගෝචර", detail: "ග්‍රහ ගමන" },
     ];
@@ -94,7 +95,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
               <Link href={personal ? chartPath : "/predictions"}>විවෘත කරන්න <span aria-hidden="true">→</span></Link>
             </section>
             <div className="ref-shortcuts">
-              <Link href="/settings">කියවීමේ ආකාරය <span aria-hidden="true">→</span></Link>
+              <Link href="/settings">ගිණුම් සැකසුම් <span aria-hidden="true">→</span></Link>
               <Link href="/profile">පැතිකඩ <span aria-hidden="true">→</span></Link>
               {roleRow?.role === "ADMIN" ? <Link href="/admin">පරිපාලන පුවරුව <span aria-hidden="true">→</span></Link> : null}
             </div>

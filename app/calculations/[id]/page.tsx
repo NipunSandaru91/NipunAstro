@@ -6,11 +6,14 @@ import ChartNameEditor from "@/app/components/chart-name-editor";
 import ChartRelationshipEditor from "@/app/components/chart-relationship-editor";
 import DeleteChartButton from "@/app/components/delete-chart-button";
 import PersonalChartView from "@/app/components/personal-chart-view";
+import PersonalNatureCard from "@/app/components/personal-nature-card";
+import PersonalPredictionTabs from "@/app/components/personal-prediction-tabs";
 import { buildCareerNatalModel } from "@/lib/prediction/topics/career.ts";
 import { buildGenericTopicNatalModel, TOPIC_LABEL_SI } from "@/lib/prediction/topics/generic-topic.ts";
 import { bhavaQualitySi } from "@/lib/prediction/qualities.ts";
 import { buildPersonalDashaReading, buildPersonalTopicReading, type PersonalReadingAnchor } from "@/lib/prediction/ui/personal-topic-reading.ts";
 import type { PredictionTopic } from "@/lib/prediction/evidence.ts";
+import { buildPersonalNatureReading } from "@/lib/prediction/ui/personal-nature-reading.ts";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -124,89 +127,94 @@ export default async function CalculationPage({
   const grahas = Array.isArray(chart.grahas) ? chart.grahas : [];
   const shadbala = Array.isArray(chart.shadbala) ? chart.shadbala : [];
   const lagnaRasiId = Number(pick(lagna, "rasi_id"));
+  const positions = grahas.map((graha) => ({ graha_id: Number(pick(graha, "graha_id")), rasi_id: Number(pick(graha, "rasi_id")) })).filter((row): row is { graha_id: number; rasi_id: number } => Boolean(row.graha_id && row.rasi_id));
+  const natureReading = buildPersonalNatureReading({ lagnaRasiId, positions });
+
+const shad = shadbala.map((row) => {
+  const graha_id = Number(pick(row, "graha_id"));
+  const direct = Number(pick(row, "total_bala_rupa"));
+  const total = Number(pick(row, "total_bala"));
+  return graha_id ? { graha_id, total_bala_rupa: Number.isFinite(direct) ? direct : Number.isFinite(total) ? total / 60 : 0 } : null;
+}).filter((row): row is { graha_id: number; total_bala_rupa: number } => row !== null);
+
+const topicIds: PredictionTopic[] = ["CAREER", "EDUCATION", "RELATIONSHIP", "FINANCE", "HEALTH", "SPIRITUALITY"];
+const natalModels = topicIds.map((topic) => topic === "CAREER"
+  ? buildCareerNatalModel({ lagnaRasiId, positions, shadbala: shad })
+  : buildGenericTopicNatalModel(topic, { lagnaRasiId, positions, shadbala: shad }));
+const { data: mdRows } = await supabase
+  .schema("jyotisha").from("mahadasa_periods").select("id,graha_id,start_at,end_at")
+  .eq("calculation_id", id).order("start_at", { ascending: true });
+const md = mdRows ?? [];
+const { data: adRows } = md.length
+  ? await supabase.schema("jyotisha").from("antardasa_periods").select("id,mahadasa_id,graha_id,start_at,end_at").in("mahadasa_id", md.map((row) => row.id)).order("start_at", { ascending: true })
+  : { data: [] as Array<{ id: string; mahadasa_id: string; graha_id: number; start_at: string; end_at: string }> };
+// This is a server rendered, time-sensitive reading; the active period must use request time.
+// eslint-disable-next-line react-hooks/purity
+const now = Date.now();
+const pairs = (adRows ?? []).map((ad) => {
+  const maha = md.find((row) => row.id === ad.mahadasa_id);
+  return maha ? { maha: Number(maha.graha_id), antar: Number(ad.graha_id), start: String(ad.start_at), end: String(ad.end_at) } : null;
+}).filter((row): row is { maha: number; antar: number; start: string; end: string } => row !== null).sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
+const activePair = pairs.find((pair) => Date.parse(pair.start) <= now && Date.parse(pair.end) > now) ?? null;
+const upcomingPair = pairs.find((pair) => Date.parse(pair.start) > now) ?? null;
+const grahaLabels: Record<number, string> = { 1: "රවි", 2: "චන්ද්‍ර", 3: "කුජ", 4: "බුධ", 5: "ගුරු", 6: "ශුක්‍ර", 7: "ශනි", 8: "රාහු", 9: "කේතු" };
+const topics = natalModels.map((model) => {
+  const themes = model.themes;
+  const level = themes.some((theme) => theme.level === "STRONG") ? "STRONG" : themes.some((theme) => theme.level === "MODERATE") ? "MODERATE" : "WEAK";
+  const anchors: PersonalReadingAnchor[] = [...model.primary, ...model.contextual].map((item) => {
+    const evidence = item.evidence;
+    return {
+      sourceBhava: item.source_bhava,
+      sourceLabel: bhavaQualitySi(item.source_bhava).keywords_si[0],
+      grahaId: evidence.placement.graha_id,
+      grahaLabel: evidence.qualities.graha.name_si,
+      rasiLabel: evidence.qualities.rasi.name_si,
+      targetBhava: evidence.placement.bhava,
+      ruleText: evidence.rule.text_si,
+      supporting: evidence.strength.supporting.map((modifier) => modifier.text_si),
+      contradicting: evidence.strength.contradicting.map((modifier) => modifier.text_si),
+    };
+  });
+  const reading = buildPersonalTopicReading({ topic: model.topic, level, anchors: anchors.slice(0, 4) });
+  const activation = (pair: typeof activePair) => {
+    if (!pair) return null;
+    const matchedAnchors = anchors
+      .filter((anchor) => anchor.grahaId === pair.maha || anchor.grahaId === pair.antar)
+      .map((anchor) => ({
+        ...anchor,
+        matchedRoles: [
+          ...(anchor.grahaId === pair.maha ? ["මහදශා අධිපති"] : []),
+          ...(anchor.grahaId === pair.antar ? ["අන්තර්දශා අධිපති"] : []),
+        ],
+      }));
+    const mahaMatches = anchors.some((anchor) => anchor.grahaId === pair.maha);
+    const antarMatches = anchors.some((anchor) => anchor.grahaId === pair.antar);
+    const strength = mahaMatches && antarMatches ? "STRONG" as const : mahaMatches || antarMatches ? "MODERATE" as const : "NONE" as const;
+    const maha = grahaLabels[pair.maha] ?? "ග්‍රහයා";
+    const antar = grahaLabels[pair.antar] ?? "ග්‍රහයා";
+    return {
+      maha,
+      antar,
+      start: pair.start,
+      end: pair.end,
+      activation: strength,
+      narrative: buildPersonalDashaReading({ maha, antar, anchors: matchedAnchors, topic: model.topic, activation: strength }),
+    };
+  };
+  const displayLabel = TOPIC_LABEL_SI[model.topic];
+  return { id: model.topic, label: displayLabel, natalLevel: level, reading, current: activation(activePair), next: activation(upcomingPair) };
+});
 
   if (profile?.account_type === "PERSONAL") {
-    const positions = grahas
-      .map((graha) => ({ graha_id: Number(pick(graha, "graha_id")), rasi_id: Number(pick(graha, "rasi_id")) }))
-      .filter((row): row is { graha_id: number; rasi_id: number } => Boolean(row.graha_id && row.rasi_id));
-    const shad = shadbala.map((row) => {
-      const graha_id = Number(pick(row, "graha_id"));
-      const direct = Number(pick(row, "total_bala_rupa"));
-      const total = Number(pick(row, "total_bala"));
-      return graha_id ? { graha_id, total_bala_rupa: Number.isFinite(direct) ? direct : Number.isFinite(total) ? total / 60 : 0 } : null;
-    }).filter((row): row is { graha_id: number; total_bala_rupa: number } => row !== null);
-
-    const topicIds: PredictionTopic[] = ["CAREER", "EDUCATION", "RELATIONSHIP", "FINANCE", "HEALTH", "SPIRITUALITY"];
-    const natalModels = topicIds.map((topic) => topic === "CAREER"
-      ? buildCareerNatalModel({ lagnaRasiId, positions, shadbala: shad })
-      : buildGenericTopicNatalModel(topic, { lagnaRasiId, positions, shadbala: shad }));
-    const { data: mdRows } = await supabase
-      .schema("jyotisha").from("mahadasa_periods").select("id,graha_id,start_at,end_at")
-      .eq("calculation_id", id).order("start_at", { ascending: true });
-    const md = mdRows ?? [];
-    const { data: adRows } = md.length
-      ? await supabase.schema("jyotisha").from("antardasa_periods").select("id,mahadasa_id,graha_id,start_at,end_at").in("mahadasa_id", md.map((row) => row.id)).order("start_at", { ascending: true })
-      : { data: [] as Array<{ id: string; mahadasa_id: string; graha_id: number; start_at: string; end_at: string }> };
-    // This is a server rendered, time-sensitive reading; the active period must use request time.
-    // eslint-disable-next-line react-hooks/purity
-    const now = Date.now();
-    const pairs = (adRows ?? []).map((ad) => {
-      const maha = md.find((row) => row.id === ad.mahadasa_id);
-      return maha ? { maha: Number(maha.graha_id), antar: Number(ad.graha_id), start: String(ad.start_at), end: String(ad.end_at) } : null;
-    }).filter((row): row is { maha: number; antar: number; start: string; end: string } => row !== null).sort((a, b) => Date.parse(a.start) - Date.parse(b.start));
-    const activePair = pairs.find((pair) => Date.parse(pair.start) <= now && Date.parse(pair.end) > now) ?? null;
-    const upcomingPair = pairs.find((pair) => Date.parse(pair.start) > now) ?? null;
-    const grahaLabels: Record<number, string> = { 1: "රවි", 2: "චන්ද්‍ර", 3: "කුජ", 4: "බුධ", 5: "ගුරු", 6: "ශුක්‍ර", 7: "ශනි", 8: "රාහු", 9: "කේතු" };
-    const topics = natalModels.map((model) => {
-      const themes = model.themes;
-      const level = themes.some((theme) => theme.level === "STRONG") ? "STRONG" : themes.some((theme) => theme.level === "MODERATE") ? "MODERATE" : "WEAK";
-      const anchors: PersonalReadingAnchor[] = [...model.primary, ...model.contextual].map((item) => {
-        const evidence = item.evidence;
-        return {
-          sourceBhava: item.source_bhava,
-          sourceLabel: bhavaQualitySi(item.source_bhava).keywords_si[0],
-          grahaId: evidence.placement.graha_id,
-          grahaLabel: evidence.qualities.graha.name_si,
-          rasiLabel: evidence.qualities.rasi.name_si,
-          targetBhava: evidence.placement.bhava,
-          ruleText: evidence.rule.text_si,
-          supporting: evidence.strength.supporting.map((modifier) => modifier.text_si),
-          contradicting: evidence.strength.contradicting.map((modifier) => modifier.text_si),
-        };
-      });
-      const reading = buildPersonalTopicReading({ topic: model.topic, level, anchors: anchors.slice(0, 4) });
-      const activation = (pair: typeof activePair) => {
-        if (!pair) return null;
-        const matchedAnchors = anchors
-          .filter((anchor) => anchor.grahaId === pair.maha || anchor.grahaId === pair.antar)
-          .map((anchor) => ({
-            ...anchor,
-            matchedRoles: [
-              ...(anchor.grahaId === pair.maha ? ["මහදශා අධිපති"] : []),
-              ...(anchor.grahaId === pair.antar ? ["අන්තර්දශා අධිපති"] : []),
-            ],
-          }));
-        const mahaMatches = anchors.some((anchor) => anchor.grahaId === pair.maha);
-        const antarMatches = anchors.some((anchor) => anchor.grahaId === pair.antar);
-        const strength = mahaMatches && antarMatches ? "STRONG" as const : mahaMatches || antarMatches ? "MODERATE" as const : "NONE" as const;
-        const maha = grahaLabels[pair.maha] ?? "ග්‍රහයා";
-        const antar = grahaLabels[pair.antar] ?? "ග්‍රහයා";
-        return {
-          maha,
-          antar,
-          start: pair.start,
-          end: pair.end,
-          activation: strength,
-          narrative: buildPersonalDashaReading({ maha, antar, anchors: matchedAnchors, topic: model.topic, activation: strength }),
-        };
-      };
-      const displayLabel = TOPIC_LABEL_SI[model.topic];
-      return { id: model.topic, label: displayLabel, natalLevel: level, reading, current: activation(activePair), next: activation(upcomingPair) };
-    });
     // Use the narrative catalog in the personal view, while keeping all chart evidence server-side.
     return (
       <PersonalChartView
         calculationId={id}
+        lagnaRasiId={lagnaRasiId}
+        grahas={grahas}
+        rashiNames={RASHI_SI}
+        grahaNames={GRAHA_SI}
+        natureReading={natureReading}
         subjectName={runMeta?.subject_name ?? null}
         currentRelationship={runMeta?.subject_relationship ?? null}
         relationshipSaved={relationship_saved === "1"}
@@ -446,6 +454,16 @@ export default async function CalculationPage({
         </section>
 
         
+        <section id="personal-predictions" className="astro-card mt-7 scroll-mt-24 p-5 sm:p-7">
+          <PersonalNatureCard reading={natureReading} />
+          <div className="mb-4 mt-6">
+            <p className="eyebrow">Personal · D1 සහ දශා</p>
+            <h2 className="serif mt-2 text-2xl text-[#18372a]">පුද්ගලික පුරෝකථන</h2>
+            <p className="mt-1 text-sm leading-6 text-[#566c5e]">Professional විශ්ලේෂණයට අමතරව, සරල සිංහල කියවීම්ද මෙතැනින් බලන්න.</p>
+          </div>
+          <PersonalPredictionTabs topics={topics as Parameters<typeof PersonalPredictionTabs>[0]["topics"]} timezone={runMeta?.input_timezone ?? "UTC"} />
+        </section>
+
         <section id="bhava" className="panel mt-5 rounded-2xl p-5 sm:p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>

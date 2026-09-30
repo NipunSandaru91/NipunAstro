@@ -1,20 +1,14 @@
 import AppNav from "@/app/components/app-nav";
 import { createClient } from "@/lib/supabase/server";
-import { updateAccountType } from "@/app/settings/actions";
 
-export default async function SettingsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{saved?: string; error?: string}>;
-}) {
-  const params = await searchParams;
+export default async function SettingsPage() {
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
     .select("account_type")
     .single();
 
-  const accountType = profile?.account_type === "PERSONAL" ? "PERSONAL" : "PROFESSIONAL";
+  const accountType = profile?.account_type === "PROFESSIONAL" ? "PROFESSIONAL" : "PERSONAL";
 
   return <>
     <AppNav active="settings" />
@@ -23,37 +17,21 @@ export default async function SettingsPage({
         <p className="eyebrow">Account Settings</p>
         <h1 className="serif mt-2 text-4xl text-[#18372a]">සැකසුම්</h1>
         <p className="mt-3 text-sm leading-7 text-[var(--muted)]">
-          ඔබට පෙන්වන ජ්‍යෝතිෂ විස්තර මට්ටම මෙතැනින් තෝරන්න.
+          ඔබගේ N Astro ගිණුමේ කියවීම් ප්‍රවේශය.
         </p>
 
-        {params.saved ? <div className="mt-6 rounded-xl border border-[#b9d8c3] bg-[#e8f4ec] p-4 text-sm text-[#176b4a]">Account type updated.</div> : null}
-        {params.error ? <div className="mt-6 rounded-xl border border-[#e9c5c0] bg-[#fff4f2] p-4 text-sm text-[#8b3c35]">{decodeURIComponent(params.error)}</div> : null}
-
-        <form action={updateAccountType} className="astro-card mt-7 space-y-4">
-          <p className="text-xs uppercase tracking-[.14em] text-[#566c5e]">Account type</p>
-
-          <label className="block cursor-pointer rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-5">
-            <div className="flex items-start gap-3">
-              <input type="radio" name="account_type" value="PERSONAL" defaultChecked={accountType==="PERSONAL"} className="mt-1 accent-[#176b4a]" />
-              <div>
-                <b className="text-[#176b4a]">Personal</b>
-                <p className="mt-1 text-xs leading-6 text-[#566c5e]">ජීවිතයේ ප්‍රධාන මාතෘකා සඳහා D1 සහ දශා කාල කියවීම්. Technical evidence නොපෙන්වයි.</p>
-              </div>
-            </div>
-          </label>
-
-          <label className="block cursor-pointer rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-5">
-            <div className="flex items-start gap-3">
-              <input type="radio" name="account_type" value="PROFESSIONAL" defaultChecked={accountType==="PROFESSIONAL"} className="mt-1 accent-[#176b4a]" />
-              <div>
-                <b className="text-[#18372a]">Professional</b>
-                <p className="mt-1 text-xs leading-6 text-[#566c5e]">Full chart data, technical evidence, Daśā, Transit, Prediction සහ advanced analysis.</p>
-              </div>
-            </div>
-          </label>
-
-          <button type="submit" className="cosmic-primary w-full">Account type සුරකින්න</button>
-        </form>
+        <section className="astro-card mt-7 p-6">
+          <p className="text-xs uppercase tracking-[.14em] text-[#566c5e]">Current account type</p>
+          <h2 className="mt-2 text-2xl font-semibold text-[#176b4a]">{accountType}</h2>
+          <p className="mt-3 text-sm leading-7 text-[#566c5e]">
+            {accountType === "PERSONAL"
+              ? "D1 කේන්දරය සහ පුද්ගලික සිංහල පුරෝකථන මෙතැනින් බලන්න."
+              : "Professional විශ්ලේෂණයට අමතරව පුද්ගලික සිංහල පුරෝකථනද ඔබට ලබා ගත හැකියි."}
+          </p>
+          <p className="mt-4 border-t border-[#d7e5da] pt-4 text-xs leading-6 text-[#566c5e]">
+            Account type එක පරිශීලකයාට තමන්ම මාරු කළ නොහැකියි. වෙනසක් අවශ්‍ය නම් පරිපාලකයෙකු අමතන්න.
+          </p>
+        </section>
       </div>
     </main>
   </>;
