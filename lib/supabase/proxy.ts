@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-import { isAuthEntryPath } from "@/lib/auth/routes";
+import { isAuthEntryPath, shouldRedirectAuthenticatedAuthEntry } from "@/lib/auth/routes";
 
 function withSessionCookies(from: NextResponse, to: NextResponse) {
   from.cookies.getAll().forEach((cookie) => to.cookies.set(cookie));
@@ -39,7 +39,8 @@ export async function updateSession(request: NextRequest) {
   const visualQaPath = process.env.VISUAL_QA_MODE === "1" && pathname.startsWith("/visual-qa");
   const isPublicPath = isAuthEntryPath(pathname) || pathname.startsWith("/auth") || visualQaPath;
 
-  if (user && isAuthEntryPath(pathname)) {
+  const isServerAction = request.headers.has("next-action");
+  if (user && isAuthEntryPath(pathname) && shouldRedirectAuthenticatedAuthEntry(request.method, isServerAction)) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     url.search = "";

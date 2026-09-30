@@ -1,10 +1,22 @@
-import { isAuthEntryPath, safeNextPath } from "../lib/auth/routes.ts";
+import { isAuthEntryPath, safeNextPath, shouldRedirectAuthenticatedAuthEntry } from "../lib/auth/routes.ts";
 
 Deno.test("authenticated entry routes are recognized", () => {
   for (const path of ["/", "/welcome", "/login", "/create-account"]) {
     if (!isAuthEntryPath(path)) throw new Error("entry route not recognized: " + path);
   }
   if (isAuthEntryPath("/dashboard")) throw new Error("dashboard must not be an auth entry route");
+});
+
+Deno.test("authenticated login redirect does not intercept a Server Action", () => {
+  if (shouldRedirectAuthenticatedAuthEntry("POST", true)) {
+    throw new Error("Server Action POST must reach its handler");
+  }
+  if (!shouldRedirectAuthenticatedAuthEntry("GET", false)) {
+    throw new Error("authenticated page navigation should still redirect");
+  }
+  if (!shouldRedirectAuthenticatedAuthEntry("POST", false)) {
+    throw new Error("ordinary POSTs must not bypass the authenticated entry redirect");
+  }
 });
 
 Deno.test("oauth next path cannot send users back into onboarding", () => {
