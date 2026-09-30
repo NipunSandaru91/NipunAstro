@@ -8,7 +8,7 @@ import PersonalChartView from "@/app/components/personal-chart-view";
 import { buildCareerNatalModel } from "@/lib/prediction/topics/career.ts";
 import { buildGenericTopicNatalModel, TOPIC_LABEL_SI } from "@/lib/prediction/topics/generic-topic.ts";
 import type { PredictionTopic } from "@/lib/prediction/evidence.ts";
-import { SUBJECT_RELATIONSHIPS } from "@/lib/calculations/subject-relationship";
+import { subjectRelationshipLabel } from "@/lib/calculations/subject-relationship";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -171,7 +171,7 @@ export default async function CalculationPage({
       <PersonalChartView
         calculationId={id}
         subjectName={runMeta?.subject_name ?? null}
-        relationshipLabel={SUBJECT_RELATIONSHIPS.find((item) => item.value === runMeta?.subject_relationship)?.label ?? null}
+        relationshipLabel={subjectRelationshipLabel(runMeta?.subject_relationship)}
         topics={topics as Parameters<typeof PersonalChartView>[0]["topics"]}
         timezone={runMeta?.input_timezone ?? "UTC"}
         saved={saved}
@@ -192,6 +192,9 @@ export default async function CalculationPage({
               <h1 className="serif text-4xl tracking-tight text-[#18372a]">
                 {runMeta?.subject_name ?? "උපන් කේන්දරය"}
               </h1>
+              {subjectRelationshipLabel(runMeta?.subject_relationship) ? (
+                <p className="mt-2 text-sm text-[#566c5e]">සම්බන්ධය: {subjectRelationshipLabel(runMeta?.subject_relationship)}</p>
+              ) : null}
               <ChartNameEditor calculationId={id} initialName={runMeta?.subject_name ?? ""} />
               {saved ? <p className="mt-2 text-xs text-[#176b4a]">නම යාවත්කාලීන කර ඇත.</p> : null}
               <p className="mt-3 text-sm text-[var(--muted)]">
