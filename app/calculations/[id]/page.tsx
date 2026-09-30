@@ -3,16 +3,18 @@ import { createClient } from "@/lib/supabase/server";
 import D1Chart from "@/app/components/d1-chart";
 import AppNav from "@/app/components/app-nav";
 import ChartNameEditor from "@/app/components/chart-name-editor";
+import ChartRelationshipEditor from "@/app/components/chart-relationship-editor";
 import DeleteChartButton from "@/app/components/delete-chart-button";
 import PersonalChartView from "@/app/components/personal-chart-view";
 import { buildCareerNatalModel } from "@/lib/prediction/topics/career.ts";
 import { buildGenericTopicNatalModel, TOPIC_LABEL_SI } from "@/lib/prediction/topics/generic-topic.ts";
+import { bhavaQualitySi } from "@/lib/prediction/qualities.ts";
+import { buildPersonalDashaReading, buildPersonalTopicReading, type PersonalReadingAnchor } from "@/lib/prediction/ui/personal-topic-reading.ts";
 import type { PredictionTopic } from "@/lib/prediction/evidence.ts";
-import { subjectRelationshipLabel } from "@/lib/calculations/subject-relationship";
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string; saved?: string }>;
+  searchParams: Promise<{ error?: string; saved?: string; relationship_saved?: string; relationship_error?: string }>;
 };
 
 type ChartData = {
@@ -84,7 +86,7 @@ export default async function CalculationPage({
   searchParams,
 }: PageProps) {
   const { id } = await params;
-  const { error: engineError, saved } = await searchParams;
+  const { error: engineError, saved, relationship_saved, relationship_error } = await searchParams;
   const supabase = await createClient();
 
   const { data, error } = await supabase.rpc(
@@ -158,20 +160,57 @@ export default async function CalculationPage({
     const topics = natalModels.map((model) => {
       const themes = model.themes;
       const level = themes.some((theme) => theme.level === "STRONG") ? "STRONG" : themes.some((theme) => theme.level === "MODERATE") ? "MODERATE" : "WEAK";
+      const anchors: PersonalReadingAnchor[] = [...model.primary, ...model.contextual].map((item) => {
+        const evidence = item.evidence;
+        return {
+          sourceBhava: item.source_bhava,
+          sourceLabel: bhavaQualitySi(item.source_bhava).keywords_si[0],
+          grahaId: evidence.placement.graha_id,
+          grahaLabel: evidence.qualities.graha.name_si,
+          rasiLabel: evidence.qualities.rasi.name_si,
+          targetBhava: evidence.placement.bhava,
+          ruleText: evidence.rule.text_si,
+          supporting: evidence.strength.supporting.map((modifier) => modifier.text_si),
+          contradicting: evidence.strength.contradicting.map((modifier) => modifier.text_si),
+        };
+      });
+      const reading = buildPersonalTopicReading({ topic: model.topic, level, anchors: anchors.slice(0, 4) });
       const activation = (pair: typeof activePair) => {
         if (!pair) return null;
-        const matches = new Set(themes.flatMap((theme) => theme.evidence_grahas).filter((id) => id === pair.maha || id === pair.antar));
-        return { maha: grahaLabels[pair.maha] ?? "ග්‍රහයා", antar: grahaLabels[pair.antar] ?? "ග්‍රහයා", start: pair.start, end: pair.end, activation: matches.size >= 2 ? "STRONG" as const : matches.size === 1 ? "MODERATE" as const : "NONE" as const };
+        const matchedAnchors = anchors
+          .filter((anchor) => anchor.grahaId === pair.maha || anchor.grahaId === pair.antar)
+          .map((anchor) => ({
+            ...anchor,
+            matchedRoles: [
+              ...(anchor.grahaId === pair.maha ? ["මහදශා අධිපති"] : []),
+              ...(anchor.grahaId === pair.antar ? ["අන්තර්දශා අධිපති"] : []),
+            ],
+          }));
+        const mahaMatches = anchors.some((anchor) => anchor.grahaId === pair.maha);
+        const antarMatches = anchors.some((anchor) => anchor.grahaId === pair.antar);
+        const strength = mahaMatches && antarMatches ? "STRONG" as const : mahaMatches || antarMatches ? "MODERATE" as const : "NONE" as const;
+        const maha = grahaLabels[pair.maha] ?? "ග්‍රහයා";
+        const antar = grahaLabels[pair.antar] ?? "ග්‍රහයා";
+        return {
+          maha,
+          antar,
+          start: pair.start,
+          end: pair.end,
+          activation: strength,
+          narrative: buildPersonalDashaReading({ maha, antar, anchors: matchedAnchors, topic: model.topic, activation: strength }),
+        };
       };
       const displayLabel = TOPIC_LABEL_SI[model.topic];
-      return { id: model.topic, label: displayLabel, natalLevel: level, current: activation(activePair), next: activation(upcomingPair) };
+      return { id: model.topic, label: displayLabel, natalLevel: level, reading, current: activation(activePair), next: activation(upcomingPair) };
     });
     // Use the narrative catalog in the personal view, while keeping all chart evidence server-side.
     return (
       <PersonalChartView
         calculationId={id}
         subjectName={runMeta?.subject_name ?? null}
-        relationshipLabel={subjectRelationshipLabel(runMeta?.subject_relationship)}
+        currentRelationship={runMeta?.subject_relationship ?? null}
+        relationshipSaved={relationship_saved === "1"}
+        relationshipError={relationship_error}
         topics={topics as Parameters<typeof PersonalChartView>[0]["topics"]}
         timezone={runMeta?.input_timezone ?? "UTC"}
         saved={saved}
@@ -192,9 +231,7 @@ export default async function CalculationPage({
               <h1 className="serif text-4xl tracking-tight text-[#18372a]">
                 {runMeta?.subject_name ?? "උපන් කේන්දරය"}
               </h1>
-              {subjectRelationshipLabel(runMeta?.subject_relationship) ? (
-                <p className="mt-2 text-sm text-[#566c5e]">සම්බන්ධය: {subjectRelationshipLabel(runMeta?.subject_relationship)}</p>
-              ) : null}
+              <ChartRelationshipEditor calculationId={id} currentRelationship={runMeta?.subject_relationship ?? null} saved={relationship_saved === "1"} error={relationship_error} />
               <ChartNameEditor calculationId={id} initialName={runMeta?.subject_name ?? ""} />
               {saved ? <p className="mt-2 text-xs text-[#176b4a]">නම යාවත්කාලීන කර ඇත.</p> : null}
               <p className="mt-3 text-sm text-[var(--muted)]">
