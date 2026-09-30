@@ -8,6 +8,8 @@ import DeleteChartButton from "@/app/components/delete-chart-button";
 import PersonalChartView from "@/app/components/personal-chart-view";
 import { buildCareerNatalModel } from "@/lib/prediction/topics/career.ts";
 import { buildGenericTopicNatalModel, TOPIC_LABEL_SI } from "@/lib/prediction/topics/generic-topic.ts";
+import { bhavaQualitySi } from "@/lib/prediction/qualities.ts";
+import { buildPersonalDashaReading, buildPersonalTopicReading, type PersonalReadingAnchor } from "@/lib/prediction/ui/personal-topic-reading.ts";
 import type { PredictionTopic } from "@/lib/prediction/evidence.ts";
 
 type PageProps = {
@@ -158,13 +160,48 @@ export default async function CalculationPage({
     const topics = natalModels.map((model) => {
       const themes = model.themes;
       const level = themes.some((theme) => theme.level === "STRONG") ? "STRONG" : themes.some((theme) => theme.level === "MODERATE") ? "MODERATE" : "WEAK";
+      const anchors: PersonalReadingAnchor[] = [...model.primary, ...model.contextual].map((item) => {
+        const evidence = item.evidence;
+        return {
+          sourceBhava: item.source_bhava,
+          sourceLabel: bhavaQualitySi(item.source_bhava).keywords_si[0],
+          grahaId: evidence.placement.graha_id,
+          grahaLabel: evidence.qualities.graha.name_si,
+          rasiLabel: evidence.qualities.rasi.name_si,
+          targetBhava: evidence.placement.bhava,
+          ruleText: evidence.rule.text_si,
+          supporting: evidence.strength.supporting.map((modifier) => modifier.text_si),
+          contradicting: evidence.strength.contradicting.map((modifier) => modifier.text_si),
+        };
+      });
+      const reading = buildPersonalTopicReading({ topic: model.topic, level, anchors: anchors.slice(0, 4) });
       const activation = (pair: typeof activePair) => {
         if (!pair) return null;
-        const matches = new Set(themes.flatMap((theme) => theme.evidence_grahas).filter((id) => id === pair.maha || id === pair.antar));
-        return { maha: grahaLabels[pair.maha] ?? "ග්‍රහයා", antar: grahaLabels[pair.antar] ?? "ග්‍රහයා", start: pair.start, end: pair.end, activation: matches.size >= 2 ? "STRONG" as const : matches.size === 1 ? "MODERATE" as const : "NONE" as const };
+        const matchedAnchors = anchors
+          .filter((anchor) => anchor.grahaId === pair.maha || anchor.grahaId === pair.antar)
+          .map((anchor) => ({
+            ...anchor,
+            matchedRoles: [
+              ...(anchor.grahaId === pair.maha ? ["මහදශා අධිපති"] : []),
+              ...(anchor.grahaId === pair.antar ? ["අන්තර්දශා අධිපති"] : []),
+            ],
+          }));
+        const mahaMatches = anchors.some((anchor) => anchor.grahaId === pair.maha);
+        const antarMatches = anchors.some((anchor) => anchor.grahaId === pair.antar);
+        const strength = mahaMatches && antarMatches ? "STRONG" as const : mahaMatches || antarMatches ? "MODERATE" as const : "NONE" as const;
+        const maha = grahaLabels[pair.maha] ?? "ග්‍රහයා";
+        const antar = grahaLabels[pair.antar] ?? "ග්‍රහයා";
+        return {
+          maha,
+          antar,
+          start: pair.start,
+          end: pair.end,
+          activation: strength,
+          narrative: buildPersonalDashaReading({ maha, antar, anchors: matchedAnchors, topic: model.topic, activation: strength }),
+        };
       };
       const displayLabel = TOPIC_LABEL_SI[model.topic];
-      return { id: model.topic, label: displayLabel, natalLevel: level, current: activation(activePair), next: activation(upcomingPair) };
+      return { id: model.topic, label: displayLabel, natalLevel: level, reading, current: activation(activePair), next: activation(upcomingPair) };
     });
     // Use the narrative catalog in the personal view, while keeping all chart evidence server-side.
     return (
