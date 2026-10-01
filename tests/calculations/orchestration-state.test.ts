@@ -98,6 +98,10 @@ Deno.test("calculated run record preserves engine audit and existing metadata", 
       record.calculation_metadata.calculation_state !== "CALCULATED") {
     throw new Error("metadata was not preserved");
   }
+  if (record.engine_version !== "jyotisha-calculator/45; swisseph-wasm/0.1.5 browser-inline" ||
+      record.calculation_metadata.engine_handoff !== "jyotisha-calculator/45") {
+    throw new Error("engine release version changed");
+  }
   if (record.ayanamsa !== "LAHIRI" || record.zodiac_type !== "SIDEREAL" ||
       record.house_system !== "WHOLE_SIGN") {
     throw new Error("calculation audit contract changed");
