@@ -9,6 +9,8 @@ import {
   nextVimshottariLord,
   padaNumber,
   vimshottariLordForNakshatra,
+  vimshottariSubperiodDurationDays,
+  vimshottariSubperiodDurationYears,
 } from "../../supabase/functions/jyotisha-calculator/core/dasha.ts";
 
 Deno.test("Vimshottari sequence is the classical 120-year cycle", () => {
@@ -69,5 +71,43 @@ Deno.test("Vimshottari rejects invalid inputs", () => {
     let rejected = false;
     try { f(); } catch { rejected = true; }
     if (!rejected) throw Error("invalid input accepted");
+  }
+});
+
+
+Deno.test("Vimshottari deep subperiods preserve the same 120-year proportion", () => {
+  const mahadasa = 20;
+  const antardasa = vimshottariSubperiodDurationYears(mahadasa, 7);
+  const pratyantardasa = vimshottariSubperiodDurationYears(antardasa, 1);
+  const sukshma = vimshottariSubperiodDurationYears(pratyantardasa, 2);
+  const prana = vimshottariSubperiodDurationYears(sukshma, 3);
+
+  if (Math.abs(antardasa - (20 * 20 / 120)) > 1e-12) throw Error("AD mismatch");
+  if (Math.abs(pratyantardasa - (antardasa * 6 / 120)) > 1e-12) throw Error("PD mismatch");
+  if (Math.abs(sukshma - (pratyantardasa * 10 / 120)) > 1e-12) throw Error("Sukshma mismatch");
+  if (Math.abs(prana - (sukshma * 7 / 120)) > 1e-12) throw Error("Prana mismatch");
+});
+
+Deno.test("Vimshottari day-based recursion preserves parent duration", () => {
+  const parentDays = 365.25 * 7;
+  const children = VIMSHOTTARI_SEQUENCE.reduce(
+    (sum, child) => sum + vimshottariSubperiodDurationDays(parentDays, child.graha_id),
+    0,
+  );
+  if (Math.abs(children - parentDays) > 1e-9) throw Error("child periods do not preserve parent duration");
+});
+
+Deno.test("Vimshottari deep subperiod helpers reject invalid parent durations", () => {
+  const bad = [
+    () => vimshottariSubperiodDurationYears(-1, 9),
+    () => vimshottariSubperiodDurationYears(Number.NaN, 9),
+    () => vimshottariSubperiodDurationDays(-1, 9),
+    () => vimshottariSubperiodDurationDays(Number.POSITIVE_INFINITY, 9),
+    () => vimshottariSubperiodDurationDays(1, 99),
+  ];
+  for (const f of bad) {
+    let rejected = false;
+    try { f(); } catch { rejected = true; }
+    if (!rejected) throw Error("invalid deep subperiod input accepted");
   }
 });
