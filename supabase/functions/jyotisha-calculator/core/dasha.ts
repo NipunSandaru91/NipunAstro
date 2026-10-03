@@ -107,5 +107,37 @@ export function antardasaDurationYears(
   if (!Number.isFinite(mahadasaYears) || mahadasaYears < 0) {
     throw new Error("mahadasaYears must be non-negative and finite");
   }
-  return mahadasaYears * durationYearsForGraha(antardasaGrahaId) / 120;
+  return vimshottariSubperiodDurationYears(mahadasaYears, antardasaGrahaId);
+}
+
+
+export type VimshottariSubperiodLevel =
+  | "ANTARDASHA"
+  | "PRATYANTARDASHA"
+  | "SUKSHMA"
+  | "PRANA";
+
+/**
+ * Vimshottari subperiods at every depth use the same 120-year proportion.
+ * Keeping the rule generic prevents MD/AD/PD/Sukshma/Prana implementations
+ * from drifting apart as the timeline feature evolves.
+ */
+export function vimshottariSubperiodDurationYears(
+  parentPeriodYears: number,
+  childGrahaId: number,
+): number {
+  if (!Number.isFinite(parentPeriodYears) || parentPeriodYears < 0) {
+    throw new Error("parentPeriodYears must be non-negative and finite");
+  }
+  return parentPeriodYears * durationYearsForGraha(childGrahaId) / 120;
+}
+
+export function vimshottariSubperiodDurationDays(
+  parentPeriodDays: number,
+  childGrahaId: number,
+): number {
+  if (!Number.isFinite(parentPeriodDays) || parentPeriodDays < 0) {
+    throw new Error("parentPeriodDays must be non-negative and finite");
+  }
+  return parentPeriodDays * durationYearsForGraha(childGrahaId) / 120;
 }
