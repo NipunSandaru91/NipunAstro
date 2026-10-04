@@ -156,7 +156,7 @@ export function buildLifeTimeline(input: TimelineInput) {
             link.direct ? "ජන්ම " + link.occupied + " භාවයේ පිහිටීම" : "",
             link.linkedRules.length ? link.linkedRules.join(" / ") + " භාව අධිපතිත්වය" : "",
           ].filter(Boolean).join(" සහ ");
-          return GRAHA[lord] + ": " + (linked || "අදාළ භාව සම්බන්ධය");
+          return GRAHA[lord] + ": " + linked;
         });
         const toneScore = lords.reduce((total, lord) => total + lordTone(houses, lord), 0);
         const { tone, toneLabel } = describeTone(toneScore);
@@ -200,7 +200,7 @@ export function buildLifeTimeline(input: TimelineInput) {
     const selected: TimelineItem[] = [];
     const adCounts = new Map<string, number>();
     for (const candidate of candidates.sort((a, b) =>
-      b.score - a.score || a.item.startAt.localeCompare(b.item.startAt) || a.item.topic.localeCompare(b.item.topic)
+      b.score - a.score || a.item.startAt.localeCompare(b.item.startAt)
     )) {
       if ((adCounts.get(candidate.ad) ?? 0) >= 2) continue;
       selected.push(candidate.item);
