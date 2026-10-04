@@ -13,6 +13,7 @@ const professionalItems=[
 const personalItems=[
   ["/dashboard","⌂","මුල් පිටුව","dashboard"],
   ["/my-chart","⌁","මගේ කේන්දර","chart"],
+  ["/forecast","◌","දෛනික","forecast"],
   ["/chart/new","＋","නව කේන්දරය","new"],
 ] as const;
 
