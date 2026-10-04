@@ -1,4 +1,4 @@
-import type { PredictionWindowType } from "@/lib/prediction/timing/prediction-window";
+import type { PredictionWindowType } from "./prediction-window.ts";
 
 export type ForecastAccountType = "PERSONAL" | "PROFESSIONAL" | null | undefined;
 export type PredictionView = "predictions" | "forecast";
