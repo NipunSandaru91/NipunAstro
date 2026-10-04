@@ -15,6 +15,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
       - name: Setup Deno
         uses: denoland/setup-deno@v2
         with:
@@ -22,5 +31,6 @@ jobs:
 
       - name: Run tests with coverage
         run: deno test --clean --allow-env --coverage=coverage --coverage-threshold=100 tests
+
       - name: Daily Swiss astronomy smoke
         run: deno run scripts/daily-sky-smoke.ts
