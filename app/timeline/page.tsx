@@ -10,7 +10,7 @@ import {
 } from "@/lib/timeline/life-timeline";
 import { GRAHA } from "@/lib/daily/labels";
 export const dynamic = "force-dynamic";
-const LEVEL = ["මහා දශා", "අන්තර් දශා", "ප්‍රත්‍යන්තර", "සූක්ෂ්ම", "ප්‍රාණ"];
+const LEVEL = ["මහා දශා", "අන්තර් දශා", "ප්‍රත්‍යන්තර"];
 
 export default async function TimelinePage(
   { searchParams }: { searchParams: Promise<{ calculation?: string }> },
@@ -81,7 +81,7 @@ export default async function TimelinePage(
       minute: "2-digit",
       hourCycle: "h23",
     }).format(new Date(at));
-  function itemCard(item: TimelineItem, past: boolean, index: number) {
+  function itemCard(item: TimelineItem, index: number) {
     return (
       <li
         key={item.id}
@@ -91,9 +91,10 @@ export default async function TimelinePage(
           {index + 1} · {date(item.startAt)} – {date(item.endAt)}
         </p>
         <h3 className="mt-2 font-semibold text-[#176b4a]">{item.label}</h3>
-        <p className="mt-2 text-sm leading-7">
-          {past ? item.question : `සලකා බැලිය හැකි තේමාව: ${item.text}.`}
+        <p className="mt-2 text-xs font-semibold text-[#64786b]">
+          {item.impactLabel} · {item.toneLabel}
         </p>
+        <p className="mt-2 text-sm leading-7">{item.interpretation}</p>
         <p className="mt-2 text-xs leading-6 text-[#64786b]">
           {item.dasha.map((p) => GRAHA[p.graha_id]).join(" → ")} · ග්‍රහ අධිපතින්
           {" "}
@@ -101,13 +102,17 @@ export default async function TimelinePage(
         </p>
         <details className="mt-3">
           <summary className="cursor-pointer text-sm text-[#176b4a]">
-            ජන්ම සාක්ෂි සහ දශා මට්ටම් 5
+            ජන්ම සාක්ෂි සහ දශා මට්ටම් 3
           </summary>
           <ul className="mt-3 space-y-2 text-xs leading-6">
             {item.evidence.map((text) => <li key={text}>{text}</li>)}
           </ul>
+          <h4 className="mt-3 text-xs font-semibold">හොඳ/අභියෝගාත්මක පැත්ත ගණනය කළ පදනම</h4>
+          <ul className="mt-2 space-y-2 text-xs leading-6">
+            {item.directionEvidence.map((text) => <li key={text}>{text}</li>)}
+          </ul>
           <div className="mt-3 space-y-2">
-            {[...item.dasha, ...item.refinement].map((p) => (
+            {item.dasha.map((p) => (
               <div
                 className="rounded-lg bg-[#f5f8f4] p-3 text-xs leading-6"
                 key={p.path}
@@ -117,12 +122,9 @@ export default async function TimelinePage(
               </div>
             ))}
           </div>
-          {item.refinement.length < 2 && (
-            <p className="mt-2 text-xs">සූක්ෂ්ම/ප්‍රාණ කාල දත්ත සම්පූර්ණ නැත.</p>
-          )}
           <p className="mt-3 text-xs leading-6 text-[#64786b]">
-            පහළ මට්ටම් දෙක මේ තේමාවට සම්බන්ධ නිදසුන් උපකාලයකි. එය සිදුවීම සිදුවන වේලාවක් නොවේ. කාල
-            පරාස අවසන් මොහොත ඊළඟ දශාවට අයත්ය.
+            සාමාන්‍ය දර්ශනයේ මහා, අන්තර් සහ ප්‍රත්‍යන්තර දශා පමණක් පෙන්වයි. මෙය සිදුවීමක් තහවුරු කරන
+            හෝ සංඛ්‍යාත්මක සම්භාවිතාවක් දෙන ප්‍රකාශයක් නොවේ.
           </p>
         </details>
       </li>
@@ -141,8 +143,8 @@ export default async function TimelinePage(
               ජීවන කාලරේඛාව
             </h1>
             <p className="mt-3 text-sm leading-7">
-              අතීතය විමසීමට සහ ඉදිරි කාලය සැලසුම් කිරීමට ජ්‍යොතිෂමය තේමා. තහවුරු වූ සිදුවීම් හෝ
-              සංඛ්‍යාත්මක සම්භාවිතා නොවේ.
+              ජන්ම කේන්දරයේ භාව සම්බන්ධතා, මහා/අන්තර් දශා සහ ඒ තුළ ප්‍රත්‍යන්තර දශා එකට ගැළපෙන
+              කාල පරාස ඉස්මතු කරයි. අතීත සිදුවීම් තහවුරු කිරීමක් හෝ සංඛ්‍යාත්මක සම්භාවිතාවක් නොවේ.
             </p>
           </header>
           {!selected
@@ -187,7 +189,7 @@ export default async function TimelinePage(
                 {(["past", "future"] as const).map((side) => (
                   <section key={side}>
                     <h2 className="mb-3 text-xl font-semibold text-[#176b4a]">
-                      {side === "past" ? "අතීතය විමසමු" : "ඉදිරි කාලයේ තේමා"} ·{" "}
+                      {side === "past" ? "අතීත කාල පරාස" : "ඉදිරි කාල පරාස"} ·{" "}
                       {result[side].length}
                     </h2>
                     {result[side].length < 10 && (
@@ -197,9 +199,7 @@ export default async function TimelinePage(
                       </p>
                     )}
                     <ol className="space-y-4">
-                      {result[side].map((item, i) =>
-                        itemCard(item, side === "past", i)
-                      )}
+                      {result[side].map((item, i) => itemCard(item, i))}
                     </ol>
                   </section>
                 ))}
@@ -209,13 +209,14 @@ export default async function TimelinePage(
                   තේරීමේ පදනම සහ සීමා
                 </summary>
                 <p className="mt-3 text-xs leading-7">
-                  දශා අධිපතින්ගේ ජන්ම භාව/අධිපතිත්ව සම්බන්ධතා අනුව ප්‍රමුඛ තේමා තෝරා, පසුව කාල
-                  අනුපිළිවෙළට සකස් කරයි. අධිපතින් දෙදෙනෙකුගේවත් සම්බන්ධතා අවශ්‍යයි. එකම
-                  ප්‍රත්‍යන්තරයට එක් තේමාවක්; එකම අන්තර් දශාවට උපරිම දෙකක්. මෙය භාව සම්බන්ධතා
-                  තෝරන {result.version}{" "}
-                  නියමයකි. යෝග, ගෝචර, දෘෂ්ටි හා ෂඩ්බල සංයුක්ත පුරෝකථනයක් හෝ සත්‍ය ජීවිත
-                  සිදුවීම්වලින් වලංගු කළ ආකෘතියක් නොවේ. ළමා වියට වැඩිහිටි රැකියා/මූල්‍ය ප්‍රතිඵල යොදා
-                  නැත. උපන් වේලාවේ සුළු වෙනසක් පහළ දශා කාලවලට බලපායි.
+                  පළමුව මහා සහ අන්තර් දශා දෙකම අදාළ භාව සම්බන්ධතාවක් ඇති කාල ලෙස ශ්‍රේණිගත කර ඉහළම
+                  දහය දක්වා තෝරයි. ඉන්පසු එම කාල තුළ අදාළ භාවයකට සම්බන්ධ ප්‍රත්‍යන්තර දශා පමණක්
+                  තබයි. අවසන් ප්‍රතිඵලය දහයට අඩු විය හැකියි. “සාක්ෂි එකතුව” යනු මෙම නියමයන් යටතේ ඇති
+                  ජ්‍යොතිෂමය ගැළපීම් ගණනයි; ජීවිත බලපෑම හෝ සම්භාවිතාව මැනීමක් නොවේ.
+                  අනුබල/අභියෝග ලේබලය ග්‍රහයාගේ ස්වභාවික වර්ගීකරණය සහ ලග්නයට ඇති භාව අධිපතිත්වයෙන්
+                  ගණනය කරයි. චන්ද්‍ර කලාව, බුධගේ සම්බන්ධතා, ගෝචර, යෝග, දෘෂ්ටි, ග්‍රහ බල සහ සැබෑ
+                  ජීවිත සිදුවීම් මෙහි ඇතුළත් නැත. එබැවින් මෙය තහවුරු වූ සිදුවීමක් හෝ වලංගු කළ
+                  පුරෝකථන ආකෘතියක් නොවේ.
                 </p>
               </details>
             </>
