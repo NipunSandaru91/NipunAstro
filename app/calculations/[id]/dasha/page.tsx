@@ -21,5 +21,5 @@ export default async function DashaPage({params,searchParams}:Props){
  const now=Date.now();
  let view;
  try{view=buildDeepDashaView(loaded.periods,period,now);}catch{notFound();}
- return <><AppNav/><DeepDashaExplorer calculationId={id} title={loaded.run.subject_name??loaded.run.input_place_name??'කේන්දරය'} timezone={loaded.run.input_timezone??'UTC'} now={now} view={view}/></>;
+ return <><AppNav/><div className="mx-auto max-w-5xl px-4 pt-5"><Link href={`/timeline?calculation=${encodeURIComponent(id)}`} className="text-sm text-[#176b4a] underline">ජීවන කාලරේඛාව · අතීතය සහ අනාගතය →</Link></div><DeepDashaExplorer calculationId={id} title={loaded.run.subject_name??loaded.run.input_place_name??'කේන්දරය'} timezone={loaded.run.input_timezone??'UTC'} now={now} view={view}/></>;
 }
