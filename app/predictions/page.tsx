@@ -784,7 +784,7 @@ export default async function PredictionsPage({
 
   return (
     <>
-      <AppNav active="predictions" />
+      <AppNav active={predictionView === "forecast" ? "forecast" : "predictions"} />
       <main className="astro-shell min-h-screen px-4 py-6 sm:px-6 sm:py-8">
         <div className="mx-auto max-w-6xl">
           <section className="cosmic-hero rounded-[28px] border border-[#d7e5da] p-6 sm:p-9">
@@ -907,12 +907,16 @@ export default async function PredictionsPage({
           <section className="astro-card mt-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="eyebrow">Forecast Window Engine V1</p>
+                <p className="eyebrow">
+                  {personalForecast ? "Daily Forecast" : "Forecast Window Engine V1"}
+                </p>
                 <h2 className="serif mt-2 text-3xl text-[#176b4a]">
-                  Daily · Weekly · Monthly · Yearly
+                  {personalForecast ? "අද දින පුරෝකථනය" : "Daily · Weekly · Monthly · Yearly"}
                 </h2>
                 <p className="mt-2 max-w-3xl text-xs leading-6 text-[#566c5e]">
-                  {WINDOW_DETAIL[windowType]}
+                  {personalForecast
+                    ? "ඔබේ ජන්ම සටහන, වත්මන් දශාව සහ අදාල ගෝචර කාල ලක්ෂ්‍ය එකට ගැලපූ දෛනික කියවීම."
+                    : WINDOW_DETAIL[windowType]}
                 </p>
               </div>
               <div className="text-left lg:text-right">
@@ -925,8 +929,14 @@ export default async function PredictionsPage({
               </div>
             </div>
 
-            <div className="mt-5 grid grid-cols-4 gap-2">
-              {(["DAILY", "WEEKLY", "MONTHLY", "YEARLY"] as const).map(
+            <div
+              className={
+                personalForecast
+                  ? "mt-5 grid grid-cols-1 gap-2"
+                  : "mt-5 grid grid-cols-4 gap-2"
+              }
+            >
+              {availableWindows.map(
                 (item) => (
                   <Link
                     key={item}
@@ -956,6 +966,7 @@ export default async function PredictionsPage({
             >
               <input type="hidden" name="calculation_id" value={selectedId} />
               <input type="hidden" name="topic" value={selectedTopic} />
+              <input type="hidden" name="view" value={predictionView} />
               <input
                 type="hidden"
                 name="timezone"
@@ -983,9 +994,13 @@ export default async function PredictionsPage({
                 />
               </label>
               <div className="flex items-end">
-                <button type="submit" className="cosmic-primary w-full">
-                  Generate / Refresh {WINDOW_LABEL[windowType]}
-                </button>
+                <PredictionWindowSubmitButton
+                  label={
+                    personalForecast
+                      ? "දෛනික පුරෝකථනය ගණනය කරන්න"
+                      : `Generate / Refresh ${WINDOW_LABEL[windowType]}`
+                  }
+                />
               </div>
             </form>
 
@@ -997,8 +1012,9 @@ export default async function PredictionsPage({
 
             {params.window_generated ? (
               <div className="mt-4 rounded-xl border border-[#b9d8c3] bg-[#e8f4ec] p-4 text-xs leading-6 text-[#176b4a]">
-                {windowPlan.samples.length} planned transit snapshots generate
-                කර {topicLabel} window aggregation සඳහා සුරකින ලදී.
+                {personalForecast
+                  ? "අද දින පුරෝකථනය යාවත්කාලීන කළා."
+                  : `${windowPlan.samples.length} planned transit snapshots generate කර ${topicLabel} window aggregation සඳහා සුරකින ලදී.`}
               </div>
             ) : null}
 
@@ -1012,29 +1028,35 @@ export default async function PredictionsPage({
                     <div className="flex items-center justify-between gap-2">
                       <WindowBadge state={result.window_state} />
                       <span className="text-[9px] text-[#566c5e]">
-                        {result.observed_samples}/{result.expected_samples} samples
+                        {personalForecast
+                          ? "දෛනික සාරාංශය"
+                          : `${result.observed_samples}/${result.expected_samples} samples`}
                       </span>
                     </div>
-                    <p className="mt-3 font-mono text-[9px] text-[#566c5e]">
-                      {result.theme_code}
+                    <p className="mt-3 text-sm leading-6 text-[#18372a]">
+                      {selectedModel?.themes.find(
+                        (theme) => theme.code === result.theme_code,
+                      )?.text_si ?? `${topicLabel} කාල තේමාව`}
                     </p>
                     <p className="mt-2 text-xs leading-6 text-[#566c5e]">
                       {windowStateSi(result.window_state)}
                     </p>
-                    <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-                      <MiniMetric
-                        label="Convergent"
-                        value={String(result.active_now_samples)}
-                      />
-                      <MiniMetric
-                        label="Daśā"
-                        value={String(result.dasha_active_samples)}
-                      />
-                      <MiniMetric
-                        label="Transit"
-                        value={String(result.transit_triggered_samples)}
-                      />
-                    </div>
+                    {personalForecast ? null : (
+                      <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                        <MiniMetric
+                          label="Convergent"
+                          value={String(result.active_now_samples)}
+                        />
+                        <MiniMetric
+                          label="Daśā"
+                          value={String(result.dasha_active_samples)}
+                        />
+                        <MiniMetric
+                          label="Transit"
+                          value={String(result.transit_triggered_samples)}
+                        />
+                      </div>
+                    )}
                     {result.first_active_at ? (
                       <p className="mt-3 text-[10px] leading-5 text-[#566c5e]">
                         First convergence ·{" "}
