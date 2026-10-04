@@ -36,7 +36,7 @@ body { font-family: "Noto Sans Sinhala", "Iskoola Pota", system-ui, sans-serif; 
 .na-entry-content > p:not(.na-overline), .na-welcome-copy > p:not(.na-overline) { max-width: 550px; margin: 0 0 2rem; color: #53695b; font-size: 1.04rem; line-height: 1.9; }
 .na-entry-foot { margin: 0; border-top: 1px solid var(--border); padding-top: 1rem; color: #617568; font-size: .72rem; }
 .na-public-header { padding: 1.7rem 0; }
-.na-welcome-layout { display: grid; min-height: calc(100svh - 110px); align-items: center; gap: 4rem; grid-template-columns: minmax(0, 1.25fr) minmax(290px, .8fr); padding: 2rem 0 5rem; }
+.na-welcome-layout { display: grid; min-height: calc(100svh - 110px); align-items: center; grid-template-columns: minmax(0, 690px); padding: 2rem 0 5rem; }
 .na-step-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 20px; background: #f8fbf8; }
 .na-step-list li { display: flex; gap: 1rem; padding: 1.5rem; }
 .na-step-list li + li { border-top: 1px solid var(--border); }
