@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { localDate } from "@/lib/daily/sky";
 
@@ -46,6 +46,12 @@ export default function DailyControls(props: Props) {
   const [locating, setLocating] = useState(false);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState("");
+  const locationRequest = useRef(0);
+
+  function beginLocationRequest() {
+    locationRequest.current += 1;
+    return locationRequest.current;
+  }
 
   const field =
     "mt-2 w-full rounded-xl border border-[#d7e5da] bg-white px-3 py-3 text-sm text-[#233e2e]";
@@ -65,7 +71,7 @@ export default function DailyControls(props: Props) {
     setError("");
   }
 
-  async function useApproximateCurrentLocation() {
+  async function loadApproximateCurrentLocation(requestId: number) {
     try {
       const response = await fetch("/api/locations?level=current", {
         cache: "no-store",
@@ -75,7 +81,11 @@ export default function DailyControls(props: Props) {
         error?: string;
       };
 
-      if (!response.ok || !payload.place) return false;
+      if (
+        requestId !== locationRequest.current ||
+        !response.ok ||
+        !payload.place
+      ) return false;
 
       setChosenLocation(
         payload.place.name || "වත්මන් ප්‍රදේශය",
@@ -91,12 +101,14 @@ export default function DailyControls(props: Props) {
   }
 
   function useCurrentLocation() {
+    const requestId = beginLocationRequest();
     setError("");
     setSearchResults([]);
     setLocating(true);
 
     const fallback = async () => {
-      const usedApproximate = await useApproximateCurrentLocation();
+      const usedApproximate = await loadApproximateCurrentLocation(requestId);
+      if (requestId !== locationRequest.current) return;
       if (!usedApproximate) {
         setError(
           "Current location ලබාගත නොහැකි විය. පහත Location Search භාවිත කර ස්ථානය තෝරන්න.",
@@ -110,24 +122,42 @@ export default function DailyControls(props: Props) {
       return;
     }
 
-    const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (!browserTimezone) {
-      void fallback();
-      return;
-    }
-
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setChosenLocation(
-          "මගේ වත්මන් ස්ථානය",
-          position.coords.latitude,
-          position.coords.longitude,
-          browserTimezone,
-          "Device GPS / browser location permission මත පදනම් වේ.",
-        );
-        setLocating(false);
+      async (position) => {
+        if (requestId !== locationRequest.current) return;
+        try {
+          const params = new URLSearchParams({
+            level: "timezone",
+            lat: String(position.coords.latitude),
+            lon: String(position.coords.longitude),
+          });
+          const response = await fetch("/api/locations?" + params, {
+            cache: "no-store",
+          });
+          const result = await response.json() as { timezone?: string };
+          if (!response.ok || !result.timezone) {
+            throw new Error("coordinate_timezone_unavailable");
+          }
+          if (requestId !== locationRequest.current) return;
+          setChosenLocation(
+            "මගේ වත්මන් ස්ථානය",
+            position.coords.latitude,
+            position.coords.longitude,
+            result.timezone,
+            "GPS coordinates අනුව ස්ථානයේ වේලා කලාපය තීරණය කරයි.",
+          );
+        } catch {
+          if (requestId === locationRequest.current) {
+            setError(
+              "GPS ස්ථානයට ගැළපෙන වේලා කලාපය හඳුනාගත නොහැකි විය. Location Search මඟින් ස්ථානය තෝරන්න.",
+            );
+          }
+        } finally {
+          if (requestId === locationRequest.current) setLocating(false);
+        }
       },
       () => {
+        if (requestId !== locationRequest.current) return;
         void fallback();
       },
       {
@@ -140,8 +170,11 @@ export default function DailyControls(props: Props) {
 
   async function searchPlaces() {
     const query = searchQuery.trim();
+    const requestId = beginLocationRequest();
     setError("");
     setSearchResults([]);
+    setLocating(false);
+    setSearching(false);
 
     if (query.length < 2) {
       setError("නගරය හෝ ප්‍රදේශය අවම වශයෙන් අකුරු 2කින් සොයන්න.");
@@ -157,6 +190,7 @@ export default function DailyControls(props: Props) {
       url.searchParams.set("format", "json");
 
       const response = await fetch(url.toString(), { cache: "no-store" });
+      if (requestId !== locationRequest.current) return;
       if (!response.ok) throw new Error("location_search_failed");
 
       const payload = await response.json() as { results?: SearchPlace[] };
@@ -180,7 +214,7 @@ export default function DailyControls(props: Props) {
         "Location Search සේවාවට සම්බන්ධ විය නොහැකි විය. නැවත උත්සාහ කරන්න.",
       );
     } finally {
-      setSearching(false);
+      if (requestId === locationRequest.current) setSearching(false);
     }
   }
 
@@ -192,6 +226,9 @@ export default function DailyControls(props: Props) {
       typeof result.timezone !== "string"
     ) return;
 
+    beginLocationRequest();
+    setSearching(false);
+    setLocating(false);
     const label = [result.name, result.admin1, result.country]
       .filter(Boolean)
       .join(", ");
@@ -261,7 +298,7 @@ export default function DailyControls(props: Props) {
         </h2>
         <button
           type="button"
-          disabled={locating || pending}
+          disabled={locating || searching || pending}
           onClick={useCurrentLocation}
           className="mt-3 w-full rounded-xl border border-[#b9d8c3] bg-[#edf5ef] px-4 py-3 text-sm font-semibold text-[#176b4a] disabled:opacity-60"
         >
@@ -281,6 +318,9 @@ export default function DailyControls(props: Props) {
           <input
             value={searchQuery}
             onChange={(event) => {
+              beginLocationRequest();
+              setSearching(false);
+              setLocating(false);
               setSearchQuery(event.target.value);
               setSearchResults([]);
             }}
@@ -296,7 +336,7 @@ export default function DailyControls(props: Props) {
           />
           <button
             type="button"
-            disabled={searching || pending}
+            disabled={searching || locating || pending}
             onClick={() => void searchPlaces()}
             className="rounded-xl bg-[#176b4a] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60"
           >
@@ -314,6 +354,7 @@ export default function DailyControls(props: Props) {
                 <button
                   key={result.id ?? `${label}-${index}`}
                   type="button"
+                  disabled={locating || searching || pending}
                   onClick={() => chooseSearchResult(result)}
                   className="block w-full border-b border-[#edf1ed] px-3 py-3 text-left last:border-b-0 hover:bg-[#f3f8f4]"
                 >
