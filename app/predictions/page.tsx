@@ -3,6 +3,7 @@ import { predictionDashaRows } from "@/lib/calculations/deep-dasha-view";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppNav from "@/app/components/app-nav";
+import PredictionWindowSubmitButton from "@/app/components/prediction-window-submit-button";
 import { generatePredictionWindow } from "@/app/calculations/actions";
 import { createClient } from "@/lib/supabase/server";
 import type { PredictionTopic } from "@/lib/prediction/evidence.ts";
@@ -28,6 +29,13 @@ import {
   utcTimestampToLocalSampleKey,
   type PredictionWindowType,
 } from "@/lib/prediction/timing/prediction-window.ts";
+import {
+  allowedForecastWindows,
+  canAccessPredictionView,
+  isPersonalAccount,
+  normalizeForecastWindow,
+  type PredictionView,
+} from "@/lib/prediction/timing/forecast-access.ts";
 import {
   aggregatePredictionWindow,
   windowStateSi,
@@ -267,8 +275,20 @@ export default async function PredictionsPage({
   const supabase = await createClient();
   const { data: claims } = await supabase.auth.getClaims();
   if (!claims?.claims?.sub) redirect("/login");
-  const { data: profile } = await supabase.from("profiles").select("account_type").single();
-  if (profile?.account_type === "PERSONAL") redirect("/dashboard");
+
+  const predictionView: PredictionView =
+    params.view === "forecast" ? "forecast" : "predictions";
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("account_type")
+    .single();
+
+  if (!canAccessPredictionView(profile?.account_type, predictionView)) {
+    redirect("/dashboard");
+  }
+
+  const personalForecast =
+    predictionView === "forecast" && isPersonalAccount(profile?.account_type);
 
   const { data: rows } = await supabase
     .from("user_calculation_runs_v1")
@@ -283,7 +303,6 @@ export default async function PredictionsPage({
     : calculations[0]?.id;
   const selectedBhava = Math.min(12, Math.max(1, Number(params.bhava) || 1));
   const selectedTopic = parsePredictionTopic(params.topic?.toUpperCase());
-  const predictionView = params.view === "forecast" ? "forecast" : "predictions";
 
   if (!selectedId) {
     return (
@@ -312,7 +331,14 @@ export default async function PredictionsPage({
   const selectedCalc = calculations.find(
     (calculation) => calculation.id === selectedId,
   )!;
-  const windowType = parsePredictionWindowType(params.window?.toUpperCase());
+  const requestedWindowType = parsePredictionWindowType(
+    params.window?.toUpperCase(),
+  );
+  const windowType = normalizeForecastWindow(
+    profile?.account_type,
+    requestedWindowType,
+  );
+  const availableWindows = allowedForecastWindows(profile?.account_type);
   const todayForChart = localDateInTimezone(
     new Date(),
     selectedCalc.input_timezone,
