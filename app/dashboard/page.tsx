@@ -36,6 +36,14 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       { href: chartPath, icon: "✧", label: "ජන්ම කේන්දරය", detail: "D1 සහ ග්‍රහ පිහිටීම්" },
       { href: `${chartPath}#personal-predictions`, icon: "✦", label: "පුද්ගලික පුරෝකථන", detail: "D1 සහ දශා කියවීම" },
       { href: latest ? chartPath + "/dasha" : "/chart/new", icon: "◌", label: "දශා විශ්ලේෂණය", detail: "කාල පරිච්ඡේද" },
+      ...(profile?.account_type === "PROFESSIONAL"
+        ? [{
+          href: "/timeline",
+          icon: "↗",
+          label: "ජීවන කාලරේඛාව",
+          detail: "අතීත/අනාගත තේමා සහ දශා සාක්ෂි",
+        }]
+        : []),
       { href: latest ? chartPath + "/transit" : "/chart/new", icon: "▥", label: "ගෝචර", detail: "ග්‍රහ ගමන" },
     ];
 
@@ -119,3 +127,4 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     </main>
   </>;
 }
+
