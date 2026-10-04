@@ -1,4 +1,5 @@
 import { PHILIPPINES_CITIES_BY_REGION, PHILIPPINES_REGIONS } from "@/lib/locations/philippines";
+import { resolveBirthPlace } from "@/lib/calculations/place-resolution";
 import { NextRequest, NextResponse } from "next/server";
 
 const API = "https://countriesnow.space/api/v0.1";
@@ -143,8 +144,21 @@ export async function GET(request: NextRequest) {
   const level = request.nextUrl.searchParams.get("level");
   const country = request.nextUrl.searchParams.get("country")?.trim() ?? "";
   const state = request.nextUrl.searchParams.get("state")?.trim() ?? "";
+  const query = request.nextUrl.searchParams.get("query")?.trim() ?? "";
 
   try {
+    if (level === "resolve") {
+      if (query.length < 2 || query.length > 120) {
+        return NextResponse.json(
+          { error: "invalid_location_query" },
+          { status: 400 },
+        );
+      }
+
+      const place = await resolveBirthPlace(query);
+      return NextResponse.json({ place });
+    }
+
     if (level === "country") {
       const payload = await readJson<Country[]>(
         `${API}/countries/flag/unicode`,
