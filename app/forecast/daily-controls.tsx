@@ -174,6 +174,7 @@ export default function DailyControls(props: Props) {
     setError("");
     setSearchResults([]);
     setLocating(false);
+    setSearching(false);
 
     if (query.length < 2) {
       setError("නගරය හෝ ප්‍රදේශය අවම වශයෙන් අකුරු 2කින් සොයන්න.");
