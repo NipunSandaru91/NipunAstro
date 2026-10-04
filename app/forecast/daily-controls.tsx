@@ -242,8 +242,9 @@ export default function DailyControls(props: Props) {
 
       <p className="mt-3 text-xs leading-6 text-[#64786b]">
         උපන් ස්ථානය නොව, අද ඔබ සිටින ස්ථානය භාවිත කරන්න. Current location
-        තෝරන විට browser එක location permission ඉල්ලයි. GPS data save නොකර
-        මෙම දෛනික ගණනයට coordinates ලෙස පමණක් යොදාගනී.{" "}
+        තෝරන විට browser එක location permission ඉල්ලයි. Location එක ඔබේ
+        කේන්දරයට හෝ app database එකට current-location field එකක් ලෙස save නොකර,
+        මෙම Daily request එකේ coordinates ලෙස භාවිත කරයි.{" "}
         {place && `තෝරාගත් ස්ථානය: ${place}`}
       </p>
 
