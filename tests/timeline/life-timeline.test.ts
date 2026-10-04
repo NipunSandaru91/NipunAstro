@@ -86,6 +86,22 @@ Deno.test("top MD/AD windows are refined by distinct topic-linked PD lords", () 
 
 Deno.test("no padding; age, period boundaries, and incomplete depth are respected", () => {
   assertEquals(buildLifeTimeline({ ...input, periods: [] }).past, []);
+  assertEquals(buildLifeTimeline({
+    ...input,
+    periods: periods.filter((p) => p.level <= 2),
+  }).future, []);
+  assertThrows(() => buildLifeTimeline({
+    ...input,
+    periods: periods.filter((p) => p.level >= 2),
+  }));
+  const zeroLengthParents = buildLifeTimeline({
+    ...input,
+    periods: periods.map((p) => p.level === 2
+      ? { ...p, start_at: p.end_at }
+      : p),
+  });
+  assertEquals(zeroLengthParents.past, []);
+  assertEquals(zeroLengthParents.future, []);
   const newborn = buildLifeTimeline({ ...input, asOf: birthAt });
   assertEquals(newborn.past, []);
   assert(
