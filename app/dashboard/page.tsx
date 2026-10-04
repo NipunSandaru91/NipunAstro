@@ -27,7 +27,6 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const latest = owned[0];
   const personal = profile?.account_type === "PERSONAL";
   const chartPath = latest ? `/calculations/${latest.id}` : "/chart/new";
-  const title = latest?.subject_name || latest?.input_place_name || "ඔබේ පළමු කේන්දරය";
   const explorations = personal
     ? [
       { href: chartPath, icon: "✧", label: "පුරෝකථන මාතෘකා", detail: "D1 සහ තත්කාලීන කියවීම" },
@@ -50,7 +49,6 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
             <h1>ඔබේ නක්ෂත්‍ර නිරීක්ෂණය</h1>
             <p>කේන්දරය තෝරාගෙන එහි ගණනය සහ කියවීම එකම තැනකින් බලන්න.</p>
           </div>
-          <Link href="/chart/new" className="ref-create-button">＋ <span>නව කේන්දරය</span></Link>
         </div>
 
         {actionError ? <div className="ref-action-error" role="alert">
@@ -61,23 +59,39 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
 
         <div className="ref-dashboard-layout">
           <div className="ref-dashboard-primary">
-            <section className="ref-feature-hero" aria-labelledby="current-chart-title">
-              <div className="ref-feature-copy">
-                <p>{latest ? "දැනට තෝරාගත් කේන්දරය" : "මෙතැනින් ආරම්භ කරන්න"}</p>
-                <h2 id="current-chart-title">{title}</h2>
-                <span>{latest
-                  ? `${latest.input_place_name ? latest.input_place_name + " · " : ""}${latest.input_birth_date} · ${latest.input_birth_time}`
-                  : "උපන් දිනය, වේලාව සහ ස්ථානය ඇතුළත් කර පළමු ගණනය සාදන්න."}</span>
+            <section className="astro-card" aria-labelledby="home-chart-selector-title">
+              <div className="flex items-end justify-between gap-3">
+                <div>
+                  <p className="eyebrow">Chart Selector</p>
+                  <h2 id="home-chart-selector-title" className="serif mt-2 text-2xl text-[#176b4a]">
+                    කේන්දරය තෝරන්න
+                  </h2>
+                </div>
               </div>
-              <Link href={chartPath} className="ref-hero-action">
-                {latest ? "කේන්දරය විවෘත කරන්න" : "කේන්දරය සාදන්න"} <span aria-hidden="true">→</span>
-              </Link>
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+                {owned.map((calculation, index) => (
+                  <Link
+                    key={calculation.id}
+                    href={`/calculations/${calculation.id}`}
+                    className={index === 0 ? "astro-chip active" : "astro-chip"}
+                  >
+                    <span className="block">
+                      {calculation.subject_name ??
+                        calculation.input_place_name ??
+                        "Natal chart"}
+                    </span>
+                    <small className="mt-1 block opacity-60">
+                      {calculation.input_birth_date}
+                    </small>
+                  </Link>
+                ))}
+                <Link href="/chart/new" className="astro-chip">
+                  <span className="block">＋ නව කේන්දරයක්</span>
+                  <small className="mt-1 block opacity-60">උපන් තොරතුරු ඇතුළත් කරන්න</small>
+                </Link>
+              </div>
             </section>
-            {latest ? <section className="ref-current-summary" aria-label="කේන්දර තත්ත්වය">
-              <div><small>ගණනයේ තත්ත්වය</small><strong>{latest.status === "CALCULATED" ? "සූදානම්" : latest.status === "FAILED" ? "නැවත පරීක්ෂා කළ යුතුයි" : "ගණනය වෙමින්"}</strong></div>
-              <div><small>සුරකින ලද කේන්දර</small><strong>{owned.length}</strong></div>
-              <Link href="/my-chart">සියල්ල බලන්න <span aria-hidden="true">→</span></Link>
-            </section> : null}
+
             <section className="ref-dashboard-section" aria-labelledby="explore-title">
               <div className="ref-section-heading"><p className="ref-kicker">EXPLORE</p><h2 id="explore-title">{personal ? "ඔබේ කියවීම" : "ගණනය විමසන්න"}</h2></div>
               <div className="ref-dashboard-cards">
