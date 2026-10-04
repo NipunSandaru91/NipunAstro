@@ -1,0 +1,41 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@fusionstrings/swisseph-wasm@0.1.5": "0.1.5",
+    "jsr:@std/assert@1": "1.0.19",
+    "jsr:@std/internal@^1.0.12": "1.0.14"
+  },
+  "jsr": {
+    "@fusionstrings/swisseph-wasm@0.1.5": {
+      "integrity": "fb9e3b7a64d8d84ced50e3e35100197e573e0b15bd82aca1a2b0477b37819aa3"
+    },
+    "@std/assert@1.0.19": {
+      "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/internal@1.0.14": {
+      "integrity": "291516b3d4c35024d6ffbc0a9df5bf4c64116e05b50012cf846710152d2ffdf7"
+    }
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@supabase/ssr@~0.12.7",
+        "npm:@supabase/supabase-js@^2.116.0",
+        "npm:@tailwindcss/postcss@4",
+        "npm:@types/node@20",
+        "npm:@types/react-dom@19",
+        "npm:@types/react@19",
+        "npm:eslint-config-next@16.3.5",
+        "npm:eslint@9",
+        "npm:next@16.3.5",
+        "npm:react-dom@19.2.8",
+        "npm:react@19.2.8",
+        "npm:tailwindcss@4",
+        "npm:typescript@5"
+      ]
+    }
+  }
+}
