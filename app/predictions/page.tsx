@@ -311,12 +311,16 @@ export default async function PredictionsPage({
         <main className="astro-shell min-h-screen px-4 py-6 sm:px-6">
           <div className="mx-auto max-w-5xl">
             <section className="cosmic-hero rounded-[28px] border border-[#d7e5da] p-6 sm:p-9">
-              <p className="eyebrow">Prediction Observatory</p>
+              <p className="eyebrow">
+                {predictionView === "forecast" ? "Daily Forecast" : "Prediction Observatory"}
+              </p>
               <h1 className="serif mt-3 text-4xl text-[#176b4a]">
-                පුරෝකථන
+                {predictionView === "forecast" ? "දෛනික පුරෝකථනය" : "පුරෝකථන"}
               </h1>
               <p className="mt-4 text-sm leading-7 text-[#566c5e]">
-                පුරෝකථනයක් සඳහා මුලින් සත්‍යාපිත calculation එකක් අවශ්‍යයි.
+                {predictionView === "forecast"
+                  ? "දෛනික කියවීමක් සඳහා මුලින් කේන්දරයක් සාදන්න."
+                  : "පුරෝකථනයක් සඳහා මුලින් සත්‍යාපිත calculation එකක් අවශ්‍යයි."}
               </p>
               <Link href="/chart/new" className="cosmic-primary mt-6">
                 නව කේන්දරයක් සාදන්න
@@ -789,17 +793,27 @@ export default async function PredictionsPage({
         <div className="mx-auto max-w-6xl">
           <section className="cosmic-hero rounded-[28px] border border-[#d7e5da] p-6 sm:p-9">
             <p className="eyebrow">
-              Prediction Observatory · {selectedTopic} V1
+              {predictionView === "forecast"
+                ? personalForecast
+                  ? "Daily Forecast"
+                  : "Forecast Observatory"
+                : `Prediction Observatory · ${selectedTopic} V1`}
             </p>
             <div className="mt-3 grid gap-7 lg:grid-cols-[1fr_.55fr] lg:items-end">
               <div>
                 <h1 className="serif text-4xl text-[#176b4a] sm:text-5xl">
-                  {topicLabel} · භාව 12 විශ්ලේෂණය
+                  {predictionView === "forecast"
+                    ? personalForecast
+                      ? `${topicLabel} · අද දින කියවීම`
+                      : `${topicLabel} · කාල අනාවැකි`
+                    : `${topicLabel} · භාව 12 විශ්ලේෂණය`}
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-[#566c5e]">
-                  Natal evidence, Vimśottarī Daśā සහ transit snapshots එකට
-                  බැඳී timing state සහ Daily / Weekly / Monthly / Yearly
-                  windows පෙන්වයි.
+                  {predictionView === "forecast"
+                    ? personalForecast
+                      ? "ජන්ම සටහන, වත්මන් දශාව සහ අද දින ගෝචර සක්‍රීයතාව එකට ගැලපූ සරල කියවීම."
+                      : "Natal evidence, Vimśottarī Daśā සහ transit snapshots එකට බැඳී කාල කවුළු විශ්ලේෂණය පෙන්වයි."
+                    : "Natal evidence, Vimśottarī Daśā සහ transit snapshots එකට බැඳී timing state සහ Daily / Weekly / Monthly / Yearly windows පෙන්වයි."}
                 </p>
               </div>
               <div className="rounded-2xl border border-[#d7e5da] bg-[#ffffff]/80 p-4">
@@ -1026,7 +1040,11 @@ export default async function PredictionsPage({
                     className="rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <WindowBadge state={result.window_state} />
+                      {personalForecast ? (
+                        <span className="strength-pill">අද</span>
+                      ) : (
+                        <WindowBadge state={result.window_state} />
+                      )}
                       <span className="text-[9px] text-[#566c5e]">
                         {personalForecast
                           ? "දෛනික සාරාංශය"
@@ -1059,7 +1077,7 @@ export default async function PredictionsPage({
                     )}
                     {result.first_active_at ? (
                       <p className="mt-3 text-[10px] leading-5 text-[#566c5e]">
-                        First convergence ·{" "}
+                        {personalForecast ? "ප්‍රබල කාල ලක්ෂ්‍යය" : "First convergence"} ·{" "}
                         {formatAt(
                           result.first_active_at,
                           selectedCalc.input_timezone,
@@ -1076,6 +1094,7 @@ export default async function PredictionsPage({
               )}
             </div>
 
+            {!personalForecast ? (
             <div className="mt-5 rounded-2xl border border-[#d7e5da] bg-[#ffffff] p-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
@@ -1126,10 +1145,12 @@ export default async function PredictionsPage({
                 </p>
               )}
             </div>
+            ) : null}
 
             <p className="mt-4 text-[10px] leading-5 text-[#566c5e]">
-              Sample counts probability නොවේ. ඒවා window එක තුළ engine එක
-              පරීක්ෂා කළ කාල ලක්ෂ්‍ය පමණි.
+              {personalForecast
+                ? "මෙය සාම්ප්‍රදායික ජ්‍යොතිෂ timing කියවීමක් වන අතර නිශ්චිත සිදුවීමක් හෝ ප්‍රතිඵලයක් සහතික නොකරයි."
+                : "Sample counts probability නොවේ. ඒවා window එක තුළ engine එක පරීක්ෂා කළ කාල ලක්ෂ්‍ය පමණි."}
             </p>
           </section>
           ) : null}
