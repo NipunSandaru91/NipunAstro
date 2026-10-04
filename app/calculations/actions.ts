@@ -20,6 +20,11 @@ import {
   parsePredictionWindowType,
 } from "@/lib/prediction/timing/prediction-window";
 import { parsePredictionTopic } from "@/lib/prediction/topics/generic-topic";
+import {
+  normalizeForecastWindow,
+  predictionBasePath,
+  type PredictionView,
+} from "@/lib/prediction/timing/forecast-access";
 import { parseSubjectRelationship } from "@/lib/calculations/subject-relationship";
 
 export async function createCalculation(formData: FormData) {
@@ -284,9 +289,27 @@ export async function generatePredictionWindow(formData: FormData) {
   const topic = parsePredictionTopic(
     String(formData.get("topic") ?? "CAREER").toUpperCase(),
   );
-  const windowType = parsePredictionWindowType(
+  const predictionView: PredictionView =
+    String(formData.get("view") ?? "predictions") === "forecast"
+      ? "forecast"
+      : "predictions";
+  const requestedWindowType = parsePredictionWindowType(
     String(formData.get("window_type") ?? "DAILY").toUpperCase(),
   );
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("account_type")
+    .single();
+
+  if (profile?.account_type === "PERSONAL" && predictionView !== "forecast") {
+    redirect("/dashboard");
+  }
+
+  const windowType = normalizeForecastWindow(
+    profile?.account_type,
+    requestedWindowType,
+  );
+  const basePath = predictionBasePath(predictionView);
 
   let planError: string | null = null;
   let plan: ReturnType<typeof buildPredictionWindowPlan> | null = null;
@@ -311,7 +334,7 @@ export async function generatePredictionWindow(formData: FormData) {
 
   if (!plan || planError) {
     redirect(
-      "/predictions" +
+      basePath +
         baseQuery +
         "&window_error=" +
         encodeURIComponent(planError ?? "INVALID_PREDICTION_WINDOW"),
@@ -404,14 +427,14 @@ export async function generatePredictionWindow(formData: FormData) {
 
   if (windowError) {
     redirect(
-      "/predictions" +
+      basePath +
         baseQuery +
         "&window_error=" +
         encodeURIComponent(windowError),
     );
   }
 
-  redirect("/predictions" + baseQuery + "&window_generated=1");
+  redirect(basePath + baseQuery + "&window_generated=1");
 }
 
 
