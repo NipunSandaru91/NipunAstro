@@ -32,5 +32,9 @@ jobs:
       - name: Run tests with coverage
         run: deno test --clean --allow-env --coverage=coverage --coverage-threshold=100 tests
 
+      - name: Print uncovered branches for diagnosis
+        if: failure()
+        run: deno coverage --detailed coverage
+
       - name: Daily Swiss astronomy smoke
         run: deno run scripts/daily-sky-smoke.ts
