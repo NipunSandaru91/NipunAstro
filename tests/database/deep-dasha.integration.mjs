@@ -25,7 +25,7 @@ insert into jyotisha.graha_positions values ('00000000-0000-0000-0000-0000000000
 await db.exec(
   readFileSync(
     new URL(
-      "../../supabase/migrations/20261003163837_deep_vimshottari_v2.sql",
+      "../../supabase/migrations/20261004004322_deep_vimshottari_v2.sql",
       import.meta.url,
     ),
     "utf8",

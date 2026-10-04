@@ -22,7 +22,7 @@ The live `generate_vimshottari_periods` already generates PD as well as MD/AD. I
 
 ## Database changes
 
-`20261003163837_deep_vimshottari_v2.sql` adds:
+`20261004004322_deep_vimshottari_v2.sql` adds (filename aligned with applied production migration):
 
 - Pure SQL `deep_vimshottari_rows_v2` with the same precision and order contract.
 - `deep_dasha_periods_v2` with versioned composite identity, same-calculation parent FK, positive duration checks, parent/lookup indexes and owner-only RLS reads excluding deleted charts.

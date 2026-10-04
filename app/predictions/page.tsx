@@ -1,3 +1,5 @@
+import { loadDeepDasha } from "@/lib/calculations/load-deep-dasha";
+import { predictionDashaRows } from "@/lib/calculations/deep-dasha-view";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppNav from "@/app/components/app-nav";
@@ -329,19 +331,14 @@ export default async function PredictionsPage({
 
   const [
     { data: chartData, error },
-    { data: mdData },
+    deepDasha,
     { data: currentTransitData },
     { data: windowTransitData },
   ] = await Promise.all([
     supabase.rpc("get_user_calculation_chart_v1", {
       p_calculation_id: selectedId,
     }),
-    supabase
-      .schema("jyotisha")
-      .from("mahadasa_periods")
-      .select("id,graha_id,start_at,end_at")
-      .eq("calculation_id", selectedId)
-      .order("start_at", { ascending: true }),
+    loadDeepDasha(supabase, selectedId, 2),
     supabase
       .schema("jyotisha")
       .from("transit_positions")
@@ -368,19 +365,7 @@ export default async function PredictionsPage({
     throw new Error(error?.message ?? "PREDICTION_CHART_NOT_AVAILABLE");
   }
 
-  const allMd = (mdData ?? []) as DashaRow[];
-  const mdIds = allMd.map((row) => row.id);
-  let allAd: DashaRow[] = [];
-
-  if (mdIds.length) {
-    const { data: adData } = await supabase
-      .schema("jyotisha")
-      .from("antardasa_periods")
-      .select("id,mahadasa_id,graha_id,start_at,end_at")
-      .in("mahadasa_id", mdIds)
-      .order("start_at", { ascending: true });
-    allAd = (adData ?? []) as DashaRow[];
-  }
+  const {md:allMd,ad:allAd} = predictionDashaRows(selectedId,deepDasha?.periods??[]);
 
   const chart = chartData as ChartData;
   const lagna = chart.lagna ?? null;

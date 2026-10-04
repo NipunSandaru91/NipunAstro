@@ -1,3 +1,5 @@
+import { loadDeepDasha } from "@/lib/calculations/load-deep-dasha";
+import { predictionDashaRows } from "@/lib/calculations/deep-dasha-view";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import D1Chart from "@/app/components/d1-chart";
@@ -141,13 +143,8 @@ const topicIds: PredictionTopic[] = ["CAREER", "EDUCATION", "RELATIONSHIP", "FIN
 const natalModels = topicIds.map((topic) => topic === "CAREER"
   ? buildCareerNatalModel({ lagnaRasiId, positions, shadbala: shad })
   : buildGenericTopicNatalModel(topic, { lagnaRasiId, positions, shadbala: shad }));
-const { data: mdRows } = await supabase
-  .schema("jyotisha").from("mahadasa_periods").select("id,graha_id,start_at,end_at")
-  .eq("calculation_id", id).order("start_at", { ascending: true });
-const md = mdRows ?? [];
-const { data: adRows } = md.length
-  ? await supabase.schema("jyotisha").from("antardasa_periods").select("id,mahadasa_id,graha_id,start_at,end_at").in("mahadasa_id", md.map((row) => row.id)).order("start_at", { ascending: true })
-  : { data: [] as Array<{ id: string; mahadasa_id: string; graha_id: number; start_at: string; end_at: string }> };
+const deepDasha = await loadDeepDasha(supabase,id,2);
+const {md,ad:adRows} = predictionDashaRows(id,deepDasha?.periods??[]);
 // This is a server rendered, time-sensitive reading; the active period must use request time.
 // eslint-disable-next-line react-hooks/purity
 const now = Date.now();
