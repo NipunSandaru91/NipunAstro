@@ -22,3 +22,5 @@ jobs:
 
       - name: Run tests with coverage
         run: deno test --clean --allow-env --coverage=coverage --coverage-threshold=100 tests
+      - name: Daily Swiss astronomy smoke
+        run: deno run scripts/daily-sky-smoke.ts
