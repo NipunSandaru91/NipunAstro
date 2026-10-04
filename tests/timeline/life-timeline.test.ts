@@ -102,6 +102,30 @@ Deno.test("no padding; age, period boundaries, and incomplete depth are respecte
   });
   assertEquals(zeroLengthParents.past, []);
   assertEquals(zeroLengthParents.future, []);
+  const prebirthParents = buildLifeTimeline({
+    ...input,
+    periods: periods.map((p) => p.level === 2
+      ? { ...p, start_at: "1980-01-01T00:00:00.000Z", end_at: "1980-02-01T00:00:00.000Z" }
+      : p),
+  });
+  assertEquals(prebirthParents.past, []);
+  const beyondHorizonParents = buildLifeTimeline({
+    ...input,
+    periods: periods.map((p) => p.level === 2
+      ? { ...p, start_at: "2090-01-01T00:00:00.000Z", end_at: "2090-02-01T00:00:00.000Z" }
+      : p),
+  });
+  assertEquals(beyondHorizonParents.future, []);
+  const repeatedMdAdLord = buildLifeTimeline({
+    ...input,
+    periods: periods.map((p) => {
+      if (p.level !== 2) return p;
+      const md = periods.find((parent) => parent.path === p.parent_path);
+      return md ? { ...p, graha_id: md.graha_id } : p;
+    }),
+  });
+  assertEquals(repeatedMdAdLord.past, []);
+  assertEquals(repeatedMdAdLord.future, []);
   const newborn = buildLifeTimeline({ ...input, asOf: birthAt });
   assertEquals(newborn.past, []);
   assert(
