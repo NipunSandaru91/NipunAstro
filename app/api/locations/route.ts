@@ -145,18 +145,85 @@ export async function GET(request: NextRequest) {
   const state = request.nextUrl.searchParams.get("state")?.trim() ?? "";
 
   try {
+    if (level === "timezone") {
+      const latitudeRaw = request.nextUrl.searchParams.get("lat")?.trim() ?? "";
+      const longitudeRaw = request.nextUrl.searchParams.get("lon")?.trim() ?? "";
+      const latitude = Number(latitudeRaw);
+      const longitude = Number(longitudeRaw);
+      if (
+        !latitudeRaw || !longitudeRaw ||
+        !Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
+        !Number.isFinite(longitude) || longitude < -180 || longitude > 180
+      ) {
+        return NextResponse.json(
+          { error: "coordinates_invalid" },
+          { status: 400 },
+        );
+      }
+
+      const url = new URL("https://api.open-meteo.com/v1/forecast");
+      url.searchParams.set("latitude", String(latitude));
+      url.searchParams.set("longitude", String(longitude));
+      url.searchParams.set("current", "temperature_2m");
+      url.searchParams.set("timezone", "auto");
+      url.searchParams.set("forecast_days", "1");
+      const response = await fetch(url.toString(), {
+        headers: { Accept: "application/json" },
+        cache: "no-store",
+        signal: AbortSignal.timeout(8000),
+      });
+      if (!response.ok) {
+        return NextResponse.json(
+          { error: "coordinate_timezone_unavailable" },
+          { status: 503 },
+        );
+      }
+      const payload = await response.json() as { timezone?: string };
+      if (!payload.timezone) {
+        return NextResponse.json(
+          { error: "coordinate_timezone_unavailable" },
+          { status: 503 },
+        );
+      }
+      try {
+        new Intl.DateTimeFormat("en", { timeZone: payload.timezone }).format(0);
+      } catch {
+        return NextResponse.json(
+          { error: "coordinate_timezone_invalid" },
+          { status: 503 },
+        );
+      }
+      return NextResponse.json({ timezone: payload.timezone });
+    }
+
     if (level === "current") {
-      const latitude = Number(request.headers.get("x-vercel-ip-latitude"));
-      const longitude = Number(request.headers.get("x-vercel-ip-longitude"));
+      const latitudeRaw = request.headers.get("x-vercel-ip-latitude")?.trim() ?? "";
+      const longitudeRaw = request.headers.get("x-vercel-ip-longitude")?.trim() ?? "";
+      const latitude = Number(latitudeRaw);
+      const longitude = Number(longitudeRaw);
       const timezone = request.headers.get("x-vercel-ip-timezone")?.trim() ?? "";
       const encodedCity = request.headers.get("x-vercel-ip-city")?.trim() ?? "";
       const countryCode = request.headers.get("x-vercel-ip-country")?.trim() ?? "";
 
       if (
+        !latitudeRaw ||
+        !longitudeRaw ||
         !Number.isFinite(latitude) ||
+        latitude < -90 ||
+        latitude > 90 ||
         !Number.isFinite(longitude) ||
+        longitude < -180 ||
+        longitude > 180 ||
         !timezone
       ) {
+        return NextResponse.json(
+          { error: "approximate_location_unavailable" },
+          { status: 503 },
+        );
+      }
+      try {
+        new Intl.DateTimeFormat("en", { timeZone: timezone }).format(0);
+      } catch {
         return NextResponse.json(
           { error: "approximate_location_unavailable" },
           { status: 503 },
