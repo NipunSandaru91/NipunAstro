@@ -1,5 +1,4 @@
 import { PHILIPPINES_CITIES_BY_REGION, PHILIPPINES_REGIONS } from "@/lib/locations/philippines";
-import { resolveBirthPlace } from "@/lib/calculations/place-resolution";
 import { NextRequest, NextResponse } from "next/server";
 
 const API = "https://countriesnow.space/api/v0.1";
@@ -144,19 +143,44 @@ export async function GET(request: NextRequest) {
   const level = request.nextUrl.searchParams.get("level");
   const country = request.nextUrl.searchParams.get("country")?.trim() ?? "";
   const state = request.nextUrl.searchParams.get("state")?.trim() ?? "";
-  const query = request.nextUrl.searchParams.get("query")?.trim() ?? "";
 
   try {
-    if (level === "resolve") {
-      if (query.length < 2 || query.length > 120) {
+    if (level === "current") {
+      const latitude = Number(request.headers.get("x-vercel-ip-latitude"));
+      const longitude = Number(request.headers.get("x-vercel-ip-longitude"));
+      const timezone = request.headers.get("x-vercel-ip-timezone")?.trim() ?? "";
+      const encodedCity = request.headers.get("x-vercel-ip-city")?.trim() ?? "";
+      const countryCode = request.headers.get("x-vercel-ip-country")?.trim() ?? "";
+
+      if (
+        !Number.isFinite(latitude) ||
+        !Number.isFinite(longitude) ||
+        !timezone
+      ) {
         return NextResponse.json(
-          { error: "invalid_location_query" },
-          { status: 400 },
+          { error: "approximate_location_unavailable" },
+          { status: 503 },
         );
       }
 
-      const place = await resolveBirthPlace(query);
-      return NextResponse.json({ place });
+      let city = encodedCity;
+      try {
+        city = decodeURIComponent(encodedCity);
+      } catch {
+        // Vercel normally RFC3986-encodes non-ASCII city names.
+      }
+
+      return NextResponse.json({
+        place: {
+          name: [city || "Approximate current location", countryCode]
+            .filter(Boolean)
+            .join(", "),
+          latitude,
+          longitude,
+          timezone,
+          approximate: true,
+        },
+      });
     }
 
     if (level === "country") {
