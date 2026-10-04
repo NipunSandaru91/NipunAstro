@@ -120,8 +120,10 @@ Deno.test("no padding; age, period boundaries, and incomplete depth are respecte
     ...input,
     positions: positions.map((p) => ({ ...p, rasi_id: 13 })),
   }));
-  assertThrows(() => buildLifeTimeline({
+  const missingParents = buildLifeTimeline({
     ...input,
     periods: periods.filter((p) => p.level >= 3),
-  }));
+  });
+  assertEquals(missingParents.past, []);
+  assertEquals(missingParents.future, []);
 });
