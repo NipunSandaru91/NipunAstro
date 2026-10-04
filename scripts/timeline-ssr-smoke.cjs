@@ -31,7 +31,7 @@ async function scenario(account='PROFESSIONAL',authenticated=true,foreign=false,
 (async()=>{
  for(const account of ['PERSONAL','ADMIN',null]){const r=await scenario(account);assert.equal(r.error,'REDIRECT:/dashboard');assert.equal(r.reads,0);}
  const signedOut=await scenario('PROFESSIONAL',false);assert.equal(signedOut.error,'REDIRECT:/login?next=%2Ftimeline');assert.equal(signedOut.reads,0);
- const result=await scenario('PROFESSIONAL',true,true);assert.equal(result.chosen,'owned');assert.ok(result.html.includes('අතීතය විමසමු'));assert.ok(result.html.includes('ඉදිරි කාලයේ තේමා'));assert.ok(result.html.includes('සූක්ෂ්ම'));assert.ok(result.html.includes('ප්‍රාණ'));
+ const result=await scenario('PROFESSIONAL',true,true);assert.equal(result.chosen,'owned');assert.ok(result.html.includes('අතීත කාල පරාස'));assert.ok(result.html.includes('ඉදිරි කාල පරාස'));assert.ok(result.html.includes('අනුබල දෙන පැත්ත වැඩියි'));assert.ok(result.html.includes('දශා මට්ටම් 3'));assert.ok(!result.html.includes('සූක්ෂ්ම'));assert.ok(!result.html.includes('ප්‍රාණ'));
  assert.ok((await scenario('PROFESSIONAL',true,false,true)).html.includes('මුලින් කේන්දරයක්'));
- console.log('PASS timeline SSR: signed-out and Personal denied before chart reads, owned selection, Professional five-level output, empty state.');
+ console.log('PASS timeline SSR: signed-out and Personal denied before chart reads, owned selection, Professional three-level output, empty state.');
 })().catch(e=>{console.error(e);process.exitCode=1});
