@@ -6,7 +6,7 @@ Professional `/predictions` retains all time windows; calculation/role tables ar
 ## Contract
 
 - Select an owned, calculated chart and current location, not an inferred birth location.
-- Local civil date / IANA timezone; city presets or manual coordinates; 1900–2100.
+- Local civil date / IANA timezone; browser current-location permission, place search, quick city presets or manual coordinates; 1900–2100.
 - Concise overview, money, work, relationships, focus, symbolic numbers/colours,
   weekday good/Maru directions, actual-daylight Rahu period, all five Panchanga limbs.
 - Sunrise-reference reading. At polar locations without sunrise, explicitly use local
@@ -26,7 +26,7 @@ New read-only `daily-sky` Edge Function uses the existing pinned Swiss WASM 0.1.
 Moshier + Lahiri. Sun/Moon sidereal longitude drives tithi, nakshatra, yoga, karana.
 Solar altitude uses Swiss apparent equatorial Sun + sidereal time, bisected at
 -0.8333° for standard apparent upper-limb rise/set. Sea-level unobstructed horizon;
-terrain, elevation and weather are not modeled. No external geocoder or new npm dependency.
+terrain, elevation and weather are not modeled. Place search reuses the existing server-side Open-Meteo geocoder; no new npm dependency. Browser geolocation is optional and requires user permission.
 
 The function validates user tokens through Supabase Auth **before** computing.
 It takes no chart IDs and accesses no database/service-role key. The page reads
