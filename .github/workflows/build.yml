@@ -20,5 +20,7 @@ jobs:
         run: npm ci
       - name: Daily card SSR contracts
         run: node scripts/daily-card-smoke.cjs
+      - name: Professional timeline SSR contracts
+        run: node scripts/timeline-ssr-smoke.cjs
       - name: Build
         run: npm run build
