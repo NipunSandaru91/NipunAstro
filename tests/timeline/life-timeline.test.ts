@@ -84,6 +84,20 @@ Deno.test("top MD/AD windows are refined by distinct topic-linked PD lords", () 
   assert(evidence.has("MODERATE"));
 });
 
+Deno.test("one shortlisted AD contributes no more than two detailed PD windows", () => {
+  const focused = periods.filter((p) =>
+    p.path === "3" || p.path === "3.3" || p.parent_path === "3.3"
+  );
+  const result = buildLifeTimeline({
+    ...input,
+    positions: positions.map((p) => ({ ...p, rasi_id: 1 })),
+    periods: focused,
+  });
+  assertEquals(result.past.length, 2);
+  assertEquals(result.future, []);
+  assert(result.past.every((item) => item.dasha[1].path === "3.3"));
+});
+
 Deno.test("no padding; age, period boundaries, and incomplete depth are respected", () => {
   assertEquals(buildLifeTimeline({ ...input, periods: [] }).past, []);
   assertEquals(buildLifeTimeline({
