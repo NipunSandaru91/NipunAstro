@@ -8,7 +8,7 @@ const professionalItems=[
   ["/dashboard","⌂","මුල් පිටුව","dashboard"],
   ["/my-chart","⌁","කේන්දර","chart"],
   ["/predictions","◉","පුරෝකථන","predictions"],
-  ["/forecast","◌","කාල අනාවැකි","forecast"],
+  ["/forecast","☀","දෛනික","forecast"],
 ] as const;
 const personalItems=[
   ["/dashboard","⌂","මුල් පිටුව","dashboard"],
