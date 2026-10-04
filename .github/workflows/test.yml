@@ -34,7 +34,9 @@ jobs:
 
       - name: Print uncovered branches for diagnosis
         if: failure()
-        run: deno coverage --detailed coverage
+        run: |
+          deno coverage --detailed coverage
+          awk '/^SF:.*life-timeline/{show=1} show{print} show&&/^end_of_record/{exit}' coverage/lcov.info
 
       - name: Daily Swiss astronomy smoke
         run: deno run scripts/daily-sky-smoke.ts
