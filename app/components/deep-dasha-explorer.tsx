@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { buildDeepDashaView } from '@/lib/calculations/deep-dasha-view';
+import ProfessionalChartTabs from '@/app/components/professional-chart-tabs';
 
 const GRAHAS:Record<number,string>={1:'රවි',2:'චන්ද්‍ර',3:'කුජ',4:'බුධ',5:'ගුරු',6:'ශුක්‍ර',7:'ශනි',8:'රාහු',9:'කේතු'};
 const LEVELS=['','මහාදශා','අන්තර්දශා','ප්‍රත්‍යන්තර්දශා','සූක්ෂ්ම දශා','ප්‍රාණ දශා'];
@@ -16,6 +17,7 @@ export default function DeepDashaExplorer({calculationId,title,timezone,now,view
    <p className="mt-3 text-sm text-[#566c5e]">{title} · වේලා කලාපය: {timezone}</p>
    <p className="mt-3 max-w-3xl text-sm leading-7 text-[#566c5e]">මහාදශාවේ සිට ප්‍රාණ දශාව දක්වා කාල සීමා බලන්න. එක් කාලයක් තෝරා එහි උපදශා විවෘත කරන්න.</p>
   </header>
+  <ProfessionalChartTabs calculationId={calculationId} active="dasha" />
   <section className="astro-card mt-6 p-5" aria-label="වත්මන් දශා">
    <h2 className="text-lg font-semibold text-[#18372a]">දැනට ක්‍රියාත්මක දශා</h2>
    {view.current.length?<div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">{view.current.map(row=><Link key={row.path} href={href(row.path)} className="rounded-xl border border-[#b9d8c3] bg-[#f2f8f3] p-4 hover:bg-[#e8f4ec] focus-visible:outline-2 focus-visible:outline-[#176b4a]"><p className="text-xs text-[#566c5e]">{LEVELS[row.level]}</p><p className="mt-1 text-xl font-semibold text-[#176b4a]">{GRAHAS[row.graha_id]}</p><p className="mt-2 text-xs leading-5 text-[#566c5e]">අවසන්: {format(row.end_at)}</p></Link>)}</div>:<p className="mt-3 text-sm text-[#566c5e]">වත්මන් දිනය මෙම කාල සටහනට ඇතුළත් නොවේ.</p>}

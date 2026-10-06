@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppNav from "@/app/components/app-nav";
+import ProfessionalChartTabs from "@/app/components/professional-chart-tabs";
 import { calculateTransit } from "@/app/calculations/actions";
 import {
   buildTransitNatalAnalysis,
@@ -246,7 +247,7 @@ export default async function TransitPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <AppNav />
+      <AppNav active="chart" />
       <main className="min-h-screen px-4 py-8 sm:px-6">
         <div className="mx-auto max-w-6xl">
           <header className="border-b border-[#d7e5da] pb-6">
@@ -264,6 +265,7 @@ export default async function TransitPage({ params, searchParams }: Props) {
               {title} · Transit snapshot → natal bhāva → natal graha interaction
             </p>
           </header>
+          <ProfessionalChartTabs calculationId={id} active="transit" />
 
           <section className="panel mt-6 rounded-2xl p-6 sm:p-7">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
