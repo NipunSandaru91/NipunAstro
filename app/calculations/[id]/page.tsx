@@ -3,7 +3,9 @@ import { predictionDashaRows } from "@/lib/calculations/deep-dasha-view";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import D1Chart from "@/app/components/d1-chart";
+import Link from "next/link";
 import AppNav from "@/app/components/app-nav";
+import ProfessionalChartTabs from "@/app/components/professional-chart-tabs";
 import ChartNameEditor from "@/app/components/chart-name-editor";
 import ChartRelationshipEditor from "@/app/components/chart-relationship-editor";
 import DeleteChartButton from "@/app/components/delete-chart-button";
@@ -19,7 +21,7 @@ import { buildPersonalNatureReading } from "@/lib/prediction/ui/personal-nature-
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string; saved?: string; relationship_saved?: string; relationship_error?: string }>;
+  searchParams: Promise<{ error?: string; saved?: string; relationship_saved?: string; relationship_error?: string; tab?: string }>;
 };
 
 type ChartData = {
@@ -91,7 +93,9 @@ export default async function CalculationPage({
   searchParams,
 }: PageProps) {
   const { id } = await params;
-  const { error: engineError, saved, relationship_saved, relationship_error } = await searchParams;
+  const { error: engineError, saved, relationship_saved, relationship_error, tab } = await searchParams;
+  const chartTabs = ["overview", "bhava", "drishti", "planets", "strength", "yoga", "predictions"] as const;
+  const activeTab = chartTabs.includes(tab as (typeof chartTabs)[number]) ? tab as (typeof chartTabs)[number] : "overview";
   const supabase = await createClient();
 
   const { data, error } = await supabase.rpc(
@@ -225,7 +229,7 @@ const topics = natalModels.map((model) => {
 
   return (
     <>
-      <AppNav />
+      <AppNav active="chart" />
       <main className="min-h-screen px-4 py-8 sm:px-6">
       <div className="mx-auto max-w-6xl">
         <header className="border-b border-[#d7e5da] pb-7">
@@ -266,7 +270,9 @@ const topics = natalModels.map((model) => {
           </section>
         ) : null}
 
-        {!engineError ? (
+        <ProfessionalChartTabs calculationId={id} active={activeTab} />
+
+        {!engineError && activeTab === "overview" ? (
         <section className="mt-7 rounded-3xl border border-[#b9d8c3] bg-[#e8f4ec] p-5 shadow-2xl sm:p-7">
           <div className="flex items-start gap-4">
             <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-[#b9d8c3] bg-[#ffffff]">
@@ -319,16 +325,18 @@ const topics = natalModels.map((model) => {
             </div>
           </div>
 
-          <a
-            href="#chart-details"
+          <Link
+            href={`/calculations/${id}?tab=planets`}
             className="mt-4 block w-full rounded-2xl border border-[#b9d8c3] bg-[#176b4a] px-4 py-3.5 text-center text-sm font-semibold text-[#ffffff] transition hover:brightness-110"
           >
             View Chart
-          </a>
+          </Link>
         </section>
 
         ) : null}
 
+        {!engineError && activeTab === "overview" ? (
+        <>
         <section className="mt-7 grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
           <div className="panel rounded-2xl p-7">
             <p className="eyebrow">ගණනය කිරීම</p>
@@ -418,14 +426,7 @@ const topics = natalModels.map((model) => {
             <span className="text-[10px] text-[#566c5e]">Screen 10 · Bhāva</span>
           </div>
 
-          <nav className="mt-5 grid grid-cols-4 overflow-hidden rounded-xl border border-[#d7e5da] bg-[#ffffff]" aria-label="Chart sections">
-            <a href="#d1-chart" className="border-b-2 border-[#b9d8c3] bg-[#ffffff] px-2 py-3 text-center text-[10px] font-semibold text-[#18372a]">D1</a>
-            <a href="#bhava" className="px-2 py-3 text-center text-[10px] text-[#566c5e]">භාව</a>
-            <a href="#drishti" className="px-2 py-3 text-center text-[10px] text-[#566c5e]">Dṛṣṭi</a>
-            <a href="#shadbala" className="px-2 py-3 text-center text-[10px] text-[#566c5e]">Ṣaḍbala</a>
-          </nav>
-
-          <div id="d1-chart" className="mt-5">
+         <div id="d1-chart" className="mt-5">
             <D1Chart
               lagnaRasiId={lagnaRasiId}
               grahas={grahas}
@@ -451,6 +452,11 @@ const topics = natalModels.map((model) => {
         </section>
 
         
+        </>
+        ) : null}
+
+        {!engineError && activeTab === "predictions" ? (
+        <>
         <section id="personal-predictions" className="astro-card mt-7 scroll-mt-24 p-5 sm:p-7">
           <PersonalNatureCard reading={natureReading} />
           <div className="mb-4 mt-6">
@@ -461,6 +467,11 @@ const topics = natalModels.map((model) => {
           <PersonalPredictionTabs topics={topics as Parameters<typeof PersonalPredictionTabs>[0]["topics"]} timezone={runMeta?.input_timezone ?? "UTC"} />
         </section>
 
+        </>
+        ) : null}
+
+        {!engineError && activeTab === "bhava" ? (
+        <>
         <section id="bhava" className="panel mt-5 rounded-2xl p-5 sm:p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -519,6 +530,11 @@ const topics = natalModels.map((model) => {
         </section>
 
 
+        </>
+        ) : null}
+
+        {!engineError && activeTab === "drishti" ? (
+        <>
         <section id="drishti" className="panel mt-5 rounded-2xl p-5 sm:p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -591,6 +607,11 @@ const topics = natalModels.map((model) => {
           </div>
         </section>
 
+        </>
+        ) : null}
+
+        {!engineError && activeTab === "planets" ? (
+        <>
 <section id="chart-details" className="panel mt-5 rounded-2xl p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -669,6 +690,11 @@ const topics = natalModels.map((model) => {
           </div>
         </section>
 
+        </>
+        ) : null}
+
+        {!engineError && activeTab === "strength" ? (
+        <>
         <section id="shadbala" className="panel mt-5 rounded-2xl p-5 sm:p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -765,6 +791,11 @@ const topics = natalModels.map((model) => {
         </section>
 
 
+        </>
+        ) : null}
+
+        {!engineError && activeTab === "yoga" ? (
+        <>
         <section id="yoga" className="panel mt-5 rounded-2xl p-5 sm:p-7">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -847,20 +878,8 @@ const topics = natalModels.map((model) => {
             </p>
           </div>
         </section>
-        <section className="mt-5 grid gap-5 md:grid-cols-2">
-          <a href={"/calculations/" + id + "/dasha"} className="panel rounded-2xl p-6 transition hover:border-[#b9d8c3]">
-            <p className="eyebrow">Screen 14</p>
-            <h2 className="serif mt-2 text-2xl text-[#18372a]">විංශෝත්තරී දශා · Vimśottarī Daśā</h2>
-            <p className="mt-3 text-sm leading-6 text-[#566c5e]">Open the persisted Vimśottarī calculation output and Mahādaśā sequence.</p>
-            <span className="mt-5 inline-block text-xs text-[#176b4a]">Open Face 14 →</span>
-          </a>
-          <a href={"/calculations/" + id + "/transit"} className="panel rounded-2xl p-6 transition hover:border-[#b9d8c3]">
-            <p className="eyebrow">Screen 15</p>
-            <h2 className="serif mt-2 text-2xl text-[#18372a]">ගෝචර · Transit</h2>
-            <p className="mt-3 text-sm leading-6 text-[#566c5e]">Calculate and inspect the persisted Transit V1 planetary positions.</p>
-            <span className="mt-5 inline-block text-xs text-[#176b4a]">Open Face 15 →</span>
-          </a>
-        </section>
+        </>
+        ) : null}
 
         <footer className="mt-6 border-t border-[#d7e5da] pt-5 text-xs leading-6 text-[#566c5e]">
           Calculation layer only. Classical interpretation, evidence

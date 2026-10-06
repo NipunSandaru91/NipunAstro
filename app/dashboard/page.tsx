@@ -36,14 +36,6 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       { href: chartPath, icon: "✧", label: "ජන්ම කේන්දරය", detail: "D1 සහ ග්‍රහ පිහිටීම්" },
       { href: `${chartPath}#personal-predictions`, icon: "✦", label: "පුද්ගලික පුරෝකථන", detail: "D1 සහ දශා කියවීම" },
       { href: latest ? chartPath + "/dasha" : "/chart/new", icon: "◌", label: "දශා විශ්ලේෂණය", detail: "කාල පරිච්ඡේද" },
-      ...(profile?.account_type === "PROFESSIONAL"
-        ? [{
-          href: "/timeline",
-          icon: "↗",
-          label: "ජීවන කාලරේඛාව",
-          detail: "අතීත/අනාගත තේමා සහ දශා සාක්ෂි",
-        }]
-        : []),
       { href: latest ? chartPath + "/transit" : "/chart/new", icon: "▥", label: "ගෝචර", detail: "ග්‍රහ ගමන" },
     ];
 
@@ -98,6 +90,24 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
                   <small className="mt-1 block opacity-60">උපන් තොරතුරු ඇතුළත් කරන්න</small>
                 </Link>
               </div>
+            </section>
+
+            <section className="mt-5 grid gap-4 sm:grid-cols-2" aria-label={personal ? "අද ඔබට" : "ජීවන කාලරේඛාව"}>
+              {personal ? (
+                <Link href={latest ? "/forecast" : "/chart/new"} className="group rounded-3xl border border-[#c6a75e]/50 bg-[#14233b] p-6 text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c6a75e]">
+                  <p className="text-sm text-[#e3c77f]">☀ අද ඔබට</p>
+                  <h2 className="mt-2 font-serif text-2xl">අද දවසේ ඔබේ මඟපෙන්වීම</h2>
+                  <p className="mt-2 text-sm leading-6 text-white/75">ඔබේ කේන්දරයට ගැළපෙන දෛනික කියවීම බලන්න.</p>
+                  <span className="mt-4 inline-block text-sm font-semibold text-[#e3c77f]">දෛනික කියවීම බලන්න →</span>
+                </Link>
+              ) : (
+                <Link href={latest ? `/timeline?calculation=${encodeURIComponent(latest.id)}` : "/chart/new"} className="group rounded-3xl border border-[#c6a75e]/50 bg-[#14233b] p-6 text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c6a75e]">
+                  <p className="text-sm text-[#e3c77f]">PROFESSIONAL · TIMELINE</p>
+                  <h2 className="mt-2 font-serif text-2xl">ජීවන කාලරේඛාව</h2>
+                  <p className="mt-2 text-sm leading-6 text-white/75">අතීත හා අනාගත කාල තේමා, දශා සාක්ෂි සමඟ.</p>
+                  <span className="mt-4 inline-block text-sm font-semibold text-[#e3c77f]">කාලරේඛාව විවෘත කරන්න →</span>
+                </Link>
+              )}
             </section>
 
             <section className="ref-dashboard-section" aria-labelledby="explore-title">

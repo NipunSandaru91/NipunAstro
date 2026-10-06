@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AppNav from "@/app/components/app-nav";
+import ProfessionalChartTabs from "@/app/components/professional-chart-tabs";
 import { createClient } from "@/lib/supabase/server";
 import { loadDeepDasha } from "@/lib/calculations/load-deep-dasha";
 import {
@@ -132,7 +133,7 @@ export default async function TimelinePage(
   }
   return (
     <>
-      <AppNav active="predictions" />
+      <AppNav active="chart" />
       <main className="astro-shell min-h-screen px-4 py-6 pb-28 text-[#233e2e]">
         <div className="mx-auto max-w-4xl space-y-5">
           <header>
@@ -173,6 +174,7 @@ export default async function TimelinePage(
                 </button>
               </form>
             )}
+          {selected ? <ProfessionalChartTabs calculationId={selected.id} active="timeline" /> : null}
           {unavailable && (
             <p role="alert" className="rounded-xl bg-white p-5">
               සම්පූර්ණ ජන්ම/දශා දත්ත නොමැති නිසා කාලරේඛාව ලබාගත නොහැක. කේන්දර ගණනය පරීක්ෂා කරන්න.
