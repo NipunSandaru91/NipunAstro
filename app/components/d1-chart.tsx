@@ -7,6 +7,7 @@ type D1ChartProps = {
   grahas: Graha[];
   rashiNames: string[];
   grahaNames: Record<string, string>;
+  compact?: boolean;
 };
 
 function pick(obj: Graha | null | undefined, ...keys: string[]) {
@@ -32,6 +33,7 @@ export default function D1Chart({
   grahas,
   rashiNames,
   grahaNames,
+  compact = false,
 }: D1ChartProps) {
   const houses = Array.from({ length: 12 }, (_, i) => {
     const house = i + 1;
@@ -44,7 +46,7 @@ export default function D1Chart({
 
   return (
     <div className="overflow-hidden rounded-3xl border border-[#d7e5da] bg-[#ffffff] p-3 sm:p-5">
-      <div className="flex items-center justify-between px-2 pb-3">
+      {!compact ? <div className="flex items-center justify-between px-2 pb-3">
         <div>
           <p className="text-[9px] font-semibold uppercase tracking-[0.16em] text-[#176b4a]">
             D1 · Rāśi Chart
@@ -56,7 +58,7 @@ export default function D1Chart({
         <span className="rounded-full border border-[#d7e5da] px-2.5 py-1 text-[9px] text-[#566c5e]">
           Calculation layer
         </span>
-      </div>
+      </div> : null}
 
       <div className="mx-auto aspect-square w-full max-w-[620px]">
         <svg viewBox="0 0 400 400" className="h-full w-full" role="img" aria-label="D1 Rashi chart">
@@ -117,7 +119,7 @@ export default function D1Chart({
         </svg>
       </div>
 
-      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {!compact ? <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {houses.slice(0, 4).map(({ house, rashiId, planets }) => (
           <div key={house} className="rounded-xl border border-[#d7e5da] bg-[#ffffff] px-3 py-2">
             <p className="text-[9px] uppercase tracking-[0.12em] text-[#566c5e]">Bhāva {house}</p>
@@ -127,7 +129,7 @@ export default function D1Chart({
             </p>
           </div>
         ))}
-      </div>
+      </div> : null}
     </div>
   );
 }

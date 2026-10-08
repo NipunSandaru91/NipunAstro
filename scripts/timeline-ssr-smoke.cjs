@@ -17,7 +17,7 @@ async function scenario(account='PROFESSIONAL',authenticated=true,foreign=false,
    if(spec==='@/app/components/app-nav')return ()=>React.createElement('nav');
    if(spec==='@/lib/supabase/server')return {createClient:async()=>client};
    if(spec==='@/lib/calculations/load-deep-dasha')return {loadDeepDasha:async()=>({run:{utc_timestamp:'1991-04-06T08:42:00.000Z'},periods:load(path.join(root,'supabase/functions/jyotisha-calculator/core/deep-dasha.ts')).generateDeepVimshottari({birth_at:'1991-04-06T08:42:00.000Z',moon_longitude_sidereal:252.348067345,depth:5,md_count:18})})};
-   if(spec.startsWith('@/')||spec.startsWith('.')){let p=spec.startsWith('@/')?path.join(root,spec.slice(2)):path.resolve(path.dirname(file),spec);if(!path.extname(p))p+='.ts';return load(p);}
+   if(spec.startsWith('@/')||spec.startsWith('.')){let p=spec.startsWith('@/')?path.join(root,spec.slice(2)):path.resolve(path.dirname(file),spec);if(!path.extname(p))p+=fs.existsSync(p+'.ts')?'.ts':'.tsx';return load(p);}
    return require(spec);
   };
   vm.runInThisContext('(function(require,module,exports){'+code+'\n})',{filename:file})(req,module,module.exports);return module.exports;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { PersonalTopicReading } from "@/lib/prediction/ui/personal-topic-reading";
 
 export type PersonalTopic = {
@@ -26,21 +26,23 @@ function formatRange(start: string, end: string, timezone: string) {
   return `${fmt(start)} – ${fmt(end)}`;
 }
 
-export default function PersonalPredictionTabs({ topics, timezone }: { topics: PersonalTopic[]; timezone: string }) {
-  const [topicId, setTopicId] = useState(topics[0]?.id ?? "CAREER");
+export default function PersonalPredictionTabs({ topics, timezone, nature }: { topics: PersonalTopic[]; timezone: string; nature?: ReactNode }) {
+  const [topicId, setTopicId] = useState(nature ? "nature" : topics[0]?.id ?? "CAREER");
   const [mode, setMode] = useState<"natal" | "timing">("natal");
-  const topic = topics.find((item) => item.id === topicId) ?? topics[0];
+  const topic = topicId === "nature" ? undefined : topics.find((item) => item.id === topicId) ?? topics[0];
   return <>
     <section className="mt-7 rounded-3xl border border-[#d7e5da] bg-white p-5 shadow-sm sm:p-7">
-      <p className="eyebrow">Prediction Topic</p><h2 className="serif mt-2 text-3xl text-[#176b4a]">විශ්ලේෂණ අංගය තෝරන්න</h2>
-      <div role="tablist" aria-label="පුරෝකථන මාතෘකා" className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {topics.map((item) => <button key={item.id} type="button" role="tab" aria-selected={topic?.id === item.id} onClick={() => setTopicId(item.id)} className={`rounded-2xl border px-4 py-4 text-sm transition ${topic?.id === item.id ? "border-[#b9d8c3] bg-[#eef7f0] font-semibold text-[#176b4a]" : "border-[#d7e5da] bg-white text-[#566c5e] hover:bg-[#f6faf7]"}`}>{item.label}</button>)}
+      <h2 className="text-xl font-semibold text-[#175c43]">කේන්දර කියවීම</h2>
+      <div role="group" aria-label="පුරෝකථන මාතෘකා" className="na-topic-tabs">
+        {nature ? <button type="button" aria-pressed={topicId === "nature"} onClick={() => setTopicId("nature")}>චරිතය</button> : null}
+        {topics.map((item) => <button key={item.id} type="button" aria-pressed={topic?.id === item.id} onClick={() => setTopicId(item.id)} className={`rounded-2xl border px-4 py-4 text-sm transition ${topic?.id === item.id ? "border-[#b9d8c3] bg-[#eef7f0] font-semibold text-[#176b4a]" : "border-[#d7e5da] bg-white text-[#566c5e] hover:bg-[#f6faf7]"}`}>{item.label}</button>)}
       </div>
     </section>
+    {topicId === "nature" ? nature : null}
     {topic ? <section className="mt-5 rounded-3xl border border-[#d7e5da] bg-white p-5 shadow-sm sm:p-7">
-      <div role="tablist" aria-label="කියවීමේ කාලය" className="inline-flex rounded-xl border border-[#d7e5da] p-1">
-        <button type="button" role="tab" aria-selected={mode === "natal"} onClick={() => setMode("natal")} className={`rounded-lg px-4 py-2 text-sm ${mode === "natal" ? "bg-[#176b4a] text-white" : "text-[#566c5e]"}`}>උපන් වෙලාවට</button>
-        <button type="button" role="tab" aria-selected={mode === "timing"} onClick={() => setMode("timing")} className={`rounded-lg px-4 py-2 text-sm ${mode === "timing" ? "bg-[#176b4a] text-white" : "text-[#566c5e]"}`}>තත්කාලීන</button>
+      <div role="group" aria-label="කියවීමේ කාලය" className="inline-flex rounded-xl border border-[#d7e5da] p-1">
+        <button type="button" aria-pressed={mode === "natal"} onClick={() => setMode("natal")} className={`rounded-lg px-4 py-2 text-sm ${mode === "natal" ? "bg-[#176b4a] text-white" : "text-[#566c5e]"}`}>D1</button>
+        <button type="button" aria-pressed={mode === "timing"} onClick={() => setMode("timing")} className={`rounded-lg px-4 py-2 text-sm ${mode === "timing" ? "bg-[#176b4a] text-white" : "text-[#566c5e]"}`}>දශා/අනුදශා</button>
       </div>
       {mode === "natal" ? <div className="mt-6 space-y-4">
         <article className="rounded-2xl bg-[#f6faf7] p-5 sm:p-6"><p className="eyebrow">{topic.label} · D1 ප්‍රතිඵලය · {topic.natalLevel}</p><h3 className="serif mt-2 text-2xl text-[#18372a]">ඔබේ උපන් කේන්දරයෙන්</h3><p className="mt-3 text-sm leading-8 text-[#40584a]">{topic.reading.outcome}</p></article>
