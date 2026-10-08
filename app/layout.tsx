@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./light-theme.css";
+import "./mobile-ui.css";
 
 export const metadata: Metadata = {
   title: "N Astro | ජ්‍යොතිෂ නිරීක්ෂණය",

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import TimelinePeriods from "@/app/components/timeline-periods";
 import { redirect } from "next/navigation";
 import AppNav from "@/app/components/app-nav";
 import ProfessionalChartTabs from "@/app/components/professional-chart-tabs";
@@ -86,7 +87,7 @@ export default async function TimelinePage(
     return (
       <li
         key={item.id}
-        className="rounded-2xl border border-[#d7e5da] bg-white p-5"
+        className="na-timeline-card rounded-2xl border border-[#d7e5da] bg-white p-5"
       >
         <p className="text-xs text-[#64786b]">
           {index + 1} · {date(item.startAt)} – {date(item.endAt)}
@@ -131,10 +132,18 @@ export default async function TimelinePage(
       </li>
     );
   }
+  function renderPeriod(side: "past" | "future") {
+    if (!result) return null;
+    return <section aria-label={side === "past" ? "අතීත කාල පරාස" : "ඉදිරි කාල පරාස"}>
+      <h2 className="mb-3 text-lg font-semibold text-[#175c43]">{side === "past" ? "අතීත කාල පරාස" : "ඉදිරි කාල පරාස"} · {result[side].length}</h2>
+      {result[side].length < 10 ? <p className="mb-4 text-xs leading-6 text-[#5d7165]">අවශ්‍ය සාක්ෂි සහිත වෙනස් කාල පරාස 10ක් නොමැති නිසා ලැබෙන සංඛ්‍යාව පමණක් පෙන්වයි.</p> : null}
+      <ol className="na-timeline-list">{result[side].map((item, i) => itemCard(item, i))}</ol>
+    </section>;
+  }
   return (
     <>
       <AppNav active="chart" />
-      <main className="astro-shell min-h-screen px-4 py-6 pb-28 text-[#233e2e]">
+      <main className="na-timeline-page astro-shell min-h-screen px-4 py-6 pb-28 text-[#233e2e]">
         <div className="mx-auto max-w-4xl space-y-5">
           <header>
             <p className="text-xs tracking-widest text-[#64786b]">
@@ -187,25 +196,10 @@ export default async function TimelinePage(
                 {timezone}. අනාගතය: අද සිට වසර 10ක්. දැන් ක්‍රියාත්මක ප්‍රත්‍යන්තර කාලය අතීත හෝ
                 අනාගත ලැයිස්තුවට දෙවරක් ඇතුළත් නොකරයි.
               </p>
-              <div className="grid gap-6 md:grid-cols-2">
-                {(["past", "future"] as const).map((side) => (
-                  <section key={side}>
-                    <h2 className="mb-3 text-xl font-semibold text-[#176b4a]">
-                      {side === "past" ? "අතීත කාල පරාස" : "ඉදිරි කාල පරාස"} ·{" "}
-                      {result[side].length}
-                    </h2>
-                    {result[side].length < 10 && (
-                      <p className="mb-3 text-xs leading-6">
-                        අවශ්‍ය සාක්ෂි සහිත වෙනස් කාල පරාස 10ක් නොමැති නිසා ලැබෙන සංඛ්‍යාව පමණක්
-                        පෙන්වයි.
-                      </p>
-                    )}
-                    <ol className="space-y-4">
-                      {result[side].map((item, i) => itemCard(item, i))}
-                    </ol>
-                  </section>
-                ))}
-              </div>
+              <TimelinePeriods
+                past={renderPeriod("past")}
+                future={renderPeriod("future")}
+              />
               <details className="rounded-xl border border-[#d7e5da] bg-white p-5">
                 <summary className="cursor-pointer text-sm text-[#176b4a]">
                   තේරීමේ පදනම සහ සීමා

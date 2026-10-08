@@ -27,7 +27,7 @@ export default function ProfessionalChartTabs({ calculationId, active }: Props) 
         key,
         href,
         "aria-current": active === key ? "page" : undefined,
-        className: `shrink-0 rounded-xl px-4 py-2.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b99a50] ${active === key ? "bg-[#14233b] text-[#e3c77f]" : "text-[#405449] hover:bg-[#f1f5f1]"}`,
+        className: `shrink-0 rounded-xl px-4 py-2.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175c43] ${active === key ? "bg-[#175c43] text-white" : "text-[#405449] hover:bg-[#f1f5f1]"}`,
       }, label)),
     ),
     createElement("p", { className: "px-2 pt-1 text-[11px] text-[#718176] sm:hidden" }, "තවත් කොටස් බැලීමට පැත්තට අදින්න"),

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import UiIcon, { type IconName } from "@/app/components/ui-icon";
 import { redirect } from "next/navigation";
 import AppNav from "@/app/components/app-nav";
 import { createClient } from "@/lib/supabase/server";
@@ -20,36 +21,29 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   if (!claims?.claims?.sub) redirect("/login");
   const [{ data: calculations, error: listError }, { data: profile }, { data: roleRow }] = await Promise.all([
     supabase.from("user_calculation_runs_v1").select("*").order("calculation_timestamp", { ascending: false }),
-    supabase.from("profiles").select("account_type").single(),
+    supabase.from("profiles").select("account_type,display_name").single(),
     supabase.from("user_roles").select("role").single(),
   ]);
   const owned = (calculations ?? []) as Calculation[];
-  const latest = owned[0];
+  const latest = owned.find((chart) => chart.status === "CALCULATED");
   const personal = profile?.account_type === "PERSONAL";
   const chartPath = latest ? `/calculations/${latest.id}` : "/chart/new";
-  const explorations = personal
-    ? [
-      { href: chartPath, icon: "✧", label: "පුරෝකථන මාතෘකා", detail: "D1 සහ තත්කාලීන කියවීම" },
-      { href: "/my-chart", icon: "▤", label: "මගේ කේන්දර", detail: "සුරැකි ගණනයන්" },
-    ]
-    : [
-      { href: chartPath, icon: "✧", label: "ජන්ම කේන්දරය", detail: "D1 සහ ග්‍රහ පිහිටීම්" },
-      { href: `${chartPath}#personal-predictions`, icon: "✦", label: "පුද්ගලික පුරෝකථන", detail: "D1 සහ දශා කියවීම" },
-      { href: latest ? chartPath + "/dasha" : "/chart/new", icon: "◌", label: "දශා විශ්ලේෂණය", detail: "කාල පරිච්ඡේද" },
-      { href: latest ? chartPath + "/transit" : "/chart/new", icon: "▥", label: "ගෝචර", detail: "ග්‍රහ ගමන" },
-    ];
+  const name = profile?.display_name || "ඔබ";
+  const explorations: { href: string; icon: IconName; label: string; detail: string }[] = [
+    { href: chartPath, icon: "chart", label: "D1 කේන්දරය", detail: "ජන්ම ග්‍රහ පිහිටීම්" },
+    { href: latest ? `${chartPath}/dasha` : "/chart/new", icon: "clock", label: "දශා", detail: "කාල පරිච්ඡේද" },
+    { href: latest ? `${chartPath}/transit` : "/chart/new", icon: "timeline", label: "ගෝචර", detail: "ග්‍රහ ගමන" },
+    { href: latest ? "/forecast" : "/chart/new", icon: "sun", label: "අද ඔබට", detail: "දෛනික මඟපෙන්වීම" },
+  ];
 
   return <>
     <AppNav active="dashboard" />
     <main className="ref-app-shell na-dashboard-shell">
       <div className="ref-app-main ref-dashboard">
-        <div className="ref-dashboard-intro">
-          <div>
-            <p className="ref-kicker">N ASTRO · {personal ? "PERSONAL" : "PROFESSIONAL"}</p>
-            <h1>ඔබේ නක්ෂත්‍ර නිරීක්ෂණය</h1>
-            <p>කේන්දරය තෝරාගෙන එහි ගණනය සහ කියවීම එකම තැනකින් බලන්න.</p>
-          </div>
-        </div>
+        <header className="na-home-intro">
+          <span className="na-account-badge">{personal ? "Personal" : "Professional"}</span>
+          <h1>{personal ? `ආයුබෝවන්, ${name}` : "කේන්දර විශ්ලේෂණය"}</h1>
+        </header>
 
         {actionError ? <div className="ref-action-error" role="alert">
           උපන් තොරතුරු සුරැකීමට නොහැකි විය. ස්ථානය සහ උපන් වේලාව පරීක්ෂා කර නැවත උත්සාහ කරන්න.
@@ -57,80 +51,35 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         </div> : null}
         {listError ? <div className="ref-action-error" role="alert">කේන්දර ලැයිස්තුව ලබාගත නොහැක. පිටුව නැවත විවෘත කරන්න.</div> : null}
 
-        <div className="ref-dashboard-layout">
-          <div className="ref-dashboard-primary">
-            <section className="astro-card" aria-labelledby="home-chart-selector-title">
-              <div className="flex items-end justify-between gap-3">
-                <div>
-                  <p className="eyebrow">Chart Selector</p>
-                  <h2 id="home-chart-selector-title" className="serif mt-2 text-2xl text-[#176b4a]">
-                    කේන්දරය තෝරන්න
-                  </h2>
-                </div>
+        <div className="na-home-layout">
+          <div className="na-home-primary">
+            {personal ? <section className="na-daily-hero" aria-labelledby="daily-title">
+              <div className="na-hero-heading"><UiIcon name="sun" /><div><h2 id="daily-title">අද ඔබට</h2><p>දවසේ මඟපෙන්වීම</p></div></div>
+              <div className="na-daily-topics">
+                {([{ icon: "money", label: "මුදල්" }, { icon: "career", label: "රැකියාව" }, { icon: "heart", label: "සබඳතා" }] as const).map(item => <Link key={item.label} href={latest ? "/forecast" : "/chart/new"}><UiIcon name={item.icon} /><span>{item.label}</span><UiIcon name="arrow" /></Link>)}
               </div>
-              <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
-                {owned.map((calculation, index) => (
-                  <Link
-                    key={calculation.id}
-                    href={`/calculations/${calculation.id}`}
-                    className={index === 0 ? "astro-chip active" : "astro-chip"}
-                  >
-                    <span className="block">
-                      {calculation.subject_name ??
-                        calculation.input_place_name ??
-                        "Natal chart"}
-                    </span>
-                    <small className="mt-1 block opacity-60">
-                      {calculation.input_birth_date}
-                    </small>
-                  </Link>
-                ))}
-                <Link href="/chart/new" className="astro-chip">
-                  <span className="block">＋ නව කේන්දරයක්</span>
-                  <small className="mt-1 block opacity-60">උපන් තොරතුරු ඇතුළත් කරන්න</small>
-                </Link>
-              </div>
-            </section>
-
-            <section className="mt-5 grid gap-4 sm:grid-cols-2" aria-label={personal ? "අද ඔබට" : "ජීවන කාලරේඛාව"}>
-              {personal ? (
-                <Link href={latest ? "/forecast" : "/chart/new"} className="group rounded-3xl border border-[#c6a75e]/50 bg-[#14233b] p-6 text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c6a75e]">
-                  <p className="text-sm text-[#e3c77f]">☀ අද ඔබට</p>
-                  <h2 className="mt-2 font-serif text-2xl">අද දවසේ ඔබේ මඟපෙන්වීම</h2>
-                  <p className="mt-2 text-sm leading-6 text-white/75">ඔබේ කේන්දරයට ගැළපෙන දෛනික කියවීම බලන්න.</p>
-                  <span className="mt-4 inline-block text-sm font-semibold text-[#e3c77f]">දෛනික කියවීම බලන්න →</span>
-                </Link>
-              ) : (
-                <Link href={latest ? `/timeline?calculation=${encodeURIComponent(latest.id)}` : "/chart/new"} className="group rounded-3xl border border-[#c6a75e]/50 bg-[#14233b] p-6 text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c6a75e]">
-                  <p className="text-sm text-[#e3c77f]">PROFESSIONAL · TIMELINE</p>
-                  <h2 className="mt-2 font-serif text-2xl">ජීවන කාලරේඛාව</h2>
-                  <p className="mt-2 text-sm leading-6 text-white/75">අතීත හා අනාගත කාල තේමා, දශා සාක්ෂි සමඟ.</p>
-                  <span className="mt-4 inline-block text-sm font-semibold text-[#e3c77f]">කාලරේඛාව විවෘත කරන්න →</span>
-                </Link>
-              )}
-            </section>
-
-            <section className="ref-dashboard-section" aria-labelledby="explore-title">
-              <div className="ref-section-heading"><p className="ref-kicker">EXPLORE</p><h2 id="explore-title">{personal ? "ඔබේ කියවීම" : "ගණනය විමසන්න"}</h2></div>
-              <div className="ref-dashboard-cards">
-                {explorations.map(item => <Link key={item.label} href={item.href} className="ref-explore-card">
-                  <span className="ref-explore-icon" aria-hidden="true">{item.icon}</span><b>{item.label}</b><small>{item.detail}</small><em aria-hidden="true">→</em>
-                </Link>)}
-              </div>
-            </section>
+              <Link className="na-hero-button" href={latest ? "/forecast" : "/chart/new"}>{latest ? "විස්තර බලන්න" : "කේන්දරයක් එක් කරන්න"}<UiIcon name="arrow" /></Link>
+            </section> : <>
+              <Link href="/my-chart" className="na-chart-selection"><UiIcon name="chart" /><span>{latest?.subject_name || "කේන්දරය තෝරන්න"}</span><UiIcon name="arrow" /></Link>
+              <section className="na-timeline-hero" aria-labelledby="timeline-title">
+                <div className="na-hero-heading"><UiIcon name="timeline" /><div><h2 id="timeline-title">අතීත / අනාගත</h2><p>ජීවිතයේ වැදගත් කාල පරාස</p></div></div>
+                <Link className="na-button" href={latest ? `/timeline?calculation=${encodeURIComponent(latest.id)}` : "/chart/new"}>ටයිම් ලයින් බලන්න<UiIcon name="arrow" /></Link>
+              </section>
+            </>}
+            {personal ? <>
+              <Link href={chartPath} className="na-chart-shortcut"><UiIcon name="chart" /><span><strong>මගේ කේන්දරය</strong><small>{latest?.subject_name || "උපන් තොරතුරු ඇතුළත් කරන්න"}{latest ? " · D1" : ""}</small></span><UiIcon name="arrow" /></Link>
+              <Link href="/chart/new" className="na-new-chart"><UiIcon name="plus" />නව කේන්දරයක්</Link>
+            </> : <>
+              <div className="na-action-grid">{explorations.map(item => <Link key={item.label} href={item.href}><UiIcon name={item.icon} /><span><strong>{item.label}</strong><small>{item.detail}</small></span><UiIcon name="arrow" /></Link>)}</div>
+              <section className="na-reading-shortcut"><h2>කේන්දර කියවීම</h2><p>මාතෘකාව අනුව ජන්ම සාක්ෂි සහ දශා විමසන්න.</p><Link href={latest ? `${chartPath}?tab=predictions` : "/chart/new"}>කියවීම විවෘත කරන්න <UiIcon name="arrow" /></Link></section>
+            </>}
           </div>
-          <aside className="ref-dashboard-aside">
-            <section className="ref-path-card">
-              <p className="ref-kicker">{personal ? "PERSONAL READING" : "EVIDENCE & TIMING"}</p>
-              <h2>{personal ? "ඔබේ පුරෝකථන" : "පුරෝකථන සහ කාලය"}</h2>
-              <p>{personal ? "ජීවිතයේ ප්‍රධාන මාතෘකා සඳහා D1 සහ දශා කාල කියවන්න." : "භාවය, සාක්ෂි සහ කාලය පියවරෙන් පියවර විමසන්න."}</p>
-              <Link href={personal ? chartPath : "/predictions"}>විවෘත කරන්න <span aria-hidden="true">→</span></Link>
+          <aside className="na-home-secondary">
+            <section className="na-saved-charts" aria-labelledby="saved-title">
+              <div className="na-section-title"><h2 id="saved-title">මගේ කේන්දර</h2><Link href="/my-chart">සියල්ල බලන්න</Link></div>
+              {owned.length ? owned.slice(0, 4).map(chart => <Link key={chart.id} href={`/calculations/${chart.id}`}><UiIcon name="chart" /><span><strong>{chart.subject_name || chart.input_place_name || "කේන්දරය"}</strong><small>{chart.input_birth_date}{chart.status !== "CALCULATED" ? " · ගණනය සම්පූර්ණ නැත" : ""}</small></span><UiIcon name="arrow" /></Link>) : <p>{listError ? "දත්ත ලබාගත නොහැක." : "ඔබේ පළමු කේන්දරය එක් කර ආරම්භ කරන්න."}</p>}
             </section>
-            <div className="ref-shortcuts">
-              <Link href="/settings">ගිණුම් සැකසුම් <span aria-hidden="true">→</span></Link>
-              <Link href="/profile">පැතිකඩ <span aria-hidden="true">→</span></Link>
-              {roleRow?.role === "ADMIN" ? <Link href="/admin">පරිපාලන පුවරුව <span aria-hidden="true">→</span></Link> : null}
-            </div>
+            {roleRow?.role === "ADMIN" ? <Link className="na-admin-link" href="/admin">පරිපාලන පුවරුව →</Link> : null}
           </aside>
         </div>
       </div>
